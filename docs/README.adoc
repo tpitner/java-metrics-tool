@@ -21,6 +21,10 @@ and current validation boundaries.
 The frozen functional and portability contract for the release accompanying
 the Journal of Open Research Software metapaper.
 
+`releasing.adoc`::
+The version-consistency checks, required tests, release artifacts, GitHub tag
+workflow, and Zenodo hand-off.
+
 The runnable minimal example is documented separately in
 `../examples/quickstart/README.adoc`. Detailed corpus structure and execution
 instructions are in `../validation/README.adoc`.

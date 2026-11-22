@@ -4,6 +4,9 @@
 
 == 2026-11-22
 
+* Added tag-driven release automation that enforces tag/POM/citation version
+  consistency, runs the default and pinned-CK test suites, produces a versioned
+  executable JAR and SHA-256 checksum, and attaches them to a GitHub release.
 * Added a required Ubuntu CI job that builds pinned CK revision `8a1ef91` and
   runs both real-CK integration tests; classified CK's two method-like
   initializer rows as explicit out-of-contract diagnostics.

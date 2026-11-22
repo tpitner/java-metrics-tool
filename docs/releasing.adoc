@@ -1,0 +1,44 @@
+= Release process
+:toc: left
+
+Releases are produced by `.github/workflows/release.yml`; release binaries must
+not be assembled or attached manually.
+
+== Prepare the release commit
+
+For a release version such as `1.1.0`:
+
+. set the Maven project version to `1.1.0` without `-SNAPSHOT`;
+. set `version: 1.1.0` and the release date in `CITATION.cff`;
+. update `HISTORY.adoc` and all user-facing versioned examples;
+. run the default suite and both opt-in real-CK tests;
+. commit and push the release metadata.
+
+The tag, Maven version, and `CITATION.cff` version must be identical. The
+workflow rejects a mismatch and rejects all snapshot versions.
+
+== Publish
+
+Create and push an annotated `v1.1.0` tag from the verified release commit. The
+tag triggers a clean Ubuntu build that:
+
+. runs the default Java 21 test suite;
+. builds pinned CK revision `8a1ef91` and runs both real-CK tests;
+. verifies that the shaded versioned JAR exists;
+. creates a SHA-256 checksum;
+. uploads both files as workflow artifacts;
+. creates the GitHub release with generated release notes and attaches the JAR
+  and checksum.
+
+If the GitHub repository remains connected to Zenodo, publication of the GitHub
+release creates the preserved software deposit. Record the resulting
+version-specific DOI in the JORS manuscript. The concept DOI may remain in the
+general project README.
+
+== Required release artifacts
+
+* `java-metrics-<version>.jar`
+* `java-metrics-<version>.jar.sha256`
+
+The release is incomplete if either artifact is missing or if the GitHub,
+Zenodo, POM, citation, and tag versions do not agree.

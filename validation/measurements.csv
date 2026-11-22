@@ -1,0 +1,1016 @@
+case_id,provider,metric,scope,subject,status,relation,value,lower,upper,reason,notes
+basic-members,java-metrics,java.declared-methods,type,validation.basic.Empty,OK,EXACT,0,,,,explicitly empty class
+basic-members,java-metrics,java.declared-constructors,type,validation.basic.Empty,OK,EXACT,0,,,,implicit constructor is excluded
+basic-members,java-metrics,java.declared-fields,type,validation.basic.Empty,OK,EXACT,0,,,,no fields
+basic-members,java-metrics,java.declared-methods,type,validation.basic.Members,OK,EXACT,3,,,,three declared methods
+basic-members,java-metrics,java.declared-constructors,type,validation.basic.Members,OK,EXACT,2,,,,two explicit constructors
+basic-members,java-metrics,java.declared-fields,type,validation.basic.Members,OK,EXACT,2,,,,two declared fields
+inheritance,java-metrics,java.declared-methods,type,validation.inheritance.Base,OK,EXACT,1,,,,one declared method
+inheritance,java-metrics,java.declared-constructors,type,validation.inheritance.Base,OK,EXACT,1,,,,one explicit constructor
+inheritance,java-metrics,java.declared-fields,type,validation.inheritance.Base,OK,EXACT,1,,,,one field
+inheritance,java-metrics,java.declared-methods,type,validation.inheritance.Middle,OK,EXACT,1,,,,inherited method excluded
+inheritance,java-metrics,java.declared-constructors,type,validation.inheritance.Middle,OK,EXACT,1,,,,one explicit constructor
+inheritance,java-metrics,java.declared-fields,type,validation.inheritance.Middle,OK,EXACT,0,,,,inherited field excluded
+inheritance,java-metrics,java.declared-methods,type,validation.inheritance.Leaf,OK,EXACT,1,,,,one override
+inheritance,java-metrics,java.declared-constructors,type,validation.inheritance.Leaf,OK,EXACT,0,,,,implicit constructor excluded
+inheritance,java-metrics,java.declared-fields,type,validation.inheritance.Leaf,OK,EXACT,0,,,,no declared field
+inheritance,java-metrics,java.declared-methods,type,validation.inheritance.Sibling,OK,EXACT,0,,,,no declared method
+inheritance,java-metrics,java.declared-constructors,type,validation.inheritance.Sibling,OK,EXACT,1,,,,one explicit constructor
+inheritance,java-metrics,java.declared-fields,type,validation.inheritance.Sibling,OK,EXACT,0,,,,no declared field
+interfaces,java-metrics,java.declared-methods,type,validation.interfaces.Root,OK,EXACT,1,,,,one abstract method
+interfaces,java-metrics,java.declared-constructors,type,validation.interfaces.Root,OK,EXACT,0,,,,interfaces have no constructors
+interfaces,java-metrics,java.declared-fields,type,validation.interfaces.Root,OK,EXACT,0,,,,no constants
+interfaces,java-metrics,java.declared-methods,type,validation.interfaces.Extended,OK,EXACT,1,,,,one default method
+interfaces,java-metrics,java.declared-constructors,type,validation.interfaces.Extended,OK,EXACT,0,,,,interfaces have no constructors
+interfaces,java-metrics,java.declared-fields,type,validation.interfaces.Extended,OK,EXACT,0,,,,no constants
+interfaces,java-metrics,java.declared-methods,type,validation.interfaces.Implementation,OK,EXACT,1,,,,one implementation method
+interfaces,java-metrics,java.declared-constructors,type,validation.interfaces.Implementation,OK,EXACT,0,,,,implicit constructor excluded
+interfaces,java-metrics,java.declared-fields,type,validation.interfaces.Implementation,OK,EXACT,0,,,,no fields
+coupling,java-metrics,java.declared-methods,type,validation.coupling.api.Service,OK,EXACT,1,,,,one interface method
+coupling,java-metrics,java.declared-constructors,type,validation.coupling.api.Service,OK,EXACT,0,,,,interfaces have no constructors
+coupling,java-metrics,java.declared-fields,type,validation.coupling.api.Service,OK,EXACT,0,,,,no fields
+coupling,java-metrics,java.declared-methods,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,one method
+coupling,java-metrics,java.declared-constructors,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,implicit constructor excluded
+coupling,java-metrics,java.declared-fields,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,no fields
+coupling,java-metrics,java.declared-methods,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,one implementation method
+coupling,java-metrics,java.declared-constructors,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,one explicit constructor
+coupling,java-metrics,java.declared-fields,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,one collaborator field
+coupling,java-metrics,java.declared-methods,type,validation.coupling.client.Controller,OK,EXACT,1,,,,one public method
+coupling,java-metrics,java.declared-constructors,type,validation.coupling.client.Controller,OK,EXACT,1,,,,one explicit constructor
+coupling,java-metrics,java.declared-fields,type,validation.coupling.client.Controller,OK,EXACT,1,,,,one service field
+overloads,java-metrics,java.declared-methods,type,validation.overloads.Overloaded,OK,EXACT,4,,,,four overloads
+overloads,java-metrics,java.declared-constructors,type,validation.overloads.Overloaded,OK,EXACT,2,,,,two constructor overloads
+overloads,java-metrics,java.declared-fields,type,validation.overloads.Overloaded,OK,EXACT,1,,,,one field
+nested-types,java-metrics,java.declared-methods,type,validation.nested.Outer,OK,EXACT,1,,,,factory method only
+nested-types,java-metrics,java.declared-constructors,type,validation.nested.Outer,OK,EXACT,1,,,,one explicit constructor
+nested-types,java-metrics,java.declared-fields,type,validation.nested.Outer,OK,EXACT,1,,,,one outer field
+nested-types,java-metrics,java.declared-methods,type,validation.nested.Outer.StaticNested,OK,EXACT,1,,,,one method
+nested-types,java-metrics,java.declared-constructors,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,implicit constructor excluded
+nested-types,java-metrics,java.declared-fields,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,no fields
+nested-types,java-metrics,java.declared-methods,type,validation.nested.Outer.Inner,OK,EXACT,1,,,,one method
+nested-types,java-metrics,java.declared-constructors,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,implicit constructor excluded
+nested-types,java-metrics,java.declared-fields,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,no fields
+unresolved-dependency,java-metrics,java.declared-methods,type,validation.unresolved.Broken,OK,EXACT,1,,,,source metric remains available
+unresolved-dependency,java-metrics,java.declared-constructors,type,validation.unresolved.Broken,OK,EXACT,1,,,,source metric remains available
+unresolved-dependency,java-metrics,java.declared-fields,type,validation.unresolved.Broken,OK,EXACT,1,,,,source metric remains available
+basic-members,ck,ck.methods,type,validation.basic.Empty,OK,EXACT,0,,,,no explicit methods or constructors
+basic-members,ck,ck.public-methods,type,validation.basic.Empty,OK,EXACT,0,,,,no explicitly public methods or constructors
+basic-members,ck,ck.fields,type,validation.basic.Empty,OK,EXACT,0,,,,no field declarations
+basic-members,ck,ck.public-fields,type,validation.basic.Empty,OK,EXACT,0,,,,no public field declarations
+basic-members,ck,ck.methods,type,validation.basic.Members,OK,EXACT,5,,,,two constructors and three methods
+basic-members,ck,ck.public-methods,type,validation.basic.Members,OK,EXACT,5,,,,all two constructors and three methods explicitly public
+basic-members,ck,ck.fields,type,validation.basic.Members,OK,EXACT,2,,,,two separate field declarations
+basic-members,ck,ck.public-fields,type,validation.basic.Members,OK,EXACT,0,,,,both field declarations are private
+inheritance,ck,ck.methods,type,validation.inheritance.Base,OK,EXACT,2,,,,one explicit constructor and one declared method
+inheritance,ck,ck.public-methods,type,validation.inheritance.Base,OK,EXACT,2,,,,constructor and method are explicitly public
+inheritance,ck,ck.fields,type,validation.inheritance.Base,OK,EXACT,1,,,,one protected field declaration
+inheritance,ck,ck.public-fields,type,validation.inheritance.Base,OK,EXACT,0,,,,the field declaration is protected
+inheritance,ck,ck.methods,type,validation.inheritance.Middle,OK,EXACT,2,,,,one explicit constructor and one declared method; inherited members excluded
+inheritance,ck,ck.public-methods,type,validation.inheritance.Middle,OK,EXACT,2,,,,constructor and declared method are explicitly public
+inheritance,ck,ck.fields,type,validation.inheritance.Middle,OK,EXACT,0,,,,no declared fields; inherited field excluded
+inheritance,ck,ck.public-fields,type,validation.inheritance.Middle,OK,EXACT,0,,,,no declared public fields
+inheritance,ck,ck.methods,type,validation.inheritance.Leaf,OK,EXACT,1,,,,one overriding method; implicit constructor and inherited methods excluded
+inheritance,ck,ck.public-methods,type,validation.inheritance.Leaf,OK,EXACT,1,,,,the overriding method is explicitly public
+inheritance,ck,ck.fields,type,validation.inheritance.Leaf,OK,EXACT,0,,,,no declared fields; inherited field excluded
+inheritance,ck,ck.public-fields,type,validation.inheritance.Leaf,OK,EXACT,0,,,,no declared public fields
+inheritance,ck,ck.methods,type,validation.inheritance.Sibling,OK,EXACT,1,,,,one explicit constructor; inherited methods excluded
+inheritance,ck,ck.public-methods,type,validation.inheritance.Sibling,OK,EXACT,1,,,,the constructor is explicitly public
+inheritance,ck,ck.fields,type,validation.inheritance.Sibling,OK,EXACT,0,,,,no declared fields; inherited field excluded
+inheritance,ck,ck.public-fields,type,validation.inheritance.Sibling,OK,EXACT,0,,,,no declared public fields
+interfaces,ck,ck.methods,type,validation.interfaces.Root,OK,EXACT,1,,,,one declared abstract interface method
+interfaces,ck,ck.public-methods,type,validation.interfaces.Root,OK,EXACT,0,,,,interface method has no explicit public modifier
+interfaces,ck,ck.fields,type,validation.interfaces.Root,OK,EXACT,0,,,,no field declarations
+interfaces,ck,ck.public-fields,type,validation.interfaces.Root,OK,EXACT,0,,,,no public field declarations
+interfaces,ck,ck.methods,type,validation.interfaces.Extended,OK,EXACT,1,,,,one declared default interface method; inherited method excluded
+interfaces,ck,ck.public-methods,type,validation.interfaces.Extended,OK,EXACT,0,,,,default method has no explicit public modifier
+interfaces,ck,ck.fields,type,validation.interfaces.Extended,OK,EXACT,0,,,,no field declarations
+interfaces,ck,ck.public-fields,type,validation.interfaces.Extended,OK,EXACT,0,,,,no public field declarations
+interfaces,ck,ck.methods,type,validation.interfaces.Implementation,OK,EXACT,1,,,,one declared implementation method; implicit constructor excluded
+interfaces,ck,ck.public-methods,type,validation.interfaces.Implementation,OK,EXACT,1,,,,implementation method is explicitly public
+interfaces,ck,ck.fields,type,validation.interfaces.Implementation,OK,EXACT,0,,,,no field declarations
+interfaces,ck,ck.public-fields,type,validation.interfaces.Implementation,OK,EXACT,0,,,,no public field declarations
+overloads,ck,ck.methods,type,validation.overloads.Overloaded,OK,EXACT,6,,,,two explicit constructors and four overloaded methods
+overloads,ck,ck.public-methods,type,validation.overloads.Overloaded,OK,EXACT,6,,,,both constructors and all four methods are explicitly public
+overloads,ck,ck.fields,type,validation.overloads.Overloaded,OK,EXACT,1,,,,one private field declaration
+overloads,ck,ck.public-fields,type,validation.overloads.Overloaded,OK,EXACT,0,,,,the field declaration is private
+coupling,ck,ck.methods,type,validation.coupling.api.Service,OK,EXACT,1,,,,one declared interface method
+coupling,ck,ck.public-methods,type,validation.coupling.api.Service,OK,EXACT,0,,,,interface method has no explicit public modifier
+coupling,ck,ck.fields,type,validation.coupling.api.Service,OK,EXACT,0,,,,no field declarations
+coupling,ck,ck.public-fields,type,validation.coupling.api.Service,OK,EXACT,0,,,,no public field declarations
+coupling,ck,ck.methods,type,validation.coupling.client.Controller,OK,EXACT,2,,,,one explicit constructor and one declared method
+coupling,ck,ck.public-methods,type,validation.coupling.client.Controller,OK,EXACT,2,,,,constructor and method are explicitly public
+coupling,ck,ck.fields,type,validation.coupling.client.Controller,OK,EXACT,1,,,,one private service field declaration
+coupling,ck,ck.public-fields,type,validation.coupling.client.Controller,OK,EXACT,0,,,,the field declaration is private
+coupling,ck,ck.methods,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,one declared method; implicit constructor excluded
+coupling,ck,ck.public-methods,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,the declared method is explicitly public
+coupling,ck,ck.fields,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,no field declarations
+coupling,ck,ck.public-fields,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,no public field declarations
+coupling,ck,ck.methods,type,validation.coupling.impl.ServiceImpl,OK,EXACT,2,,,,one explicit constructor and one declared implementation method
+coupling,ck,ck.public-methods,type,validation.coupling.impl.ServiceImpl,OK,EXACT,2,,,,constructor and method are explicitly public
+coupling,ck,ck.fields,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,one private helper field declaration
+coupling,ck,ck.public-fields,type,validation.coupling.impl.ServiceImpl,OK,EXACT,0,,,,the field declaration is private
+nested-types,ck,ck.methods,type,validation.nested.Outer,OK,EXACT,2,,,,one explicit constructor and one factory method; nested type members excluded
+nested-types,ck,ck.public-methods,type,validation.nested.Outer,OK,EXACT,2,,,,constructor and factory method are explicitly public
+nested-types,ck,ck.fields,type,validation.nested.Outer,OK,EXACT,1,,,,one private outer field; local variable excluded
+nested-types,ck,ck.public-fields,type,validation.nested.Outer,OK,EXACT,0,,,,the outer field declaration is private
+nested-types,ck,ck.methods,type,validation.nested.Outer.StaticNested,OK,EXACT,1,,,,one declared method; implicit constructor excluded
+nested-types,ck,ck.public-methods,type,validation.nested.Outer.StaticNested,OK,EXACT,1,,,,the declared method is explicitly public
+nested-types,ck,ck.fields,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,no field declarations
+nested-types,ck,ck.public-fields,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,no public field declarations
+nested-types,ck,ck.methods,type,validation.nested.Outer.Inner,OK,EXACT,1,,,,one declared method; implicit constructor excluded
+nested-types,ck,ck.public-methods,type,validation.nested.Outer.Inner,OK,EXACT,1,,,,the declared method is explicitly public
+nested-types,ck,ck.fields,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,no field declarations; captured outer field excluded
+nested-types,ck,ck.public-fields,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,no public field declarations
+modern-types,ck,ck.methods,type,validation.modern.Point,OK,EXACT,1,,,,one explicitly declared method; generated record members excluded
+modern-types,ck,ck.public-methods,type,validation.modern.Point,OK,EXACT,1,,,,the explicitly declared method is public
+modern-types,ck,ck.fields,type,validation.modern.Point,OK,EXACT,0,,,,record components are not FieldDeclaration nodes
+modern-types,ck,ck.public-fields,type,validation.modern.Point,OK,EXACT,0,,,,record components are not public field declarations
+modern-types,ck,ck.methods,type,validation.modern.Mode,OK,EXACT,1,,,,one explicitly declared enum method; generated methods excluded
+modern-types,ck,ck.public-methods,type,validation.modern.Mode,OK,EXACT,1,,,,the explicitly declared method is public
+modern-types,ck,ck.fields,type,validation.modern.Mode,OK,EXACT,0,,,,enum constants are not FieldDeclaration nodes
+modern-types,ck,ck.public-fields,type,validation.modern.Mode,OK,EXACT,0,,,,enum constants are not public field declarations
+modern-types,ck,ck.methods,type,validation.modern.Shape,OK,EXACT,1,,,,one declared interface method
+modern-types,ck,ck.public-methods,type,validation.modern.Shape,OK,EXACT,0,,,,interface method has no explicit public modifier
+modern-types,ck,ck.fields,type,validation.modern.Shape,OK,EXACT,0,,,,no field declarations
+modern-types,ck,ck.public-fields,type,validation.modern.Shape,OK,EXACT,0,,,,no public field declarations
+modern-types,ck,ck.methods,type,validation.modern.Circle,OK,EXACT,1,,,,one explicitly declared method; generated record members excluded
+modern-types,ck,ck.public-methods,type,validation.modern.Circle,OK,EXACT,1,,,,the explicitly declared method is public
+modern-types,ck,ck.fields,type,validation.modern.Circle,OK,EXACT,0,,,,record component is not a FieldDeclaration node
+modern-types,ck,ck.public-fields,type,validation.modern.Circle,OK,EXACT,0,,,,record component is not a public field declaration
+modern-types,ck,ck.methods,type,validation.modern.Rectangle,OK,EXACT,2,,,,one explicit constructor and one declared method
+modern-types,ck,ck.public-methods,type,validation.modern.Rectangle,OK,EXACT,2,,,,constructor and method are explicitly public
+modern-types,ck,ck.fields,type,validation.modern.Rectangle,OK,EXACT,2,,,,two separate private field declarations
+modern-types,ck,ck.public-fields,type,validation.modern.Rectangle,OK,EXACT,0,,,,both field declarations are private
+unresolved-dependency,ck,ck.methods,type,validation.unresolved.Broken,OK,EXACT,2,,,,one explicit constructor and one declared method despite unresolved external type
+unresolved-dependency,ck,ck.public-methods,type,validation.unresolved.Broken,OK,EXACT,2,,,,constructor and method are explicitly public
+unresolved-dependency,ck,ck.fields,type,validation.unresolved.Broken,OK,EXACT,1,,,,one private field declaration despite unresolved field type
+unresolved-dependency,ck,ck.public-fields,type,validation.unresolved.Broken,OK,EXACT,0,,,,the field declaration is private
+inheritance,ck,ck.dit,type,validation.inheritance.Base,OK,EXACT,1,,,,java.lang.Object is included as the first inheritance level
+inheritance,ck,ck.noc,type,validation.inheritance.Base,OK,EXACT,2,,,,direct subclasses are Middle and Sibling
+inheritance,ck,ck.dit,type,validation.inheritance.Middle,OK,EXACT,2,,,,inheritance path is Middle to Base to Object
+inheritance,ck,ck.noc,type,validation.inheritance.Middle,OK,EXACT,1,,,,direct subclass is Leaf
+inheritance,ck,ck.dit,type,validation.inheritance.Leaf,OK,EXACT,3,,,,inheritance path is Leaf to Middle to Base to Object
+inheritance,ck,ck.noc,type,validation.inheritance.Leaf,OK,EXACT,0,,,,no direct subclasses in the analyzed project
+inheritance,ck,ck.dit,type,validation.inheritance.Sibling,OK,EXACT,2,,,,inheritance path is Sibling to Base to Object
+inheritance,ck,ck.noc,type,validation.inheritance.Sibling,OK,EXACT,0,,,,no direct subclasses in the analyzed project
+interfaces,ck,ck.dit,type,validation.interfaces.Root,OK,EXACT,1,,,,CK initializes DIT to one and does not traverse interface inheritance
+interfaces,ck,ck.noc,type,validation.interfaces.Root,OK,EXACT,0,,,,CK resolved-binding NOC ignores extending interfaces and implementations
+interfaces,ck,ck.dit,type,validation.interfaces.Extended,OK,EXACT,1,,,,CK initializes DIT to one and does not count Root as a superclass
+interfaces,ck,ck.noc,type,validation.interfaces.Extended,OK,EXACT,0,,,,CK resolved-binding NOC ignores Implementation as an implementing child
+interfaces,ck,ck.dit,type,validation.interfaces.Implementation,OK,EXACT,1,,,,the only class superclass is java.lang.Object
+interfaces,ck,ck.noc,type,validation.interfaces.Implementation,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+modern-types,ck,ck.dit,type,validation.modern.Point,OK,EXACT,1,,,,CK reports the baseline DIT for a record without class inheritance
+modern-types,ck,ck.noc,type,validation.modern.Point,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+modern-types,ck,ck.dit,type,validation.modern.Mode,OK,EXACT,1,,,,CK reports the baseline DIT for the enum declaration
+modern-types,ck,ck.noc,type,validation.modern.Mode,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+modern-types,ck,ck.dit,type,validation.modern.Shape,OK,EXACT,1,,,,CK initializes interface DIT to one
+modern-types,ck,ck.noc,type,validation.modern.Shape,OK,EXACT,0,,,,CK NOC ignores permitted implementations and interface implementation edges
+modern-types,ck,ck.dit,type,validation.modern.Circle,OK,EXACT,1,,,,record implementation of Shape does not increase CK DIT
+modern-types,ck,ck.noc,type,validation.modern.Circle,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+modern-types,ck,ck.dit,type,validation.modern.Rectangle,OK,EXACT,1,,,,implementing Shape does not increase CK DIT; superclass is Object
+modern-types,ck,ck.noc,type,validation.modern.Rectangle,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+basic-members,ck,ck.dit,type,validation.basic.Empty,OK,EXACT,1,,,,direct superclass is java.lang.Object
+basic-members,ck,ck.noc,type,validation.basic.Empty,OK,EXACT,0,,,,no direct subclasses in the analyzed project
+basic-members,ck,ck.dit,type,validation.basic.Members,OK,EXACT,1,,,,direct superclass is java.lang.Object
+basic-members,ck,ck.noc,type,validation.basic.Members,OK,EXACT,0,,,,no direct subclasses in the analyzed project
+coupling,ck,ck.dit,type,validation.coupling.api.Service,OK,EXACT,1,,,,CK initializes interface DIT to one
+coupling,ck,ck.noc,type,validation.coupling.api.Service,OK,EXACT,0,,,,CK NOC ignores ServiceImpl as an implementing type
+coupling,ck,ck.dit,type,validation.coupling.client.Controller,OK,EXACT,1,,,,direct superclass is java.lang.Object
+coupling,ck,ck.noc,type,validation.coupling.client.Controller,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+coupling,ck,ck.dit,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,direct superclass is java.lang.Object
+coupling,ck,ck.noc,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+coupling,ck,ck.dit,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,implementing Service does not increase CK DIT
+coupling,ck,ck.noc,type,validation.coupling.impl.ServiceImpl,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+overloads,ck,ck.dit,type,validation.overloads.Overloaded,OK,EXACT,1,,,,direct superclass is java.lang.Object
+overloads,ck,ck.noc,type,validation.overloads.Overloaded,OK,EXACT,0,,,,no direct subclasses in the analyzed project
+nested-types,ck,ck.dit,type,validation.nested.Outer,OK,EXACT,1,,,,direct superclass is java.lang.Object; nested containment excluded
+nested-types,ck,ck.noc,type,validation.nested.Outer,OK,EXACT,0,,,,nested types are not class-inheritance children
+nested-types,ck,ck.dit,type,validation.nested.Outer.StaticNested,OK,EXACT,1,,,,direct superclass is java.lang.Object; enclosing type excluded
+nested-types,ck,ck.noc,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+nested-types,ck,ck.dit,type,validation.nested.Outer.Inner,OK,EXACT,1,,,,direct superclass is java.lang.Object; enclosing type excluded
+nested-types,ck,ck.noc,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,no direct class subclasses in the analyzed project
+unresolved-dependency,ck,ck.dit,type,validation.unresolved.Broken,OK,EXACT,1,,,,superclass Object remains resolved despite the missing external member type
+unresolved-dependency,ck,ck.noc,type,validation.unresolved.Broken,OK,EXACT,0,,,,no direct subclasses in the analyzed project
+basic-members,ck,ck.parameters,constructor,validation.basic.Members#<init>(),OK,EXACT,0,,,,zero-argument constructor
+basic-members,ck,ck.parameters,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,1,,,,one String parameter
+basic-members,ck,ck.parameters,method,validation.basic.Members#count(),OK,EXACT,0,,,,zero-argument method
+basic-members,ck,ck.parameters,method,validation.basic.Members#name(),OK,EXACT,0,,,,zero-argument method
+basic-members,ck,ck.parameters,method,validation.basic.Members#increment(),OK,EXACT,0,,,,zero-argument method
+inheritance,ck,ck.parameters,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,1,,,,one primitive int parameter
+inheritance,ck,ck.parameters,method,validation.inheritance.Base#value(),OK,EXACT,0,,,,zero-argument method
+inheritance,ck,ck.parameters,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,0,,,,zero-argument constructor
+inheritance,ck,ck.parameters,method,validation.inheritance.Middle#doubled(),OK,EXACT,0,,,,zero-argument method
+inheritance,ck,ck.parameters,method,validation.inheritance.Leaf#doubled(),OK,EXACT,0,,,,zero-argument overriding method
+inheritance,ck,ck.parameters,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,0,,,,zero-argument constructor
+interfaces,ck,ck.parameters,method,validation.interfaces.Root#id(),OK,EXACT,0,,,,zero-argument abstract interface method
+interfaces,ck,ck.parameters,method,validation.interfaces.Extended#label(),OK,EXACT,0,,,,zero-argument default interface method
+interfaces,ck,ck.parameters,method,validation.interfaces.Implementation#id(),OK,EXACT,0,,,,zero-argument implementation method
+coupling,ck,ck.parameters,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,1,,,,one String parameter
+coupling,ck,ck.parameters,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,1,,,,one project API type parameter
+coupling,ck,ck.parameters,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,1,,,,one String parameter
+coupling,ck,ck.parameters,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,1,,,,one String parameter
+coupling,ck,ck.parameters,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,1,,,,one project implementation type parameter
+coupling,ck,ck.parameters,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,1,,,,one String parameter
+overloads,ck,ck.parameters,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,0,,,,zero-argument constructor
+overloads,ck,ck.parameters,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,1,,,,one String parameter
+overloads,ck,ck.parameters,method,validation.overloads.Overloaded#run(),OK,EXACT,0,,,,zero-argument overload
+overloads,ck,ck.parameters,method,validation.overloads.Overloaded#run(int),OK,EXACT,1,,,,one primitive int parameter
+overloads,ck,ck.parameters,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,1,,,,one String parameter
+overloads,ck,ck.parameters,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,2,,,,two parameters with distinct types
+nested-types,ck,ck.parameters,constructor,validation.nested.Outer#<init>(int),OK,EXACT,1,,,,one primitive int parameter
+nested-types,ck,ck.parameters,method,validation.nested.Outer#factory(),OK,EXACT,0,,,,zero-argument outer method
+nested-types,ck,ck.parameters,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,0,,,,zero-argument static nested method
+nested-types,ck,ck.parameters,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,0,,,,zero-argument inner method
+modern-types,ck,ck.parameters,method,validation.modern.Point#sum(),OK,EXACT,0,,,,zero-argument explicitly declared record method
+modern-types,ck,ck.parameters,method,validation.modern.Mode#fast(),OK,EXACT,0,,,,zero-argument explicitly declared enum method
+modern-types,ck,ck.parameters,method,validation.modern.Shape#area(),OK,EXACT,0,,,,zero-argument sealed interface method
+modern-types,ck,ck.parameters,method,validation.modern.Circle#area(),OK,EXACT,0,,,,zero-argument record implementation method
+modern-types,ck,ck.parameters,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,2,,,,two primitive double parameters
+modern-types,ck,ck.parameters,method,validation.modern.Rectangle#area(),OK,EXACT,0,,,,zero-argument class implementation method
+unresolved-dependency,ck,ck.parameters,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,1,,,,one syntactically identified unresolved external type parameter
+unresolved-dependency,ck,ck.parameters,method,validation.unresolved.Broken#dependency(),OK,EXACT,0,,,,zero-argument method with unresolved return type
+basic-members,ck,ck.wmc,type,validation.basic.Empty,OK,EXACT,0,,,,no explicit methods constructors or decision points
+basic-members,ck,ck.wmc,type,validation.basic.Members,OK,EXACT,5,,,,five explicit method declarations with base complexity one each
+basic-members,ck,ck.wmc,constructor,validation.basic.Members#<init>(),OK,EXACT,1,,,,base complexity of one
+basic-members,ck,ck.wmc,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,1,,,,base complexity of one
+basic-members,ck,ck.wmc,method,validation.basic.Members#count(),OK,EXACT,1,,,,base complexity of one
+basic-members,ck,ck.wmc,method,validation.basic.Members#name(),OK,EXACT,1,,,,base complexity of one
+basic-members,ck,ck.wmc,method,validation.basic.Members#increment(),OK,EXACT,1,,,,base complexity of one
+inheritance,ck,ck.wmc,type,validation.inheritance.Base,OK,EXACT,2,,,,constructor and method have base complexity one each
+inheritance,ck,ck.wmc,type,validation.inheritance.Middle,OK,EXACT,2,,,,constructor and method have base complexity one each
+inheritance,ck,ck.wmc,type,validation.inheritance.Leaf,OK,EXACT,1,,,,one overriding method with base complexity one
+inheritance,ck,ck.wmc,type,validation.inheritance.Sibling,OK,EXACT,1,,,,one constructor with base complexity one
+inheritance,ck,ck.wmc,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,1,,,,base complexity of one
+inheritance,ck,ck.wmc,method,validation.inheritance.Base#value(),OK,EXACT,1,,,,base complexity of one
+inheritance,ck,ck.wmc,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,1,,,,base complexity of one
+inheritance,ck,ck.wmc,method,validation.inheritance.Middle#doubled(),OK,EXACT,1,,,,base complexity of one
+inheritance,ck,ck.wmc,method,validation.inheritance.Leaf#doubled(),OK,EXACT,1,,,,base complexity of one
+inheritance,ck,ck.wmc,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,1,,,,base complexity of one
+interfaces,ck,ck.wmc,type,validation.interfaces.Root,OK,EXACT,1,,,,one abstract method declaration
+interfaces,ck,ck.wmc,type,validation.interfaces.Extended,OK,EXACT,1,,,,one default method declaration
+interfaces,ck,ck.wmc,type,validation.interfaces.Implementation,OK,EXACT,1,,,,one implementation method declaration
+interfaces,ck,ck.wmc,method,validation.interfaces.Root#id(),OK,EXACT,1,,,,abstract declaration has base complexity one
+interfaces,ck,ck.wmc,method,validation.interfaces.Extended#label(),OK,EXACT,1,,,,base complexity of one
+interfaces,ck,ck.wmc,method,validation.interfaces.Implementation#id(),OK,EXACT,1,,,,base complexity of one
+coupling,ck,ck.wmc,type,validation.coupling.api.Service,OK,EXACT,1,,,,one interface method declaration
+coupling,ck,ck.wmc,type,validation.coupling.client.Controller,OK,EXACT,2,,,,constructor and method have base complexity one each
+coupling,ck,ck.wmc,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,one method with base complexity one
+coupling,ck,ck.wmc,type,validation.coupling.impl.ServiceImpl,OK,EXACT,2,,,,constructor and method have base complexity one each
+coupling,ck,ck.wmc,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,1,,,,abstract declaration has base complexity one
+coupling,ck,ck.wmc,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,1,,,,base complexity of one
+coupling,ck,ck.wmc,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,1,,,,base complexity of one
+coupling,ck,ck.wmc,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,1,,,,base complexity of one
+coupling,ck,ck.wmc,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,1,,,,base complexity of one
+coupling,ck,ck.wmc,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,1,,,,base complexity of one
+overloads,ck,ck.wmc,type,validation.overloads.Overloaded,OK,EXACT,6,,,,two constructors and four methods have base complexity one each
+overloads,ck,ck.wmc,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,1,,,,base complexity of one
+overloads,ck,ck.wmc,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,1,,,,base complexity of one
+overloads,ck,ck.wmc,method,validation.overloads.Overloaded#run(),OK,EXACT,1,,,,base complexity of one
+overloads,ck,ck.wmc,method,validation.overloads.Overloaded#run(int),OK,EXACT,1,,,,base complexity of one
+overloads,ck,ck.wmc,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,1,,,,base complexity of one
+overloads,ck,ck.wmc,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,1,,,,base complexity of one
+nested-types,ck,ck.wmc,type,validation.nested.Outer,OK,EXACT,3,,,,constructor and factory base complexity plus one conditional expression
+nested-types,ck,ck.wmc,type,validation.nested.Outer.StaticNested,OK,EXACT,1,,,,one method with base complexity one
+nested-types,ck,ck.wmc,type,validation.nested.Outer.Inner,OK,EXACT,1,,,,one method with base complexity one
+nested-types,ck,ck.wmc,constructor,validation.nested.Outer#<init>(int),OK,EXACT,1,,,,base complexity of one
+nested-types,ck,ck.wmc,method,validation.nested.Outer#factory(),OK,EXACT,2,,,,base complexity plus one conditional expression
+nested-types,ck,ck.wmc,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,1,,,,base complexity of one
+nested-types,ck,ck.wmc,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,1,,,,base complexity of one
+modern-types,ck,ck.wmc,type,validation.modern.Point,OK,EXACT,1,,,,one explicit method with base complexity one
+modern-types,ck,ck.wmc,type,validation.modern.Mode,OK,EXACT,2,,,,method base complexity plus one standalone equality comparison
+modern-types,ck,ck.wmc,type,validation.modern.Shape,OK,EXACT,1,,,,one interface method declaration
+modern-types,ck,ck.wmc,type,validation.modern.Circle,OK,EXACT,1,,,,one explicit method with base complexity one
+modern-types,ck,ck.wmc,type,validation.modern.Rectangle,OK,EXACT,2,,,,constructor and method have base complexity one each
+modern-types,ck,ck.wmc,method,validation.modern.Point#sum(),OK,EXACT,1,,,,base complexity of one
+modern-types,ck,ck.wmc,method,validation.modern.Mode#fast(),OK,EXACT,2,,,,base complexity plus one standalone equality comparison
+modern-types,ck,ck.wmc,method,validation.modern.Shape#area(),OK,EXACT,1,,,,abstract declaration has base complexity one
+modern-types,ck,ck.wmc,method,validation.modern.Circle#area(),OK,EXACT,1,,,,base complexity of one
+modern-types,ck,ck.wmc,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,1,,,,base complexity of one
+modern-types,ck,ck.wmc,method,validation.modern.Rectangle#area(),OK,EXACT,1,,,,base complexity of one
+unresolved-dependency,ck,ck.wmc,type,validation.unresolved.Broken,OK,EXACT,2,,,,constructor and method remain countable despite unresolved member type
+unresolved-dependency,ck,ck.wmc,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,1,,,,base complexity of one
+unresolved-dependency,ck,ck.wmc,method,validation.unresolved.Broken#dependency(),OK,EXACT,1,,,,base complexity of one
+basic-members,ck,ck.rfc,type,validation.basic.Empty,OK,EXACT,0,,,,no MethodInvocation or SuperMethodInvocation nodes
+basic-members,ck,ck.rfc,type,validation.basic.Members,OK,EXACT,0,,,,constructor chaining is not a MethodInvocation
+basic-members,ck,ck.rfc,constructor,validation.basic.Members#<init>(),OK,EXACT,0,,,,this-constructor invocation excluded
+basic-members,ck,ck.rfc,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,0,,,,no method invocations
+basic-members,ck,ck.rfc,method,validation.basic.Members#count(),OK,EXACT,0,,,,no method invocations
+basic-members,ck,ck.rfc,method,validation.basic.Members#name(),OK,EXACT,0,,,,no method invocations
+basic-members,ck,ck.rfc,method,validation.basic.Members#increment(),OK,EXACT,0,,,,field increment is not a method invocation
+inheritance,ck,ck.rfc,type,validation.inheritance.Base,OK,EXACT,0,,,,no method invocations; constructor body only assigns a field
+inheritance,ck,ck.rfc,type,validation.inheritance.Middle,OK,EXACT,0,,,,super-constructor invocation excluded and doubled has no invocation
+inheritance,ck,ck.rfc,type,validation.inheritance.Leaf,OK,EXACT,1,,,,unique invocations: {super.doubled()}
+inheritance,ck,ck.rfc,type,validation.inheritance.Sibling,OK,EXACT,0,,,,super-constructor invocation excluded
+inheritance,ck,ck.rfc,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,0,,,,no method invocations
+inheritance,ck,ck.rfc,method,validation.inheritance.Base#value(),OK,EXACT,0,,,,no method invocations
+inheritance,ck,ck.rfc,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,0,,,,super-constructor invocation excluded
+inheritance,ck,ck.rfc,method,validation.inheritance.Middle#doubled(),OK,EXACT,0,,,,no method invocations
+inheritance,ck,ck.rfc,method,validation.inheritance.Leaf#doubled(),OK,EXACT,1,,,,unique invocations: {super.doubled()}
+inheritance,ck,ck.rfc,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,0,,,,super-constructor invocation excluded
+interfaces,ck,ck.rfc,type,validation.interfaces.Root,OK,EXACT,0,,,,abstract declaration has no invocation
+interfaces,ck,ck.rfc,type,validation.interfaces.Extended,OK,EXACT,0,,,,default method has no invocation
+interfaces,ck,ck.rfc,type,validation.interfaces.Implementation,OK,EXACT,0,,,,implementation method has no invocation
+interfaces,ck,ck.rfc,method,validation.interfaces.Root#id(),OK,EXACT,0,,,,abstract declaration has no invocation
+interfaces,ck,ck.rfc,method,validation.interfaces.Extended#label(),OK,EXACT,0,,,,no method invocations
+interfaces,ck,ck.rfc,method,validation.interfaces.Implementation#id(),OK,EXACT,0,,,,no method invocations
+coupling,ck,ck.rfc,type,validation.coupling.api.Service,OK,EXACT,0,,,,abstract declaration has no invocation
+coupling,ck,ck.rfc,type,validation.coupling.client.Controller,OK,EXACT,1,,,,unique invocations: {Service.execute(String)}
+coupling,ck,ck.rfc,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,unique invocations: {String.trim()}
+coupling,ck,ck.rfc,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,unique invocations: {Helper.normalize(String)}
+coupling,ck,ck.rfc,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,0,,,,abstract declaration has no invocation
+coupling,ck,ck.rfc,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,0,,,,field assignment has no method invocation
+coupling,ck,ck.rfc,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,1,,,,unique invocations: {Service.execute(String)}
+coupling,ck,ck.rfc,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,1,,,,unique invocations: {String.trim()}
+coupling,ck,ck.rfc,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,0,,,,field assignment has no method invocation
+coupling,ck,ck.rfc,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,1,,,,unique invocations: {Helper.normalize(String)}
+overloads,ck,ck.rfc,type,validation.overloads.Overloaded,OK,EXACT,2,,,,unique invocations: {String.repeat(int) | Overloaded.run(int)}
+overloads,ck,ck.rfc,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,0,,,,this-constructor invocation excluded
+overloads,ck,ck.rfc,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,0,,,,no method invocations
+overloads,ck,ck.rfc,method,validation.overloads.Overloaded#run(),OK,EXACT,0,,,,no method invocations
+overloads,ck,ck.rfc,method,validation.overloads.Overloaded#run(int),OK,EXACT,1,,,,unique invocations: {String.repeat(int)}
+overloads,ck,ck.rfc,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,0,,,,string concatenation is not a method invocation
+overloads,ck,ck.rfc,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,1,,,,unique invocations: {Overloaded.run(int)}
+nested-types,ck,ck.rfc,type,validation.nested.Outer,OK,EXACT,0,,,,local and anonymous class invocations are isolated from the outer type
+nested-types,ck,ck.rfc,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,no method invocations
+nested-types,ck,ck.rfc,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,outer field access is not a method invocation
+nested-types,ck,ck.rfc,constructor,validation.nested.Outer#<init>(int),OK,EXACT,0,,,,field assignment has no method invocation
+nested-types,ck,ck.rfc,method,validation.nested.Outer#factory(),OK,EXACT,0,,,,constructor calls excluded and local or anonymous method bodies are isolated
+nested-types,ck,ck.rfc,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,0,,,,no method invocations
+nested-types,ck,ck.rfc,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,0,,,,outer field access is not a method invocation
+modern-types,ck,ck.rfc,type,validation.modern.Point,OK,EXACT,0,,,,record method uses only component access and arithmetic
+modern-types,ck,ck.rfc,type,validation.modern.Mode,OK,EXACT,0,,,,enum comparison is not a method invocation
+modern-types,ck,ck.rfc,type,validation.modern.Shape,OK,EXACT,0,,,,abstract interface declaration has no invocation
+modern-types,ck,ck.rfc,type,validation.modern.Circle,OK,EXACT,0,,,,Math.PI is a field access and arithmetic has no invocation
+modern-types,ck,ck.rfc,type,validation.modern.Rectangle,OK,EXACT,0,,,,constructor and area method have no invocations
+modern-types,ck,ck.rfc,method,validation.modern.Point#sum(),OK,EXACT,0,,,,record component access and arithmetic are not method invocations
+modern-types,ck,ck.rfc,method,validation.modern.Mode#fast(),OK,EXACT,0,,,,enum comparison is not a method invocation
+modern-types,ck,ck.rfc,method,validation.modern.Shape#area(),OK,EXACT,0,,,,abstract declaration has no invocation
+modern-types,ck,ck.rfc,method,validation.modern.Circle#area(),OK,EXACT,0,,,,Math.PI field access is not a method invocation
+modern-types,ck,ck.rfc,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,0,,,,field assignments have no method invocation
+modern-types,ck,ck.rfc,method,validation.modern.Rectangle#area(),OK,EXACT,0,,,,field access and arithmetic have no method invocation
+unresolved-dependency,ck,ck.rfc,type,validation.unresolved.Broken,OK,EXACT,0,,,,unresolved type references and field access are not method invocations
+unresolved-dependency,ck,ck.rfc,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,0,,,,field assignment has no method invocation
+unresolved-dependency,ck,ck.rfc,method,validation.unresolved.Broken#dependency(),OK,EXACT,0,,,,field access has no method invocation
+basic-members,ck,ck.loc,type,validation.basic.Empty,OK,EXACT,2,,,,AST rendering has class declaration and closing brace
+basic-members,ck,ck.loc,type,validation.basic.Members,OK,EXACT,19,,,,AST rendering has class braces two fields and five three-line members
+basic-members,ck,ck.loc,constructor,validation.basic.Members#<init>(),OK,EXACT,3,,,,AST rendering has signature invocation and closing brace
+basic-members,ck,ck.loc,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,3,,,,AST rendering has signature assignment and closing brace
+basic-members,ck,ck.loc,method,validation.basic.Members#count(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+basic-members,ck,ck.loc,method,validation.basic.Members#name(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+basic-members,ck,ck.loc,method,validation.basic.Members#increment(),OK,EXACT,3,,,,AST rendering has signature increment and closing brace
+inheritance,ck,ck.loc,type,validation.inheritance.Base,OK,EXACT,9,,,,class braces one field and two three-line members
+inheritance,ck,ck.loc,type,validation.inheritance.Middle,OK,EXACT,8,,,,class braces and two three-line members
+inheritance,ck,ck.loc,type,validation.inheritance.Leaf,OK,EXACT,5,,,,class braces and one three-line overriding method
+inheritance,ck,ck.loc,type,validation.inheritance.Sibling,OK,EXACT,5,,,,class braces and one three-line constructor
+inheritance,ck,ck.loc,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,3,,,,AST rendering has signature assignment and closing brace
+inheritance,ck,ck.loc,method,validation.inheritance.Base#value(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+inheritance,ck,ck.loc,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,3,,,,AST rendering has signature super invocation and closing brace
+inheritance,ck,ck.loc,method,validation.inheritance.Middle#doubled(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+inheritance,ck,ck.loc,method,validation.inheritance.Leaf#doubled(),OK,EXACT,3,,,,override annotation remains on the rendered signature line
+inheritance,ck,ck.loc,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,3,,,,AST rendering has signature super invocation and closing brace
+interfaces,ck,ck.loc,type,validation.interfaces.Root,OK,EXACT,3,,,,interface braces and one single-line abstract method declaration
+interfaces,ck,ck.loc,type,validation.interfaces.Extended,OK,EXACT,5,,,,interface braces and one three-line default method
+interfaces,ck,ck.loc,type,validation.interfaces.Implementation,OK,EXACT,5,,,,class braces and one three-line implementation method
+interfaces,ck,ck.loc,method,validation.interfaces.Root#id(),OK,EXACT,1,,,,abstract method declaration renders on one line
+interfaces,ck,ck.loc,method,validation.interfaces.Extended#label(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+interfaces,ck,ck.loc,method,validation.interfaces.Implementation#id(),OK,EXACT,3,,,,override annotation remains on the rendered signature line
+coupling,ck,ck.loc,type,validation.coupling.api.Service,OK,EXACT,3,,,,interface braces and one single-line abstract method declaration
+coupling,ck,ck.loc,type,validation.coupling.client.Controller,OK,EXACT,9,,,,class braces one field and two three-line members
+coupling,ck,ck.loc,type,validation.coupling.impl.Helper,OK,EXACT,5,,,,class braces and one three-line method
+coupling,ck,ck.loc,type,validation.coupling.impl.ServiceImpl,OK,EXACT,9,,,,class braces one field and two three-line members
+coupling,ck,ck.loc,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,1,,,,abstract method declaration renders on one line
+coupling,ck,ck.loc,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,3,,,,AST rendering has signature assignment and closing brace
+coupling,ck,ck.loc,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,3,,,,AST rendering has signature return invocation and closing brace
+coupling,ck,ck.loc,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,3,,,,AST rendering has signature return invocation and closing brace
+coupling,ck,ck.loc,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,3,,,,AST rendering has signature assignment and closing brace
+coupling,ck,ck.loc,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,3,,,,override annotation remains on the rendered signature line
+overloads,ck,ck.loc,type,validation.overloads.Overloaded,OK,EXACT,21,,,,class braces one field and six three-line members
+overloads,ck,ck.loc,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,3,,,,AST rendering has signature constructor invocation and closing brace
+overloads,ck,ck.loc,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,3,,,,AST rendering has signature assignment and closing brace
+overloads,ck,ck.loc,method,validation.overloads.Overloaded#run(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+overloads,ck,ck.loc,method,validation.overloads.Overloaded#run(int),OK,EXACT,3,,,,AST rendering has signature return invocation and closing brace
+overloads,ck,ck.loc,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,3,,,,AST rendering has signature return expression and closing brace
+overloads,ck,ck.loc,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,3,,,,AST rendering has signature return invocation and closing brace
+nested-types,ck,ck.loc,type,validation.nested.Outer,OK,EXACT,30,,,,outer AST rendering includes field constructor factory local anonymous static nested and inner declarations
+nested-types,ck,ck.loc,type,validation.nested.Outer.StaticNested,OK,EXACT,5,,,,type braces and one three-line method
+nested-types,ck,ck.loc,type,validation.nested.Outer.Inner,OK,EXACT,5,,,,type braces and one three-line method
+nested-types,ck,ck.loc,constructor,validation.nested.Outer#<init>(int),OK,EXACT,3,,,,AST rendering has signature assignment and closing brace
+nested-types,ck,ck.loc,method,validation.nested.Outer#factory(),OK,EXACT,14,,,,method rendering includes local and anonymous bodies plus a separate anonymous-declaration terminator line and return
+nested-types,ck,ck.loc,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+nested-types,ck,ck.loc,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+modern-types,ck,ck.loc,type,validation.modern.Point,OK,EXACT,5,,,,record braces and one three-line explicit method
+modern-types,ck,ck.loc,type,validation.modern.Mode,OK,EXACT,4,,,,CK enum declaration rendering counts enum shell and constants separately from method-level LOC
+modern-types,ck,ck.loc,type,validation.modern.Shape,OK,EXACT,3,,,,sealed interface braces and one single-line abstract method
+modern-types,ck,ck.loc,type,validation.modern.Circle,OK,EXACT,5,,,,record braces and one three-line explicit method
+modern-types,ck,ck.loc,type,validation.modern.Rectangle,OK,EXACT,11,,,,class braces two fields four-line constructor and three-line method
+modern-types,ck,ck.loc,method,validation.modern.Point#sum(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+modern-types,ck,ck.loc,method,validation.modern.Mode#fast(),OK,EXACT,3,,,,AST rendering has signature return comparison and closing brace
+modern-types,ck,ck.loc,method,validation.modern.Shape#area(),OK,EXACT,1,,,,abstract method declaration renders on one line
+modern-types,ck,ck.loc,method,validation.modern.Circle#area(),OK,EXACT,3,,,,override annotation remains on the rendered signature line
+modern-types,ck,ck.loc,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,4,,,,AST rendering has signature two assignments and closing brace
+modern-types,ck,ck.loc,method,validation.modern.Rectangle#area(),OK,EXACT,3,,,,override annotation remains on the rendered signature line
+unresolved-dependency,ck,ck.loc,type,validation.unresolved.Broken,OK,EXACT,9,,,,class braces one field and two three-line members despite unresolved external type
+unresolved-dependency,ck,ck.loc,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,3,,,,AST rendering has signature assignment and closing brace
+unresolved-dependency,ck,ck.loc,method,validation.unresolved.Broken#dependency(),OK,EXACT,3,,,,AST rendering has signature return and closing brace
+basic-members,ck,ck.cbo,type,validation.basic.Empty,OK,EXACT,0,,,,outgoing types: {}; Object ignored
+basic-members,ck,ck.cbo-modified,type,validation.basic.Empty,OK,EXACT,0,,,,incoming types: {}; outgoing types: {}
+basic-members,ck,ck.cbo,type,validation.basic.Members,OK,EXACT,0,,,,outgoing types: {}; primitives and java.lang.String ignored
+basic-members,ck,ck.cbo-modified,type,validation.basic.Members,OK,EXACT,0,,,,incoming types: {}; outgoing types: {}
+inheritance,ck,ck.cbo,type,validation.inheritance.Base,OK,EXACT,0,,,,outgoing types: {}; Object and primitives ignored
+inheritance,ck,ck.cbo-modified,type,validation.inheritance.Base,OK,EXACT,2,,,,incoming types: {Middle | Sibling}; outgoing types: {}
+inheritance,ck,ck.cbo,type,validation.inheritance.Middle,OK,EXACT,1,,,,outgoing types: {Base}
+inheritance,ck,ck.cbo-modified,type,validation.inheritance.Middle,OK,EXACT,2,,,,incoming types: {Leaf}; outgoing types: {Base}
+inheritance,ck,ck.cbo,type,validation.inheritance.Leaf,OK,EXACT,1,,,,outgoing types: {Middle}; super method invocation adds no separate type
+inheritance,ck,ck.cbo-modified,type,validation.inheritance.Leaf,OK,EXACT,1,,,,incoming types: {}; outgoing types: {Middle}
+inheritance,ck,ck.cbo,type,validation.inheritance.Sibling,OK,EXACT,1,,,,outgoing types: {Base}
+inheritance,ck,ck.cbo-modified,type,validation.inheritance.Sibling,OK,EXACT,1,,,,incoming types: {}; outgoing types: {Base}
+interfaces,ck,ck.cbo,type,validation.interfaces.Root,OK,EXACT,0,,,,outgoing types: {}; java.lang.String ignored
+interfaces,ck,ck.cbo-modified,type,validation.interfaces.Root,OK,EXACT,1,,,,incoming types: {Extended}; outgoing types: {}
+interfaces,ck,ck.cbo,type,validation.interfaces.Extended,OK,EXACT,1,,,,outgoing types: {Root}
+interfaces,ck,ck.cbo-modified,type,validation.interfaces.Extended,OK,EXACT,2,,,,incoming types: {Implementation}; outgoing types: {Root}
+interfaces,ck,ck.cbo,type,validation.interfaces.Implementation,OK,EXACT,1,,,,outgoing types: {Extended}
+interfaces,ck,ck.cbo-modified,type,validation.interfaces.Implementation,OK,EXACT,1,,,,incoming types: {}; outgoing types: {Extended}
+coupling,ck,ck.cbo,type,validation.coupling.api.Service,OK,EXACT,0,,,,outgoing types: {}; java.lang.String and Object ignored
+coupling,ck,ck.cbo-modified,type,validation.coupling.api.Service,OK,EXACT,2,,,,incoming types: {Controller | ServiceImpl}; outgoing types: {}
+coupling,ck,ck.cbo,type,validation.coupling.client.Controller,OK,EXACT,1,,,,outgoing types: {Service}; duplicate field parameter and invocation references collapse
+coupling,ck,ck.cbo-modified,type,validation.coupling.client.Controller,OK,EXACT,1,,,,incoming types: {}; outgoing types: {Service}
+coupling,ck,ck.cbo,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,outgoing types: {}; java.lang.String invocation ignored
+coupling,ck,ck.cbo-modified,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,incoming types: {ServiceImpl}; outgoing types: {}
+coupling,ck,ck.cbo,type,validation.coupling.impl.ServiceImpl,OK,EXACT,2,,,,outgoing types: {Service | Helper}
+coupling,ck,ck.cbo-modified,type,validation.coupling.impl.ServiceImpl,OK,EXACT,2,,,,incoming types: {}; outgoing types: {Service | Helper}
+overloads,ck,ck.cbo,type,validation.overloads.Overloaded,OK,EXACT,1,,,,outgoing types: {Overloaded}; local overload invocation creates self-coupling
+overloads,ck,ck.cbo-modified,type,validation.overloads.Overloaded,OK,EXACT,2,,,,incoming types: {Overloaded}; outgoing types: {Overloaded}
+nested-types,ck,ck.cbo,type,validation.nested.Outer,OK,EXACT,1,,,,outgoing types: {Local}; JDK Runnable ignored and nested member bodies isolated
+nested-types,ck,ck.cbo-modified,type,validation.nested.Outer,OK,EXACT,1,,,,incoming types: {}; outgoing types: {Local}
+nested-types,ck,ck.cbo,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,outgoing types: {}; primitives and Object ignored
+nested-types,ck,ck.cbo-modified,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,incoming types: {}; outgoing types: {}
+nested-types,ck,ck.cbo,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,outgoing types: {}; implicit outer reference and field access excluded
+nested-types,ck,ck.cbo-modified,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,incoming types: {}; outgoing types: {}
+modern-types,ck,ck.cbo,type,validation.modern.Point,OK,EXACT,0,,,,outgoing types: {}; record components and primitives ignored
+modern-types,ck,ck.cbo-modified,type,validation.modern.Point,OK,EXACT,0,,,,incoming types: {}; outgoing types: {}
+modern-types,ck,ck.cbo,type,validation.modern.Mode,OK,EXACT,0,,,,outgoing types: {}; enum declaration and comparison add no type
+modern-types,ck,ck.cbo-modified,type,validation.modern.Mode,OK,EXACT,0,,,,incoming types: {}; outgoing types: {}
+modern-types,ck,ck.cbo,type,validation.modern.Shape,OK,EXACT,0,,,,outgoing types: {}; permits edges are not visited by CK CBO
+modern-types,ck,ck.cbo-modified,type,validation.modern.Shape,OK,EXACT,1,,,,incoming types: {Rectangle}; Circle record implementation edge is not visited
+modern-types,ck,ck.cbo,type,validation.modern.Circle,OK,EXACT,0,,,,outgoing types: {}; CK CBO does not visit record implementation edges
+modern-types,ck,ck.cbo-modified,type,validation.modern.Circle,OK,EXACT,0,,,,incoming types: {}; outgoing types: {}
+modern-types,ck,ck.cbo,type,validation.modern.Rectangle,OK,EXACT,1,,,,outgoing types: {Shape}; primitives ignored
+modern-types,ck,ck.cbo-modified,type,validation.modern.Rectangle,OK,EXACT,1,,,,incoming types: {}; outgoing types: {Shape}
+unresolved-dependency,ck,ck.cbo,type,validation.unresolved.Broken,OK,EXACT,1,,,,outgoing types: {Dependency}; duplicate unresolved references collapse
+unresolved-dependency,ck,ck.cbo-modified,type,validation.unresolved.Broken,OK,EXACT,1,,,,incoming types: {}; outgoing types: {Dependency}
+basic-members,ck,ck.fan-in,type,validation.basic.Empty,OK,EXACT,0,,,,incoming types: {}
+basic-members,ck,ck.fan-out,type,validation.basic.Empty,OK,EXACT,0,,,,outgoing types: {}
+basic-members,ck,ck.fan-in,type,validation.basic.Members,OK,EXACT,0,,,,incoming types: {}
+basic-members,ck,ck.fan-out,type,validation.basic.Members,OK,EXACT,0,,,,outgoing types: {}; JDK and primitive types ignored
+inheritance,ck,ck.fan-in,type,validation.inheritance.Base,OK,EXACT,2,,,,incoming types: {Middle | Sibling}
+inheritance,ck,ck.fan-out,type,validation.inheritance.Base,OK,EXACT,0,,,,outgoing types: {}
+inheritance,ck,ck.fan-in,type,validation.inheritance.Middle,OK,EXACT,1,,,,incoming types: {Leaf}
+inheritance,ck,ck.fan-out,type,validation.inheritance.Middle,OK,EXACT,1,,,,outgoing types: {Base}
+inheritance,ck,ck.fan-in,type,validation.inheritance.Leaf,OK,EXACT,0,,,,incoming types: {}
+inheritance,ck,ck.fan-out,type,validation.inheritance.Leaf,OK,EXACT,1,,,,outgoing types: {Middle}
+inheritance,ck,ck.fan-in,type,validation.inheritance.Sibling,OK,EXACT,0,,,,incoming types: {}
+inheritance,ck,ck.fan-out,type,validation.inheritance.Sibling,OK,EXACT,1,,,,outgoing types: {Base}
+interfaces,ck,ck.fan-in,type,validation.interfaces.Root,OK,EXACT,1,,,,incoming types: {Extended}
+interfaces,ck,ck.fan-out,type,validation.interfaces.Root,OK,EXACT,0,,,,outgoing types: {}
+interfaces,ck,ck.fan-in,type,validation.interfaces.Extended,OK,EXACT,1,,,,incoming types: {Implementation}
+interfaces,ck,ck.fan-out,type,validation.interfaces.Extended,OK,EXACT,1,,,,outgoing types: {Root}
+interfaces,ck,ck.fan-in,type,validation.interfaces.Implementation,OK,EXACT,0,,,,incoming types: {}
+interfaces,ck,ck.fan-out,type,validation.interfaces.Implementation,OK,EXACT,1,,,,outgoing types: {Extended}
+coupling,ck,ck.fan-in,type,validation.coupling.api.Service,OK,EXACT,2,,,,incoming types: {Controller | ServiceImpl}
+coupling,ck,ck.fan-out,type,validation.coupling.api.Service,OK,EXACT,0,,,,outgoing types: {}
+coupling,ck,ck.fan-in,type,validation.coupling.client.Controller,OK,EXACT,0,,,,incoming types: {}
+coupling,ck,ck.fan-out,type,validation.coupling.client.Controller,OK,EXACT,1,,,,outgoing types: {Service}
+coupling,ck,ck.fan-in,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,incoming types: {ServiceImpl}
+coupling,ck,ck.fan-out,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,outgoing types: {}
+coupling,ck,ck.fan-in,type,validation.coupling.impl.ServiceImpl,OK,EXACT,0,,,,incoming types: {}
+coupling,ck,ck.fan-out,type,validation.coupling.impl.ServiceImpl,OK,EXACT,2,,,,outgoing types: {Service | Helper}
+overloads,ck,ck.fan-in,type,validation.overloads.Overloaded,OK,EXACT,1,,,,incoming types: {Overloaded}; self-coupling retained
+overloads,ck,ck.fan-out,type,validation.overloads.Overloaded,OK,EXACT,1,,,,outgoing types: {Overloaded}; self-coupling retained
+nested-types,ck,ck.fan-in,type,validation.nested.Outer,OK,EXACT,0,,,,incoming types: {}
+nested-types,ck,ck.fan-out,type,validation.nested.Outer,OK,EXACT,1,,,,outgoing types: {Local}
+nested-types,ck,ck.fan-in,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,incoming types: {}
+nested-types,ck,ck.fan-out,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,outgoing types: {}
+nested-types,ck,ck.fan-in,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,incoming types: {}
+nested-types,ck,ck.fan-out,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,outgoing types: {}
+modern-types,ck,ck.fan-in,type,validation.modern.Point,OK,EXACT,0,,,,incoming types: {}
+modern-types,ck,ck.fan-out,type,validation.modern.Point,OK,EXACT,0,,,,outgoing types: {}
+modern-types,ck,ck.fan-in,type,validation.modern.Mode,OK,EXACT,0,,,,incoming types: {}
+modern-types,ck,ck.fan-out,type,validation.modern.Mode,OK,EXACT,0,,,,outgoing types: {}
+modern-types,ck,ck.fan-in,type,validation.modern.Shape,OK,EXACT,1,,,,incoming types: {Rectangle}; record Circle edge not visited
+modern-types,ck,ck.fan-out,type,validation.modern.Shape,OK,EXACT,0,,,,outgoing types: {}; permits ignored
+modern-types,ck,ck.fan-in,type,validation.modern.Circle,OK,EXACT,0,,,,incoming types: {}
+modern-types,ck,ck.fan-out,type,validation.modern.Circle,OK,EXACT,0,,,,outgoing types: {}; record implementation edge not visited
+modern-types,ck,ck.fan-in,type,validation.modern.Rectangle,OK,EXACT,0,,,,incoming types: {}
+modern-types,ck,ck.fan-out,type,validation.modern.Rectangle,OK,EXACT,1,,,,outgoing types: {Shape}
+unresolved-dependency,ck,ck.fan-in,type,validation.unresolved.Broken,OK,EXACT,0,,,,incoming types: {}
+unresolved-dependency,ck,ck.fan-out,type,validation.unresolved.Broken,OK,EXACT,1,,,,outgoing types: {Dependency}
+basic-members,ck,ck.lcom,type,validation.basic.Empty,OK,EXACT,0,,,,no method pairs
+basic-members,ck,ck.lcom-star,type,validation.basic.Empty,OK,EXACT,0,,,,no declared fields
+basic-members,ck,ck.lcom,type,validation.basic.Members,OK,EXACT,6,,,,ten method pairs: eight disjoint minus two field-sharing pairs
+basic-members,ck,ck.lcom-star,type,validation.basic.Members,OK,EXACT,0.6,,,,two fields each accessed by two of five methods
+inheritance,ck,ck.lcom,type,validation.inheritance.Base,OK,EXACT,0,,,,constructor and accessor both use value
+inheritance,ck,ck.lcom-star,type,validation.inheritance.Base,OK,EXACT,0,,,,value is accessed by both methods
+inheritance,ck,ck.lcom,type,validation.inheritance.Middle,OK,EXACT,1,,,,constructor and method share no field declared in Middle
+inheritance,ck,ck.lcom-star,type,validation.inheritance.Middle,OK,EXACT,0,,,,no fields declared in Middle
+inheritance,ck,ck.lcom,type,validation.inheritance.Leaf,OK,EXACT,0,,,,only one declared method
+inheritance,ck,ck.lcom-star,type,validation.inheritance.Leaf,OK,EXACT,0,,,,no declared fields
+inheritance,ck,ck.lcom,type,validation.inheritance.Sibling,OK,EXACT,0,,,,only one declared constructor
+inheritance,ck,ck.lcom-star,type,validation.inheritance.Sibling,OK,EXACT,0,,,,no declared fields
+interfaces,ck,ck.lcom,type,validation.interfaces.Root,OK,EXACT,0,,,,only one declared method
+interfaces,ck,ck.lcom-star,type,validation.interfaces.Root,OK,EXACT,0,,,,no declared fields
+interfaces,ck,ck.lcom,type,validation.interfaces.Extended,OK,EXACT,0,,,,only one declared method
+interfaces,ck,ck.lcom-star,type,validation.interfaces.Extended,OK,EXACT,0,,,,no declared fields
+interfaces,ck,ck.lcom,type,validation.interfaces.Implementation,OK,EXACT,0,,,,only one declared method
+interfaces,ck,ck.lcom-star,type,validation.interfaces.Implementation,OK,EXACT,0,,,,no declared fields
+coupling,ck,ck.lcom,type,validation.coupling.api.Service,OK,EXACT,0,,,,only one declared method
+coupling,ck,ck.lcom-star,type,validation.coupling.api.Service,OK,EXACT,0,,,,no declared fields
+coupling,ck,ck.lcom,type,validation.coupling.client.Controller,OK,EXACT,0,,,,constructor and handle both use service
+coupling,ck,ck.lcom-star,type,validation.coupling.client.Controller,OK,EXACT,0,,,,service is accessed by both methods
+coupling,ck,ck.lcom,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,only one declared method
+coupling,ck,ck.lcom-star,type,validation.coupling.impl.Helper,OK,EXACT,0,,,,no declared fields
+coupling,ck,ck.lcom,type,validation.coupling.impl.ServiceImpl,OK,EXACT,0,,,,constructor and execute both use helper
+coupling,ck,ck.lcom-star,type,validation.coupling.impl.ServiceImpl,OK,EXACT,0,,,,helper is accessed by both methods
+overloads,ck,ck.lcom,type,validation.overloads.Overloaded,OK,EXACT,3,,,,fifteen method pairs: nine disjoint minus six value-sharing pairs
+overloads,ck,ck.lcom-star,type,validation.overloads.Overloaded,OK,EXACT,0.33333334,,,,value is accessed by four of six methods
+nested-types,ck,ck.lcom,type,validation.nested.Outer,OK,EXACT,0,,,,constructor and factory both use value; nested member methods isolated
+nested-types,ck,ck.lcom-star,type,validation.nested.Outer,OK,EXACT,0,,,,value is accessed by both outer methods
+nested-types,ck,ck.lcom,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,only one declared method
+nested-types,ck,ck.lcom-star,type,validation.nested.Outer.StaticNested,OK,EXACT,0,,,,no declared fields
+nested-types,ck,ck.lcom,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,only one declared method and outer value is not an Inner field
+nested-types,ck,ck.lcom-star,type,validation.nested.Outer.Inner,OK,EXACT,0,,,,no fields declared in Inner
+modern-types,ck,ck.lcom,type,validation.modern.Point,OK,EXACT,0,,,,one explicit method and record components are not FieldDeclaration nodes
+modern-types,ck,ck.lcom-star,type,validation.modern.Point,OK,EXACT,0,,,,record components are not declared fields for CK LCOM star
+modern-types,ck,ck.lcom,type,validation.modern.Mode,OK,EXACT,0,,,,only one explicit method and enum constants are not fields
+modern-types,ck,ck.lcom-star,type,validation.modern.Mode,OK,EXACT,0,,,,no FieldDeclaration nodes
+modern-types,ck,ck.lcom,type,validation.modern.Shape,OK,EXACT,0,,,,only one abstract method
+modern-types,ck,ck.lcom-star,type,validation.modern.Shape,OK,EXACT,0,,,,no declared fields
+modern-types,ck,ck.lcom,type,validation.modern.Circle,OK,EXACT,0,,,,one explicit method and record component is not a field
+modern-types,ck,ck.lcom-star,type,validation.modern.Circle,OK,EXACT,0,,,,record component is not a declared field for CK LCOM star
+modern-types,ck,ck.lcom,type,validation.modern.Rectangle,OK,EXACT,0,,,,constructor and area both use width and height
+modern-types,ck,ck.lcom-star,type,validation.modern.Rectangle,OK,EXACT,0,,,,both fields are accessed by both methods
+unresolved-dependency,ck,ck.lcom,type,validation.unresolved.Broken,OK,EXACT,0,,,,constructor and accessor both use dependency
+unresolved-dependency,ck,ck.lcom-star,type,validation.unresolved.Broken,OK,EXACT,0,,,,dependency is accessed by both methods
+basic-members,ck,ck.tcc,type,validation.basic.Empty,UNAVAILABLE,,,,,PROVIDER_DID_NOT_REPORT_VALUE,no visible methods; CK reports negative sentinel
+basic-members,ck,ck.lcc,type,validation.basic.Empty,UNAVAILABLE,,,,,PROVIDER_DID_NOT_REPORT_VALUE,no visible methods; CK reports negative sentinel
+basic-members,ck,ck.tcc,type,validation.basic.Members,OK,EXACT,0.2,,,,four ordered direct connections among five visible methods
+basic-members,ck,ck.lcc,type,validation.basic.Members,OK,EXACT,0.2,,,,no additional indirect connections beyond the direct graph
+inheritance,ck,ck.tcc,type,validation.inheritance.Base,OK,EXACT,1,,,,constructor and accessor both access value
+inheritance,ck,ck.lcc,type,validation.inheritance.Base,OK,EXACT,1,,,,both visible methods are directly connected
+inheritance,ck,ck.tcc,type,validation.inheritance.Middle,OK,EXACT,0,,,,two visible methods share no field declared in Middle
+inheritance,ck,ck.lcc,type,validation.inheritance.Middle,OK,EXACT,0,,,,no direct graph path connects the methods
+inheritance,ck,ck.tcc,type,validation.inheritance.Leaf,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+inheritance,ck,ck.lcc,type,validation.inheritance.Leaf,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+inheritance,ck,ck.tcc,type,validation.inheritance.Sibling,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible constructor gives zero possible pairs
+inheritance,ck,ck.lcc,type,validation.inheritance.Sibling,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible constructor gives zero possible pairs
+interfaces,ck,ck.tcc,type,validation.interfaces.Root,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible abstract method gives zero possible pairs
+interfaces,ck,ck.lcc,type,validation.interfaces.Root,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible abstract method gives zero possible pairs
+interfaces,ck,ck.tcc,type,validation.interfaces.Extended,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible default method gives zero possible pairs
+interfaces,ck,ck.lcc,type,validation.interfaces.Extended,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible default method gives zero possible pairs
+interfaces,ck,ck.tcc,type,validation.interfaces.Implementation,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+interfaces,ck,ck.lcc,type,validation.interfaces.Implementation,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+coupling,ck,ck.tcc,type,validation.coupling.api.Service,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible abstract method gives zero possible pairs
+coupling,ck,ck.lcc,type,validation.coupling.api.Service,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible abstract method gives zero possible pairs
+coupling,ck,ck.tcc,type,validation.coupling.client.Controller,OK,EXACT,1,,,,constructor and handle both access service
+coupling,ck,ck.lcc,type,validation.coupling.client.Controller,OK,EXACT,1,,,,both visible methods are directly connected
+coupling,ck,ck.tcc,type,validation.coupling.impl.Helper,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+coupling,ck,ck.lcc,type,validation.coupling.impl.Helper,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+coupling,ck,ck.tcc,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,constructor and execute both access helper
+coupling,ck,ck.lcc,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,both visible methods are directly connected
+overloads,ck,ck.tcc,type,validation.overloads.Overloaded,OK,EXACT,0.4,,,,twelve ordered direct connections among six visible methods
+overloads,ck,ck.lcc,type,validation.overloads.Overloaded,OK,EXACT,0.4,,,,no additional indirect connections beyond the direct graph
+nested-types,ck,ck.tcc,type,validation.nested.Outer,OK,EXACT,1,,,,constructor and factory share value through local and anonymous bodies
+nested-types,ck,ck.lcc,type,validation.nested.Outer,OK,EXACT,1,,,,both visible methods are directly connected
+nested-types,ck,ck.tcc,type,validation.nested.Outer.StaticNested,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+nested-types,ck,ck.lcc,type,validation.nested.Outer.StaticNested,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+nested-types,ck,ck.tcc,type,validation.nested.Outer.Inner,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+nested-types,ck,ck.lcc,type,validation.nested.Outer.Inner,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible method gives zero possible pairs
+modern-types,ck,ck.tcc,type,validation.modern.Point,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible explicit method gives zero possible pairs
+modern-types,ck,ck.lcc,type,validation.modern.Point,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible explicit method gives zero possible pairs
+modern-types,ck,ck.tcc,type,validation.modern.Mode,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible explicit method gives zero possible pairs
+modern-types,ck,ck.lcc,type,validation.modern.Mode,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible explicit method gives zero possible pairs
+modern-types,ck,ck.tcc,type,validation.modern.Shape,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible abstract method gives zero possible pairs
+modern-types,ck,ck.lcc,type,validation.modern.Shape,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible abstract method gives zero possible pairs
+modern-types,ck,ck.tcc,type,validation.modern.Circle,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible explicit method gives zero possible pairs
+modern-types,ck,ck.lcc,type,validation.modern.Circle,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,one visible explicit method gives zero possible pairs
+modern-types,ck,ck.tcc,type,validation.modern.Rectangle,OK,EXACT,1,,,,constructor and area both access width and height
+modern-types,ck,ck.lcc,type,validation.modern.Rectangle,OK,EXACT,1,,,,both visible methods are directly connected
+unresolved-dependency,ck,ck.tcc,type,validation.unresolved.Broken,OK,EXACT,1,,,,constructor and accessor share dependency despite the unresolved external type
+unresolved-dependency,ck,ck.lcc,type,validation.unresolved.Broken,OK,EXACT,1,,,,both visible methods are directly connected
+basic-members,ck,ck.cbo,constructor,validation.basic.Members#<init>(),OK,EXACT,0,,,,constructor chaining is not a CK method-level CBO edge
+basic-members,ck,ck.cbo-modified,constructor,validation.basic.Members#<init>(),OK,EXACT,0,,,,constructor chaining is not a modified-CBO invocation edge
+basic-members,ck,ck.cbo,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,0,,,,java.lang.String is ignored
+basic-members,ck,ck.cbo-modified,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,0,,,,field assignment creates no invocation edge
+basic-members,ck,ck.cbo,method,validation.basic.Members#count(),OK,EXACT,0,,,,primitive return and field access create no CBO type
+basic-members,ck,ck.cbo-modified,method,validation.basic.Members#count(),OK,EXACT,0,,,,no incoming or outgoing method invocation
+basic-members,ck,ck.cbo,method,validation.basic.Members#name(),OK,EXACT,0,,,,java.lang.String is ignored
+basic-members,ck,ck.cbo-modified,method,validation.basic.Members#name(),OK,EXACT,0,,,,no incoming or outgoing method invocation
+basic-members,ck,ck.cbo,method,validation.basic.Members#increment(),OK,EXACT,0,,,,primitive field update creates no CBO type
+basic-members,ck,ck.cbo-modified,method,validation.basic.Members#increment(),OK,EXACT,0,,,,field update creates no invocation edge
+inheritance,ck,ck.cbo,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,0,,,,primitive parameter and field assignment create no CBO type
+inheritance,ck,ck.cbo-modified,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,0,,,,field assignment creates no invocation edge
+inheritance,ck,ck.cbo,method,validation.inheritance.Base#value(),OK,EXACT,0,,,,primitive return and field access create no CBO type
+inheritance,ck,ck.cbo-modified,method,validation.inheritance.Base#value(),OK,EXACT,0,,,,no incoming or outgoing MethodInvocation edge
+inheritance,ck,ck.cbo,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,0,,,,super constructor chaining is not visited by method-level CBO
+inheritance,ck,ck.cbo-modified,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,0,,,,super constructor chaining is not a modified-CBO invocation edge
+inheritance,ck,ck.cbo,method,validation.inheritance.Middle#doubled(),OK,EXACT,0,,,,arithmetic and inherited field access create no CBO type
+inheritance,ck,ck.cbo-modified,method,validation.inheritance.Middle#doubled(),OK,EXACT,0,,,,no regular MethodInvocation edge
+inheritance,ck,ck.cbo,method,validation.inheritance.Leaf#doubled(),OK,EXACT,0,,,,SuperMethodInvocation is not visited by CK CBO
+inheritance,ck,ck.cbo-modified,method,validation.inheritance.Leaf#doubled(),OK,EXACT,0,,,,SuperMethodInvocation is not a modified-CBO edge
+inheritance,ck,ck.cbo,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,0,,,,super constructor chaining is not visited by method-level CBO
+inheritance,ck,ck.cbo-modified,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,0,,,,super constructor chaining is not a modified-CBO invocation edge
+interfaces,ck,ck.cbo,method,validation.interfaces.Root#id(),OK,EXACT,0,,,,java.lang.String return is ignored
+interfaces,ck,ck.cbo-modified,method,validation.interfaces.Root#id(),OK,EXACT,0,,,,declaration creates no invocation edge
+interfaces,ck,ck.cbo,method,validation.interfaces.Extended#label(),OK,EXACT,0,,,,java.lang.String return and literal are ignored
+interfaces,ck,ck.cbo-modified,method,validation.interfaces.Extended#label(),OK,EXACT,0,,,,no incoming or outgoing method invocation
+interfaces,ck,ck.cbo,method,validation.interfaces.Implementation#id(),OK,EXACT,0,,,,java.lang.String return and literal are ignored
+interfaces,ck,ck.cbo-modified,method,validation.interfaces.Implementation#id(),OK,EXACT,0,,,,no incoming or outgoing method invocation
+coupling,ck,ck.cbo,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,0,,,,java.lang.String parameter and return are ignored
+coupling,ck,ck.cbo-modified,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,1,,,,incoming invocation from Controller.handle
+coupling,ck,ck.cbo,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,1,,,,signature couples to Service
+coupling,ck,ck.cbo-modified,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,0,,,,field assignment creates no invocation edge
+coupling,ck,ck.cbo,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,1,,,,Service.execute invocation couples to Service
+coupling,ck,ck.cbo-modified,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,1,,,,outgoing invocation to Service.execute
+coupling,ck,ck.cbo,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,0,,,,java.lang.String and its invocation are ignored
+coupling,ck,ck.cbo-modified,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,1,,,,incoming invocation from ServiceImpl.execute
+coupling,ck,ck.cbo,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,1,,,,signature couples to Helper
+coupling,ck,ck.cbo-modified,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,0,,,,field assignment creates no invocation edge
+coupling,ck,ck.cbo,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,1,,,,Helper.normalize invocation couples to Helper
+coupling,ck,ck.cbo-modified,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,1,,,,outgoing invocation to Helper.normalize
+overloads,ck,ck.cbo,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,0,,,,constructor chaining is not a CK method-level CBO edge
+overloads,ck,ck.cbo-modified,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,0,,,,constructor chaining is not a modified-CBO invocation edge
+overloads,ck,ck.cbo,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,0,,,,java.lang.String is ignored
+overloads,ck,ck.cbo-modified,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,0,,,,field assignment creates no invocation edge
+overloads,ck,ck.cbo,method,validation.overloads.Overloaded#run(),OK,EXACT,0,,,,java.lang.String return and field access are ignored
+overloads,ck,ck.cbo-modified,method,validation.overloads.Overloaded#run(),OK,EXACT,0,,,,no incoming or outgoing method invocation
+overloads,ck,ck.cbo,method,validation.overloads.Overloaded#run(int),OK,EXACT,0,,,,java.lang.String.repeat invocation is ignored
+overloads,ck,ck.cbo-modified,method,validation.overloads.Overloaded#run(int),OK,EXACT,1,,,,incoming invocation from the two-argument overload
+overloads,ck,ck.cbo,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,0,,,,java.lang.String types and concatenation are ignored
+overloads,ck,ck.cbo-modified,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,0,,,,no incoming or outgoing method invocation
+overloads,ck,ck.cbo,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,1,,,,local run invocation couples to Overloaded
+overloads,ck,ck.cbo-modified,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,1,,,,outgoing invocation to run(int)
+nested-types,ck,ck.cbo,constructor,validation.nested.Outer#<init>(int),OK,EXACT,0,,,,primitive parameter and field assignment create no CBO type
+nested-types,ck,ck.cbo-modified,constructor,validation.nested.Outer#<init>(int),OK,EXACT,0,,,,field assignment creates no invocation edge
+nested-types,ck,ck.cbo,method,validation.nested.Outer#factory(),OK,EXACT,1,,,,Local construction couples to the local type; JDK Runnable is ignored
+nested-types,ck,ck.cbo-modified,method,validation.nested.Outer#factory(),OK,EXACT,2,,,,outgoing constructor edges to local and anonymous implementations
+nested-types,ck,ck.cbo,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,0,,,,primitive return and literal create no CBO type
+nested-types,ck,ck.cbo-modified,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,0,,,,no incoming or outgoing method invocation
+nested-types,ck,ck.cbo,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,0,,,,implicit outer reference and primitive field access are excluded
+nested-types,ck,ck.cbo-modified,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,0,,,,field access creates no invocation edge
+modern-types,ck,ck.cbo,method,validation.modern.Point#sum(),OK,EXACT,0,,,,primitive components and arithmetic create no CBO type
+modern-types,ck,ck.cbo-modified,method,validation.modern.Point#sum(),OK,EXACT,0,,,,no incoming or outgoing method invocation
+modern-types,ck,ck.cbo,method,validation.modern.Mode#fast(),OK,EXACT,0,,,,enum comparison creates no CBO type
+modern-types,ck,ck.cbo-modified,method,validation.modern.Mode#fast(),OK,EXACT,0,,,,no incoming or outgoing method invocation
+modern-types,ck,ck.cbo,method,validation.modern.Shape#area(),OK,EXACT,0,,,,primitive return and abstract declaration create no CBO type
+modern-types,ck,ck.cbo-modified,method,validation.modern.Shape#area(),OK,EXACT,0,,,,declaration creates no invocation edge
+modern-types,ck,ck.cbo,method,validation.modern.Circle#area(),OK,EXACT,0,,,,primitive component and java.lang.Math are ignored
+modern-types,ck,ck.cbo-modified,method,validation.modern.Circle#area(),OK,EXACT,0,,,,field access and arithmetic create no invocation edge
+modern-types,ck,ck.cbo,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,0,,,,primitive parameters and field assignments create no CBO type
+modern-types,ck,ck.cbo-modified,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,0,,,,field assignments create no invocation edge
+modern-types,ck,ck.cbo,method,validation.modern.Rectangle#area(),OK,EXACT,0,,,,primitive fields and arithmetic create no CBO type
+modern-types,ck,ck.cbo-modified,method,validation.modern.Rectangle#area(),OK,EXACT,0,,,,field access and arithmetic create no invocation edge
+unresolved-dependency,ck,ck.cbo,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,1,,,,syntactic unresolved Dependency parameter is retained
+unresolved-dependency,ck,ck.cbo-modified,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,0,,,,field assignment creates no invocation edge
+unresolved-dependency,ck,ck.cbo,method,validation.unresolved.Broken#dependency(),OK,EXACT,1,,,,syntactic unresolved Dependency return is retained
+unresolved-dependency,ck,ck.cbo-modified,method,validation.unresolved.Broken#dependency(),OK,EXACT,0,,,,field access creates no invocation edge
+basic-members,ck,ck.fan-in,constructor,validation.basic.Members#<init>(),OK,EXACT,0,,,,constructor chaining is not an incoming invocation edge
+basic-members,ck,ck.fan-out,constructor,validation.basic.Members#<init>(),OK,EXACT,0,,,,constructor chaining is not an outgoing invocation edge
+basic-members,ck,ck.fan-in,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,0,,,,no incoming invocation edge
+basic-members,ck,ck.fan-out,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,0,,,,field assignment creates no outgoing invocation edge
+basic-members,ck,ck.fan-in,method,validation.basic.Members#count(),OK,EXACT,0,,,,no incoming invocation edge
+basic-members,ck,ck.fan-out,method,validation.basic.Members#count(),OK,EXACT,0,,,,field access creates no outgoing invocation edge
+basic-members,ck,ck.fan-in,method,validation.basic.Members#name(),OK,EXACT,0,,,,no incoming invocation edge
+basic-members,ck,ck.fan-out,method,validation.basic.Members#name(),OK,EXACT,0,,,,field access creates no outgoing invocation edge
+basic-members,ck,ck.fan-in,method,validation.basic.Members#increment(),OK,EXACT,0,,,,no incoming invocation edge
+basic-members,ck,ck.fan-out,method,validation.basic.Members#increment(),OK,EXACT,0,,,,field update creates no outgoing invocation edge
+inheritance,ck,ck.fan-in,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,0,,,,no incoming invocation edge
+inheritance,ck,ck.fan-out,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,0,,,,field assignment creates no outgoing invocation edge
+inheritance,ck,ck.fan-in,method,validation.inheritance.Base#value(),OK,EXACT,0,,,,no incoming regular MethodInvocation edge
+inheritance,ck,ck.fan-out,method,validation.inheritance.Base#value(),OK,EXACT,0,,,,field access creates no outgoing invocation edge
+inheritance,ck,ck.fan-in,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,0,,,,constructor chaining is not an incoming invocation edge
+inheritance,ck,ck.fan-out,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,0,,,,constructor chaining is not an outgoing invocation edge
+inheritance,ck,ck.fan-in,method,validation.inheritance.Middle#doubled(),OK,EXACT,0,,,,SuperMethodInvocation is not counted as incoming fan-in
+inheritance,ck,ck.fan-out,method,validation.inheritance.Middle#doubled(),OK,EXACT,0,,,,field access and arithmetic create no outgoing invocation
+inheritance,ck,ck.fan-in,method,validation.inheritance.Leaf#doubled(),OK,EXACT,0,,,,no incoming regular MethodInvocation edge
+inheritance,ck,ck.fan-out,method,validation.inheritance.Leaf#doubled(),OK,EXACT,0,,,,SuperMethodInvocation is not counted as outgoing fan-out
+inheritance,ck,ck.fan-in,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,0,,,,constructor chaining is not an incoming invocation edge
+inheritance,ck,ck.fan-out,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,0,,,,constructor chaining is not an outgoing invocation edge
+interfaces,ck,ck.fan-in,method,validation.interfaces.Root#id(),OK,EXACT,0,,,,implementation relation creates no incoming invocation
+interfaces,ck,ck.fan-out,method,validation.interfaces.Root#id(),OK,EXACT,0,,,,abstract declaration creates no outgoing invocation
+interfaces,ck,ck.fan-in,method,validation.interfaces.Extended#label(),OK,EXACT,0,,,,no incoming invocation edge
+interfaces,ck,ck.fan-out,method,validation.interfaces.Extended#label(),OK,EXACT,0,,,,literal return creates no outgoing invocation
+interfaces,ck,ck.fan-in,method,validation.interfaces.Implementation#id(),OK,EXACT,0,,,,override relation creates no incoming invocation
+interfaces,ck,ck.fan-out,method,validation.interfaces.Implementation#id(),OK,EXACT,0,,,,literal return creates no outgoing invocation
+coupling,ck,ck.fan-in,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,1,,,,incoming invocation from Controller.handle
+coupling,ck,ck.fan-out,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,0,,,,abstract declaration creates no outgoing invocation
+coupling,ck,ck.fan-in,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,0,,,,no incoming constructor invocation is recorded
+coupling,ck,ck.fan-out,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,0,,,,field assignment creates no outgoing invocation
+coupling,ck,ck.fan-in,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,0,,,,no incoming invocation edge
+coupling,ck,ck.fan-out,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,1,,,,outgoing invocation to Service.execute
+coupling,ck,ck.fan-in,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,1,,,,incoming invocation from ServiceImpl.execute
+coupling,ck,ck.fan-out,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,0,,,,java.lang.String.trim is ignored
+coupling,ck,ck.fan-in,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,0,,,,no incoming constructor invocation is recorded
+coupling,ck,ck.fan-out,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,0,,,,field assignment creates no outgoing invocation
+coupling,ck,ck.fan-in,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,0,,,,implementation relation creates no incoming invocation
+coupling,ck,ck.fan-out,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,1,,,,outgoing invocation to Helper.normalize
+overloads,ck,ck.fan-in,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,0,,,,constructor chaining is not an incoming invocation edge
+overloads,ck,ck.fan-out,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,0,,,,constructor chaining is not an outgoing invocation edge
+overloads,ck,ck.fan-in,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,0,,,,constructor chaining is not recorded as incoming fan-in
+overloads,ck,ck.fan-out,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,0,,,,field assignment creates no outgoing invocation
+overloads,ck,ck.fan-in,method,validation.overloads.Overloaded#run(),OK,EXACT,0,,,,no incoming invocation edge
+overloads,ck,ck.fan-out,method,validation.overloads.Overloaded#run(),OK,EXACT,0,,,,field access creates no outgoing invocation
+overloads,ck,ck.fan-in,method,validation.overloads.Overloaded#run(int),OK,EXACT,1,,,,incoming invocation from the two-argument overload
+overloads,ck,ck.fan-out,method,validation.overloads.Overloaded#run(int),OK,EXACT,0,,,,java.lang.String.repeat is ignored
+overloads,ck,ck.fan-in,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,0,,,,no incoming invocation edge
+overloads,ck,ck.fan-out,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,0,,,,concatenation creates no outgoing invocation
+overloads,ck,ck.fan-in,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,0,,,,no incoming invocation edge
+overloads,ck,ck.fan-out,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,1,,,,outgoing invocation to run(int)
+nested-types,ck,ck.fan-in,constructor,validation.nested.Outer#<init>(int),OK,EXACT,0,,,,no incoming constructor invocation is recorded
+nested-types,ck,ck.fan-out,constructor,validation.nested.Outer#<init>(int),OK,EXACT,0,,,,field assignment creates no outgoing invocation
+nested-types,ck,ck.fan-in,method,validation.nested.Outer#factory(),OK,EXACT,0,,,,no incoming invocation edge
+nested-types,ck,ck.fan-out,method,validation.nested.Outer#factory(),OK,EXACT,2,,,,outgoing constructor edges to local and anonymous implementations
+nested-types,ck,ck.fan-in,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,0,,,,no incoming invocation edge
+nested-types,ck,ck.fan-out,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,0,,,,literal return creates no outgoing invocation
+nested-types,ck,ck.fan-in,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,0,,,,no incoming invocation edge
+nested-types,ck,ck.fan-out,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,0,,,,outer field access creates no outgoing invocation
+modern-types,ck,ck.fan-in,method,validation.modern.Point#sum(),OK,EXACT,0,,,,no incoming invocation edge
+modern-types,ck,ck.fan-out,method,validation.modern.Point#sum(),OK,EXACT,0,,,,component access and arithmetic create no outgoing invocation
+modern-types,ck,ck.fan-in,method,validation.modern.Mode#fast(),OK,EXACT,0,,,,no incoming invocation edge
+modern-types,ck,ck.fan-out,method,validation.modern.Mode#fast(),OK,EXACT,0,,,,enum comparison creates no outgoing invocation
+modern-types,ck,ck.fan-in,method,validation.modern.Shape#area(),OK,EXACT,0,,,,implementation relations create no incoming invocation
+modern-types,ck,ck.fan-out,method,validation.modern.Shape#area(),OK,EXACT,0,,,,abstract declaration creates no outgoing invocation
+modern-types,ck,ck.fan-in,method,validation.modern.Circle#area(),OK,EXACT,0,,,,implementation relation creates no incoming invocation
+modern-types,ck,ck.fan-out,method,validation.modern.Circle#area(),OK,EXACT,0,,,,field access and arithmetic create no outgoing invocation
+modern-types,ck,ck.fan-in,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,0,,,,no incoming constructor invocation is recorded
+modern-types,ck,ck.fan-out,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,0,,,,field assignments create no outgoing invocation
+modern-types,ck,ck.fan-in,method,validation.modern.Rectangle#area(),OK,EXACT,0,,,,implementation relation creates no incoming invocation
+modern-types,ck,ck.fan-out,method,validation.modern.Rectangle#area(),OK,EXACT,0,,,,field access and arithmetic create no outgoing invocation
+unresolved-dependency,ck,ck.fan-in,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,0,,,,unresolved signature creates no incoming invocation edge
+unresolved-dependency,ck,ck.fan-out,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,0,,,,field assignment creates no outgoing invocation
+unresolved-dependency,ck,ck.fan-in,method,validation.unresolved.Broken#dependency(),OK,EXACT,0,,,,unresolved return type creates no incoming invocation edge
+unresolved-dependency,ck,ck.fan-out,method,validation.unresolved.Broken#dependency(),OK,EXACT,0,,,,field access creates no outgoing invocation
+basic-members,java-metrics,java.physical-loc,type,validation.basic.Empty,OK,EXACT,2,,,,class declaration spans source lines 6 through 7
+basic-members,java-metrics,java.ncloc,type,validation.basic.Empty,OK,EXACT,2,,,,both declaration lines contain Java tokens
+basic-members,java-metrics,java.physical-loc-exclusive,type,validation.basic.Empty,OK,EXACT,2,,,,no nested type range to exclude
+basic-members,java-metrics,java.ncloc-exclusive,type,validation.basic.Empty,OK,EXACT,2,,,,no nested type range to exclude
+basic-members,java-metrics,java.physical-loc,type,validation.basic.Members,OK,EXACT,24,,,,class declaration spans source lines 6 through 29
+basic-members,java-metrics,java.ncloc,type,validation.basic.Members,OK,EXACT,19,,,,five blank lines are excluded from the class range
+basic-members,java-metrics,java.physical-loc-exclusive,type,validation.basic.Members,OK,EXACT,24,,,,no nested type range to exclude
+basic-members,java-metrics,java.ncloc-exclusive,type,validation.basic.Members,OK,EXACT,19,,,,no nested type range to exclude
+basic-members,java-metrics,java.physical-loc,constructor,validation.basic.Members#<init>(),OK,EXACT,3,,,,constructor declaration spans three physical lines
+basic-members,java-metrics,java.ncloc,constructor,validation.basic.Members#<init>(),OK,EXACT,3,,,,all constructor lines contain Java tokens
+basic-members,java-metrics,java.physical-loc,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,3,,,,constructor declaration spans three physical lines
+basic-members,java-metrics,java.ncloc,constructor,validation.basic.Members#<init>(java.lang.String),OK,EXACT,3,,,,all constructor lines contain Java tokens
+basic-members,java-metrics,java.physical-loc,method,validation.basic.Members#count(),OK,EXACT,3,,,,method declaration spans three physical lines
+basic-members,java-metrics,java.ncloc,method,validation.basic.Members#count(),OK,EXACT,3,,,,all method lines contain Java tokens
+basic-members,java-metrics,java.physical-loc,method,validation.basic.Members#name(),OK,EXACT,3,,,,method declaration spans three physical lines
+basic-members,java-metrics,java.ncloc,method,validation.basic.Members#name(),OK,EXACT,3,,,,all method lines contain Java tokens
+basic-members,java-metrics,java.physical-loc,method,validation.basic.Members#increment(),OK,EXACT,3,,,,method declaration spans three physical lines
+basic-members,java-metrics,java.ncloc,method,validation.basic.Members#increment(),OK,EXACT,3,,,,all method lines contain Java tokens
+inheritance,java-metrics,java.physical-loc,type,validation.inheritance.Base,OK,EXACT,11,,,,class declaration spans source lines 6 through 16
+inheritance,java-metrics,java.ncloc,type,validation.inheritance.Base,OK,EXACT,9,,,,two blank lines are excluded from the class range
+inheritance,java-metrics,java.physical-loc-exclusive,type,validation.inheritance.Base,OK,EXACT,11,,,,no nested type range to exclude
+inheritance,java-metrics,java.ncloc-exclusive,type,validation.inheritance.Base,OK,EXACT,9,,,,no nested type range to exclude
+inheritance,java-metrics,java.physical-loc,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,3,,,,constructor declaration spans three physical lines
+inheritance,java-metrics,java.ncloc,constructor,validation.inheritance.Base#<init>(int),OK,EXACT,3,,,,all constructor lines contain Java tokens
+inheritance,java-metrics,java.physical-loc,method,validation.inheritance.Base#value(),OK,EXACT,3,,,,method declaration spans three physical lines
+inheritance,java-metrics,java.ncloc,method,validation.inheritance.Base#value(),OK,EXACT,3,,,,all method lines contain Java tokens
+inheritance,java-metrics,java.physical-loc,type,validation.inheritance.Middle,OK,EXACT,9,,,,class declaration spans source lines 6 through 14
+inheritance,java-metrics,java.ncloc,type,validation.inheritance.Middle,OK,EXACT,8,,,,one blank line is excluded from the class range
+inheritance,java-metrics,java.physical-loc-exclusive,type,validation.inheritance.Middle,OK,EXACT,9,,,,no nested type range to exclude
+inheritance,java-metrics,java.ncloc-exclusive,type,validation.inheritance.Middle,OK,EXACT,8,,,,no nested type range to exclude
+inheritance,java-metrics,java.physical-loc,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,3,,,,constructor declaration spans three physical lines
+inheritance,java-metrics,java.ncloc,constructor,validation.inheritance.Middle#<init>(),OK,EXACT,3,,,,all constructor lines contain Java tokens
+inheritance,java-metrics,java.physical-loc,method,validation.inheritance.Middle#doubled(),OK,EXACT,3,,,,method declaration spans three physical lines
+inheritance,java-metrics,java.ncloc,method,validation.inheritance.Middle#doubled(),OK,EXACT,3,,,,all method lines contain Java tokens
+inheritance,java-metrics,java.physical-loc,type,validation.inheritance.Leaf,OK,EXACT,6,,,,class declaration spans source lines 6 through 11
+inheritance,java-metrics,java.ncloc,type,validation.inheritance.Leaf,OK,EXACT,6,,,,all class-range lines contain Java tokens
+inheritance,java-metrics,java.physical-loc-exclusive,type,validation.inheritance.Leaf,OK,EXACT,6,,,,no nested type range to exclude
+inheritance,java-metrics,java.ncloc-exclusive,type,validation.inheritance.Leaf,OK,EXACT,6,,,,no nested type range to exclude
+inheritance,java-metrics,java.physical-loc,method,validation.inheritance.Leaf#doubled(),OK,EXACT,4,,,,range starts at Override annotation and ends at method brace
+inheritance,java-metrics,java.ncloc,method,validation.inheritance.Leaf#doubled(),OK,EXACT,4,,,,annotation and all method lines contain Java tokens
+inheritance,java-metrics,java.physical-loc,type,validation.inheritance.Sibling,OK,EXACT,5,,,,class declaration spans source lines 6 through 10
+inheritance,java-metrics,java.ncloc,type,validation.inheritance.Sibling,OK,EXACT,5,,,,all class-range lines contain Java tokens
+inheritance,java-metrics,java.physical-loc-exclusive,type,validation.inheritance.Sibling,OK,EXACT,5,,,,no nested type range to exclude
+inheritance,java-metrics,java.ncloc-exclusive,type,validation.inheritance.Sibling,OK,EXACT,5,,,,no nested type range to exclude
+inheritance,java-metrics,java.physical-loc,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,3,,,,constructor declaration spans three physical lines
+inheritance,java-metrics,java.ncloc,constructor,validation.inheritance.Sibling#<init>(),OK,EXACT,3,,,,all constructor lines contain Java tokens
+interfaces,java-metrics,java.physical-loc,type,validation.interfaces.Root,OK,EXACT,3,,,,interface declaration spans source lines 6 through 8
+interfaces,java-metrics,java.ncloc,type,validation.interfaces.Root,OK,EXACT,3,,,,all interface-range lines contain Java tokens
+interfaces,java-metrics,java.physical-loc-exclusive,type,validation.interfaces.Root,OK,EXACT,3,,,,no nested type range to exclude
+interfaces,java-metrics,java.ncloc-exclusive,type,validation.interfaces.Root,OK,EXACT,3,,,,no nested type range to exclude
+interfaces,java-metrics,java.physical-loc,method,validation.interfaces.Root#id(),OK,EXACT,1,,,,abstract method declaration occupies one line
+interfaces,java-metrics,java.ncloc,method,validation.interfaces.Root#id(),OK,EXACT,1,,,,declaration line contains Java tokens
+interfaces,java-metrics,java.physical-loc,type,validation.interfaces.Extended,OK,EXACT,5,,,,interface declaration spans source lines 6 through 10
+interfaces,java-metrics,java.ncloc,type,validation.interfaces.Extended,OK,EXACT,5,,,,all interface-range lines contain Java tokens
+interfaces,java-metrics,java.physical-loc-exclusive,type,validation.interfaces.Extended,OK,EXACT,5,,,,no nested type range to exclude
+interfaces,java-metrics,java.ncloc-exclusive,type,validation.interfaces.Extended,OK,EXACT,5,,,,no nested type range to exclude
+interfaces,java-metrics,java.physical-loc,method,validation.interfaces.Extended#label(),OK,EXACT,3,,,,default method declaration spans three lines
+interfaces,java-metrics,java.ncloc,method,validation.interfaces.Extended#label(),OK,EXACT,3,,,,all default-method lines contain Java tokens
+interfaces,java-metrics,java.physical-loc,type,validation.interfaces.Implementation,OK,EXACT,6,,,,class declaration spans source lines 6 through 11
+interfaces,java-metrics,java.ncloc,type,validation.interfaces.Implementation,OK,EXACT,6,,,,all class-range lines contain Java tokens
+interfaces,java-metrics,java.physical-loc-exclusive,type,validation.interfaces.Implementation,OK,EXACT,6,,,,no nested type range to exclude
+interfaces,java-metrics,java.ncloc-exclusive,type,validation.interfaces.Implementation,OK,EXACT,6,,,,no nested type range to exclude
+interfaces,java-metrics,java.physical-loc,method,validation.interfaces.Implementation#id(),OK,EXACT,4,,,,range starts at Override annotation and ends at method brace
+interfaces,java-metrics,java.ncloc,method,validation.interfaces.Implementation#id(),OK,EXACT,4,,,,annotation and all method lines contain Java tokens
+coupling,java-metrics,java.physical-loc,type,validation.coupling.api.Service,OK,EXACT,3,,,,interface declaration spans source lines 6 through 8
+coupling,java-metrics,java.ncloc,type,validation.coupling.api.Service,OK,EXACT,3,,,,all interface-range lines contain Java tokens
+coupling,java-metrics,java.physical-loc-exclusive,type,validation.coupling.api.Service,OK,EXACT,3,,,,no nested type range to exclude
+coupling,java-metrics,java.ncloc-exclusive,type,validation.coupling.api.Service,OK,EXACT,3,,,,no nested type range to exclude
+coupling,java-metrics,java.physical-loc,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,1,,,,abstract method declaration occupies one line
+coupling,java-metrics,java.ncloc,method,validation.coupling.api.Service#execute(java.lang.String),OK,EXACT,1,,,,declaration line contains Java tokens
+coupling,java-metrics,java.physical-loc,type,validation.coupling.impl.Helper,OK,EXACT,5,,,,class declaration spans source lines 6 through 10
+coupling,java-metrics,java.ncloc,type,validation.coupling.impl.Helper,OK,EXACT,5,,,,all class-range lines contain Java tokens
+coupling,java-metrics,java.physical-loc-exclusive,type,validation.coupling.impl.Helper,OK,EXACT,5,,,,no nested type range to exclude
+coupling,java-metrics,java.ncloc-exclusive,type,validation.coupling.impl.Helper,OK,EXACT,5,,,,no nested type range to exclude
+coupling,java-metrics,java.physical-loc,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,3,,,,method declaration spans three physical lines
+coupling,java-metrics,java.ncloc,method,validation.coupling.impl.Helper#normalize(java.lang.String),OK,EXACT,3,,,,all method lines contain Java tokens
+coupling,java-metrics,java.physical-loc,type,validation.coupling.impl.ServiceImpl,OK,EXACT,12,,,,class declaration spans source lines 8 through 19
+coupling,java-metrics,java.ncloc,type,validation.coupling.impl.ServiceImpl,OK,EXACT,10,,,,two blank lines are excluded from the class range
+coupling,java-metrics,java.physical-loc-exclusive,type,validation.coupling.impl.ServiceImpl,OK,EXACT,12,,,,no nested type range to exclude
+coupling,java-metrics,java.ncloc-exclusive,type,validation.coupling.impl.ServiceImpl,OK,EXACT,10,,,,no nested type range to exclude
+coupling,java-metrics,java.physical-loc,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,3,,,,constructor declaration spans three physical lines
+coupling,java-metrics,java.ncloc,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),OK,EXACT,3,,,,all constructor lines contain Java tokens
+coupling,java-metrics,java.physical-loc,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,4,,,,range starts at Override annotation and ends at method brace
+coupling,java-metrics,java.ncloc,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),OK,EXACT,4,,,,annotation and all method lines contain Java tokens
+coupling,java-metrics,java.physical-loc,type,validation.coupling.client.Controller,OK,EXACT,11,,,,class declaration spans source lines 8 through 18
+coupling,java-metrics,java.ncloc,type,validation.coupling.client.Controller,OK,EXACT,9,,,,two blank lines are excluded from the class range
+coupling,java-metrics,java.physical-loc-exclusive,type,validation.coupling.client.Controller,OK,EXACT,11,,,,no nested type range to exclude
+coupling,java-metrics,java.ncloc-exclusive,type,validation.coupling.client.Controller,OK,EXACT,9,,,,no nested type range to exclude
+coupling,java-metrics,java.physical-loc,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,3,,,,constructor declaration spans three physical lines
+coupling,java-metrics,java.ncloc,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),OK,EXACT,3,,,,all constructor lines contain Java tokens
+coupling,java-metrics,java.physical-loc,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,3,,,,method declaration spans three physical lines
+coupling,java-metrics,java.ncloc,method,validation.coupling.client.Controller#handle(java.lang.String),OK,EXACT,3,,,,all method lines contain Java tokens
+overloads,java-metrics,java.physical-loc,type,validation.overloads.Overloaded,OK,EXACT,27,,,,class declaration spans source lines 6 through 32
+overloads,java-metrics,java.ncloc,type,validation.overloads.Overloaded,OK,EXACT,21,,,,six blank lines are excluded from the class range
+overloads,java-metrics,java.physical-loc-exclusive,type,validation.overloads.Overloaded,OK,EXACT,27,,,,no nested type range to exclude
+overloads,java-metrics,java.ncloc-exclusive,type,validation.overloads.Overloaded,OK,EXACT,21,,,,no nested type range to exclude
+overloads,java-metrics,java.physical-loc,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,3,,,,constructor declaration spans three physical lines
+overloads,java-metrics,java.ncloc,constructor,validation.overloads.Overloaded#<init>(),OK,EXACT,3,,,,all constructor lines contain Java tokens
+overloads,java-metrics,java.physical-loc,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,3,,,,constructor declaration spans three physical lines
+overloads,java-metrics,java.ncloc,constructor,validation.overloads.Overloaded#<init>(java.lang.String),OK,EXACT,3,,,,all constructor lines contain Java tokens
+overloads,java-metrics,java.physical-loc,method,validation.overloads.Overloaded#run(),OK,EXACT,3,,,,method declaration spans three physical lines
+overloads,java-metrics,java.ncloc,method,validation.overloads.Overloaded#run(),OK,EXACT,3,,,,all method lines contain Java tokens
+overloads,java-metrics,java.physical-loc,method,validation.overloads.Overloaded#run(int),OK,EXACT,3,,,,method declaration spans three physical lines
+overloads,java-metrics,java.ncloc,method,validation.overloads.Overloaded#run(int),OK,EXACT,3,,,,all method lines contain Java tokens
+overloads,java-metrics,java.physical-loc,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,3,,,,method declaration spans three physical lines
+overloads,java-metrics,java.ncloc,method,validation.overloads.Overloaded#run(java.lang.String),OK,EXACT,3,,,,all method lines contain Java tokens
+overloads,java-metrics,java.physical-loc,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,3,,,,method declaration spans three physical lines
+overloads,java-metrics,java.ncloc,method,"validation.overloads.Overloaded#run(int,java.lang.String)",OK,EXACT,3,,,,all method lines contain Java tokens
+nested-types,java-metrics,java.physical-loc,type,validation.nested.Outer,OK,EXACT,35,,,,outer declaration spans source lines 6 through 40 including all nested types
+nested-types,java-metrics,java.ncloc,type,validation.nested.Outer,OK,EXACT,31,,,,four blank lines are excluded but nested type lines remain included
+nested-types,java-metrics,java.physical-loc-exclusive,type,validation.nested.Outer,OK,EXACT,15,,,,nested ranges are excluded but the anonymous-class boundary lines retain enclosing construction tokens
+nested-types,java-metrics,java.ncloc-exclusive,type,validation.nested.Outer,OK,EXACT,11,,,,new Runnable prefix and trailing semicolon lie outside the anonymous-class AST span
+nested-types,java-metrics,java.physical-loc,constructor,validation.nested.Outer#<init>(int),OK,EXACT,3,,,,constructor declaration spans three physical lines
+nested-types,java-metrics,java.ncloc,constructor,validation.nested.Outer#<init>(int),OK,EXACT,3,,,,all constructor lines contain Java tokens
+nested-types,java-metrics,java.physical-loc,method,validation.nested.Outer#factory(),OK,EXACT,15,,,,method range includes its local and anonymous class declarations
+nested-types,java-metrics,java.ncloc,method,validation.nested.Outer#factory(),OK,EXACT,15,,,,every line in the method range contains Java tokens
+nested-types,java-metrics,java.physical-loc,type,validation.nested.Outer.StaticNested,OK,EXACT,5,,,,static nested class spans source lines 29 through 33
+nested-types,java-metrics,java.ncloc,type,validation.nested.Outer.StaticNested,OK,EXACT,5,,,,all nested-class lines contain Java tokens
+nested-types,java-metrics,java.physical-loc-exclusive,type,validation.nested.Outer.StaticNested,OK,EXACT,5,,,,no child type range to exclude
+nested-types,java-metrics,java.ncloc-exclusive,type,validation.nested.Outer.StaticNested,OK,EXACT,5,,,,no child type range to exclude
+nested-types,java-metrics,java.physical-loc,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,3,,,,method declaration spans three physical lines
+nested-types,java-metrics,java.ncloc,method,validation.nested.Outer.StaticNested#answer(),OK,EXACT,3,,,,all method lines contain Java tokens
+nested-types,java-metrics,java.physical-loc,type,validation.nested.Outer.Inner,OK,EXACT,5,,,,inner class spans source lines 35 through 39
+nested-types,java-metrics,java.ncloc,type,validation.nested.Outer.Inner,OK,EXACT,5,,,,all inner-class lines contain Java tokens
+nested-types,java-metrics,java.physical-loc-exclusive,type,validation.nested.Outer.Inner,OK,EXACT,5,,,,no child type range to exclude
+nested-types,java-metrics,java.ncloc-exclusive,type,validation.nested.Outer.Inner,OK,EXACT,5,,,,no child type range to exclude
+nested-types,java-metrics,java.physical-loc,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,3,,,,method declaration spans three physical lines
+nested-types,java-metrics,java.ncloc,method,validation.nested.Outer.Inner#outerValue(),OK,EXACT,3,,,,all method lines contain Java tokens
+modern-types,java-metrics,java.physical-loc,type,validation.modern.Point,OK,EXACT,5,,,,record declaration spans source lines 6 through 10
+modern-types,java-metrics,java.ncloc,type,validation.modern.Point,OK,EXACT,5,,,,all record-range lines contain Java tokens
+modern-types,java-metrics,java.physical-loc-exclusive,type,validation.modern.Point,OK,EXACT,5,,,,no nested type range to exclude
+modern-types,java-metrics,java.ncloc-exclusive,type,validation.modern.Point,OK,EXACT,5,,,,no nested type range to exclude
+modern-types,java-metrics,java.physical-loc,method,validation.modern.Point#sum(),OK,EXACT,3,,,,record method declaration spans three physical lines
+modern-types,java-metrics,java.ncloc,method,validation.modern.Point#sum(),OK,EXACT,3,,,,all method lines contain Java tokens
+modern-types,java-metrics,java.physical-loc,type,validation.modern.Mode,OK,EXACT,8,,,,enum declaration spans source lines 6 through 13
+modern-types,java-metrics,java.ncloc,type,validation.modern.Mode,OK,EXACT,7,,,,one blank line is excluded from the enum range
+modern-types,java-metrics,java.physical-loc-exclusive,type,validation.modern.Mode,OK,EXACT,8,,,,no nested type range to exclude
+modern-types,java-metrics,java.ncloc-exclusive,type,validation.modern.Mode,OK,EXACT,7,,,,no nested type range to exclude
+modern-types,java-metrics,java.physical-loc,method,validation.modern.Mode#fast(),OK,EXACT,3,,,,enum method declaration spans three physical lines
+modern-types,java-metrics,java.ncloc,method,validation.modern.Mode#fast(),OK,EXACT,3,,,,all method lines contain Java tokens
+modern-types,java-metrics,java.physical-loc,type,validation.modern.Marker,OK,EXACT,3,,,,annotation declaration spans source lines 6 through 8
+modern-types,java-metrics,java.ncloc,type,validation.modern.Marker,OK,EXACT,3,,,,all annotation-range lines contain Java tokens
+modern-types,java-metrics,java.physical-loc-exclusive,type,validation.modern.Marker,OK,EXACT,3,,,,no nested type range to exclude
+modern-types,java-metrics,java.ncloc-exclusive,type,validation.modern.Marker,OK,EXACT,3,,,,no nested type range to exclude
+modern-types,java-metrics,java.physical-loc,type,validation.modern.Shape,OK,EXACT,3,,,,sealed interface declaration spans source lines 6 through 8
+modern-types,java-metrics,java.ncloc,type,validation.modern.Shape,OK,EXACT,3,,,,all sealed-interface lines contain Java tokens
+modern-types,java-metrics,java.physical-loc-exclusive,type,validation.modern.Shape,OK,EXACT,3,,,,no nested type range to exclude
+modern-types,java-metrics,java.ncloc-exclusive,type,validation.modern.Shape,OK,EXACT,3,,,,no nested type range to exclude
+modern-types,java-metrics,java.physical-loc,method,validation.modern.Shape#area(),OK,EXACT,1,,,,abstract method declaration occupies one line
+modern-types,java-metrics,java.ncloc,method,validation.modern.Shape#area(),OK,EXACT,1,,,,declaration line contains Java tokens
+modern-types,java-metrics,java.physical-loc,type,validation.modern.Circle,OK,EXACT,6,,,,record declaration spans source lines 6 through 11
+modern-types,java-metrics,java.ncloc,type,validation.modern.Circle,OK,EXACT,6,,,,all record-range lines contain Java tokens
+modern-types,java-metrics,java.physical-loc-exclusive,type,validation.modern.Circle,OK,EXACT,6,,,,no nested type range to exclude
+modern-types,java-metrics,java.ncloc-exclusive,type,validation.modern.Circle,OK,EXACT,6,,,,no nested type range to exclude
+modern-types,java-metrics,java.physical-loc,method,validation.modern.Circle#area(),OK,EXACT,4,,,,range starts at Override annotation and ends at method brace
+modern-types,java-metrics,java.ncloc,method,validation.modern.Circle#area(),OK,EXACT,4,,,,annotation and all method lines contain Java tokens
+modern-types,java-metrics,java.physical-loc,type,validation.modern.Rectangle,OK,EXACT,14,,,,class declaration spans source lines 6 through 19
+modern-types,java-metrics,java.ncloc,type,validation.modern.Rectangle,OK,EXACT,12,,,,two blank lines are excluded from the class range
+modern-types,java-metrics,java.physical-loc-exclusive,type,validation.modern.Rectangle,OK,EXACT,14,,,,no nested type range to exclude
+modern-types,java-metrics,java.ncloc-exclusive,type,validation.modern.Rectangle,OK,EXACT,12,,,,no nested type range to exclude
+modern-types,java-metrics,java.physical-loc,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,4,,,,constructor declaration spans four physical lines
+modern-types,java-metrics,java.ncloc,constructor,"validation.modern.Rectangle#<init>(double,double)",OK,EXACT,4,,,,all constructor lines contain Java tokens
+modern-types,java-metrics,java.physical-loc,method,validation.modern.Rectangle#area(),OK,EXACT,4,,,,range starts at Override annotation and ends at method brace
+modern-types,java-metrics,java.ncloc,method,validation.modern.Rectangle#area(),OK,EXACT,4,,,,annotation and all method lines contain Java tokens
+initializers-lambdas,java-metrics,java.physical-loc,type,validation.initializers.InitLambda,OK,EXACT,19,,,,class declaration spans source lines 8 through 26
+initializers-lambdas,java-metrics,java.ncloc,type,validation.initializers.InitLambda,OK,EXACT,16,,,,three blank lines are excluded from the class range
+initializers-lambdas,java-metrics,java.physical-loc-exclusive,type,validation.initializers.InitLambda,OK,EXACT,19,,,,lambdas and initializers are executable subjects not nested types
+initializers-lambdas,java-metrics,java.ncloc-exclusive,type,validation.initializers.InitLambda,OK,EXACT,16,,,,lambdas and initializers are not excluded by the nested-type variant
+initializers-lambdas,java-metrics,java.physical-loc,initializer,validation.initializers.InitLambda#<initializer:static:1>,OK,EXACT,3,,,,static initializer spans three physical lines including braces
+initializers-lambdas,java-metrics,java.ncloc,initializer,validation.initializers.InitLambda#<initializer:static:1>,OK,EXACT,3,,,,all static-initializer lines contain Java tokens
+initializers-lambdas,java-metrics,java.physical-loc,initializer,validation.initializers.InitLambda#<initializer:instance:1>,OK,EXACT,6,,,,instance initializer includes the block lambda and invocation
+initializers-lambdas,java-metrics,java.ncloc,initializer,validation.initializers.InitLambda#<initializer:instance:1>,OK,EXACT,6,,,,all instance-initializer lines contain Java tokens
+initializers-lambdas,java-metrics,java.physical-loc,lambda,validation.initializers.InitLambda#<lambda:1>,OK,EXACT,3,,,,block lambda spans arrow line body line and closing brace line
+initializers-lambdas,java-metrics,java.ncloc,lambda,validation.initializers.InitLambda#<lambda:1>,OK,EXACT,3,,,,all block-lambda lines contain Java tokens
+initializers-lambdas,java-metrics,java.physical-loc,lambda,validation.initializers.InitLambda#<lambda:2>,OK,EXACT,1,,,,expression lambda occupies one physical line
+initializers-lambdas,java-metrics,java.ncloc,lambda,validation.initializers.InitLambda#<lambda:2>,OK,EXACT,1,,,,expression-lambda line contains Java tokens
+initializers-lambdas,java-metrics,java.physical-loc,method,validation.initializers.InitLambda#apply(int),OK,EXACT,3,,,,ordinary method declaration spans three physical lines
+initializers-lambdas,java-metrics,java.ncloc,method,validation.initializers.InitLambda#apply(int),OK,EXACT,3,,,,all method lines contain Java tokens
+unresolved-dependency,java-metrics,java.physical-loc,type,validation.unresolved.Broken,OK,EXACT,11,,,,class declaration spans source lines 8 through 18 despite unresolved field type
+unresolved-dependency,java-metrics,java.ncloc,type,validation.unresolved.Broken,OK,EXACT,9,,,,two blank lines are excluded independently of binding resolution
+unresolved-dependency,java-metrics,java.physical-loc-exclusive,type,validation.unresolved.Broken,OK,EXACT,11,,,,no nested type range to exclude
+unresolved-dependency,java-metrics,java.ncloc-exclusive,type,validation.unresolved.Broken,OK,EXACT,9,,,,no nested type range to exclude
+unresolved-dependency,java-metrics,java.physical-loc,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,3,,,,unresolved parameter type does not affect source range
+unresolved-dependency,java-metrics,java.ncloc,constructor,validation.unresolved.Broken#<init>(Dependency),OK,EXACT,3,,,,all constructor lines contain Java tokens
+unresolved-dependency,java-metrics,java.physical-loc,method,validation.unresolved.Broken#dependency(),OK,EXACT,3,,,,unresolved return type does not affect source range
+unresolved-dependency,java-metrics,java.ncloc,method,validation.unresolved.Broken#dependency(),OK,EXACT,3,,,,all method lines contain Java tokens
+basic-members,java-metrics,java.lcom4,type,validation.basic.Empty,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,no explicitly declared methods
+basic-members,java-metrics,java.lcom4,type,validation.basic.Members,OK,EXACT,1,,,,count and name are trivial getters; increment is the single eligible method
+inheritance,java-metrics,java.lcom4,type,validation.inheritance.Base,NOT_APPLICABLE,,,,,ACCESSORS_ONLY,value is a trivial getter and constructors are excluded
+inheritance,java-metrics,java.lcom4,type,validation.inheritance.Middle,OK,EXACT,1,,,,doubled is the single eligible method; inherited fields are excluded
+inheritance,java-metrics,java.lcom4,type,validation.inheritance.Leaf,OK,EXACT,1,,,,overriding doubled is the single eligible method
+inheritance,java-metrics,java.lcom4,type,validation.inheritance.Sibling,NOT_APPLICABLE,,,,,NO_ELIGIBLE_MEMBERS,constructors are excluded and no method is declared
+interfaces,java-metrics,java.lcom4,type,validation.interfaces.Root,NOT_APPLICABLE,,,,,INTERFACE_OR_ANNOTATION,interfaces are outside the primary LCOM4 domain
+interfaces,java-metrics,java.lcom4,type,validation.interfaces.Extended,NOT_APPLICABLE,,,,,INTERFACE_OR_ANNOTATION,default methods do not make the interface applicable
+interfaces,java-metrics,java.lcom4,type,validation.interfaces.Implementation,OK,EXACT,1,,,,id is the single eligible method
+coupling,java-metrics,java.lcom4,type,validation.coupling.api.Service,NOT_APPLICABLE,,,,,INTERFACE_OR_ANNOTATION,interfaces are outside the primary LCOM4 domain
+coupling,java-metrics,java.lcom4,type,validation.coupling.impl.Helper,OK,EXACT,1,,,,normalize is the single eligible method
+coupling,java-metrics,java.lcom4,type,validation.coupling.impl.ServiceImpl,OK,EXACT,1,,,,execute is the single eligible method and accesses helper
+coupling,java-metrics,java.lcom4,type,validation.coupling.client.Controller,OK,EXACT,1,,,,handle is the single eligible method and accesses service
+overloads,java-metrics,java.lcom4,type,validation.overloads.Overloaded,OK,EXACT,1,,,,run() is a trivial getter; other overloads connect through value and run(int)
+nested-types,java-metrics,java.lcom4,type,validation.nested.Outer,OK,EXACT,1,,,,factory is the single eligible method; local and anonymous bodies are excluded
+nested-types,java-metrics,java.lcom4,type,validation.nested.Outer.StaticNested,OK,EXACT,1,,,,answer is the single eligible method
+nested-types,java-metrics,java.lcom4,type,validation.nested.Outer.Inner,OK,EXACT,1,,,,outerValue is eligible because the accessed field belongs to Outer not Inner
+modern-types,java-metrics,java.lcom4,type,validation.modern.Point,OK,EXACT,1,,,,sum is the single explicit eligible method over record component fields
+modern-types,java-metrics,java.lcom4,type,validation.modern.Mode,OK,EXACT,1,,,,fast is the single eligible enum method
+modern-types,java-metrics,java.lcom4,type,validation.modern.Marker,NOT_APPLICABLE,,,,,INTERFACE_OR_ANNOTATION,annotation types are outside the primary LCOM4 domain
+modern-types,java-metrics,java.lcom4,type,validation.modern.Shape,NOT_APPLICABLE,,,,,INTERFACE_OR_ANNOTATION,interfaces are outside the primary LCOM4 domain
+modern-types,java-metrics,java.lcom4,type,validation.modern.Circle,OK,EXACT,1,,,,area is the single explicit eligible record method
+modern-types,java-metrics,java.lcom4,type,validation.modern.Rectangle,OK,EXACT,1,,,,area is the single eligible method; constructors are excluded
+initializers-lambdas,java-metrics,java.lcom4,type,validation.initializers.InitLambda,OK,EXACT,1,,,,apply is the single eligible method; initializer lambdas are not graph vertices
+unresolved-dependency,java-metrics,java.lcom4,type,validation.unresolved.Broken,NOT_APPLICABLE,,,,,ACCESSORS_ONLY,dependency is a trivial getter despite the unresolved external field type
+basic-members,java-metrics,java.ca,package,validation.basic,OK,EXACT,0,,,,no other project package depends on this package
+basic-members,java-metrics,java.ce,package,validation.basic,OK,EXACT,0,,,,all dependencies remain within the package or outside the project
+basic-members,java-metrics,java.instability,package,validation.basic,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,internal Ca plus Ce is zero
+basic-members,java-metrics,java.abstractness,package,validation.basic,OK,EXACT,0,,,,zero abstract types among two eligible top-level classes
+basic-members,java-metrics,java.distance,package,validation.basic,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,instability is not applicable
+inheritance,java-metrics,java.ca,package,validation.inheritance,OK,EXACT,0,,,,single project package
+inheritance,java-metrics,java.ce,package,validation.inheritance,OK,EXACT,0,,,,inheritance edges are within the package
+inheritance,java-metrics,java.instability,package,validation.inheritance,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,internal Ca plus Ce is zero
+inheritance,java-metrics,java.abstractness,package,validation.inheritance,OK,EXACT,0,,,,all four eligible classes are concrete
+inheritance,java-metrics,java.distance,package,validation.inheritance,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,instability is not applicable
+interfaces,java-metrics,java.ca,package,validation.interfaces,OK,EXACT,0,,,,single project package
+interfaces,java-metrics,java.ce,package,validation.interfaces,OK,EXACT,0,,,,interface edges are within the package
+interfaces,java-metrics,java.instability,package,validation.interfaces,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,internal Ca plus Ce is zero
+interfaces,java-metrics,java.abstractness,package,validation.interfaces,OK,EXACT,0.6666666666666666666666666666666667,,,,two interfaces among three eligible top-level types
+interfaces,java-metrics,java.distance,package,validation.interfaces,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,instability is not applicable
+coupling,java-metrics,java.ca,package,validation.coupling.api,OK,EXACT,2,,,,client and impl depend on api
+coupling,java-metrics,java.ce,package,validation.coupling.api,OK,EXACT,0,,,,api has no internal outgoing package dependency
+coupling,java-metrics,java.instability,package,validation.coupling.api,OK,EXACT,0,,,,Ce zero over Ca two
+coupling,java-metrics,java.abstractness,package,validation.coupling.api,OK,EXACT,1,,,,the sole eligible type is an interface
+coupling,java-metrics,java.distance,package,validation.coupling.api,OK,EXACT,0,,,,A one and I zero lie on the main sequence
+coupling,java-metrics,java.ca,package,validation.coupling.impl,OK,EXACT,0,,,,no project package depends on impl
+coupling,java-metrics,java.ce,package,validation.coupling.impl,OK,EXACT,1,,,,impl depends on api
+coupling,java-metrics,java.instability,package,validation.coupling.impl,OK,EXACT,1,,,,Ce one over Ca zero plus Ce one
+coupling,java-metrics,java.abstractness,package,validation.coupling.impl,OK,EXACT,0,,,,both eligible classes are concrete
+coupling,java-metrics,java.distance,package,validation.coupling.impl,OK,EXACT,0,,,,A zero and I one lie on the main sequence
+coupling,java-metrics,java.ca,package,validation.coupling.client,OK,EXACT,0,,,,no project package depends on client
+coupling,java-metrics,java.ce,package,validation.coupling.client,OK,EXACT,1,,,,client depends on api
+coupling,java-metrics,java.instability,package,validation.coupling.client,OK,EXACT,1,,,,Ce one over Ca zero plus Ce one
+coupling,java-metrics,java.abstractness,package,validation.coupling.client,OK,EXACT,0,,,,the sole eligible class is concrete
+coupling,java-metrics,java.distance,package,validation.coupling.client,OK,EXACT,0,,,,A zero and I one lie on the main sequence
+overloads,java-metrics,java.ca,package,validation.overloads,OK,EXACT,0,,,,single project package
+overloads,java-metrics,java.ce,package,validation.overloads,OK,EXACT,0,,,,no internal package dependency
+overloads,java-metrics,java.instability,package,validation.overloads,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,internal Ca plus Ce is zero
+overloads,java-metrics,java.abstractness,package,validation.overloads,OK,EXACT,0,,,,the sole eligible class is concrete
+overloads,java-metrics,java.distance,package,validation.overloads,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,instability is not applicable
+nested-types,java-metrics,java.ca,package,validation.nested,OK,EXACT,0,,,,single project package
+nested-types,java-metrics,java.ce,package,validation.nested,OK,EXACT,0,,,,nested type dependencies do not create another package
+nested-types,java-metrics,java.instability,package,validation.nested,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,internal Ca plus Ce is zero
+nested-types,java-metrics,java.abstractness,package,validation.nested,OK,EXACT,0,,,,only the concrete top-level Outer is eligible
+nested-types,java-metrics,java.distance,package,validation.nested,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,instability is not applicable
+modern-types,java-metrics,java.ca,package,validation.modern,OK,EXACT,0,,,,single project package
+modern-types,java-metrics,java.ce,package,validation.modern,OK,EXACT,0,,,,sealed hierarchy edges stay within the package
+modern-types,java-metrics,java.instability,package,validation.modern,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,internal Ca plus Ce is zero
+modern-types,java-metrics,java.abstractness,package,validation.modern,OK,EXACT,0.2,,,,one interface among five eligible types; annotation excluded
+modern-types,java-metrics,java.distance,package,validation.modern,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,instability is not applicable
+initializers-lambdas,java-metrics,java.ca,package,validation.initializers,OK,EXACT,0,,,,single project package
+initializers-lambdas,java-metrics,java.ce,package,validation.initializers,OK,EXACT,0,,,,lambda and initializer dependencies do not leave the package
+initializers-lambdas,java-metrics,java.instability,package,validation.initializers,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,internal Ca plus Ce is zero
+initializers-lambdas,java-metrics,java.abstractness,package,validation.initializers,OK,EXACT,0,,,,the sole eligible class is concrete
+initializers-lambdas,java-metrics,java.distance,package,validation.initializers,NOT_APPLICABLE,,,,,NO_PACKAGE_DEPENDENCIES,instability is not applicable
+unresolved-dependency,java-metrics,java.ca,package,validation.unresolved,OK,EXACT,0,,,,own unresolved outgoing edge cannot become a self-package incoming edge
+unresolved-dependency,java-metrics,java.ce,package,validation.unresolved,PARTIAL,AT_LEAST,0,,,UNRESOLVED_PACKAGE_TARGET,unresolved dependency may target another project package
+unresolved-dependency,java-metrics,java.instability,package,validation.unresolved,PARTIAL,,,0,1,UNRESOLVED_PACKAGE_TARGET,zero observed denominator with unresolved outgoing evidence
+unresolved-dependency,java-metrics,java.abstractness,package,validation.unresolved,OK,EXACT,0,,,,the sole eligible class is concrete
+unresolved-dependency,java-metrics,java.distance,package,validation.unresolved,PARTIAL,,,0,1,UNRESOLVED_PACKAGE_TARGET,distance induced by A zero and instability interval zero to one

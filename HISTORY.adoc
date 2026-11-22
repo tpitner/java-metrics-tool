@@ -1,0 +1,152 @@
+= Development History
+:toc:
+:toclevels: 2
+
+== 2026-11-22
+
+* Added the immutable package dependency graph as the foundation for Martin
+  metrics, with package-edge deduplication, self-edge removal, internal target
+  object links, external/JDK classification and unresolved outgoing evidence.
+* Added binding-derived package names to `SymbolRef` and JSON export so nested
+  external types are not classified by an unreliable last-dot heuristic.
+* Added body-level dependency extraction for local types, construction and
+  calls, fields, casts, instanceof, class literals, method references, catch
+  types, lambda targets and concrete generic arguments, with nested-scope
+  isolation and unresolved evidence.
+* Implemented Martin's internal package coupling as `java.ca` and `java.ce`,
+  with exact manifest-scoped counts, conservative partial lower bounds and
+  audit attributes for external, JDK and unresolved outgoing dependencies.
+* Implemented `java.instability` from internal Ca/Ce, including exact isolated
+  package non-applicability, observed-fragment results and a conservative
+  `[0,1]` interval when unresolved targets leave the denominator unknown.
+* Implemented `java.abstractness` for manifest-selected production packages,
+  with explicit top-level type eligibility, annotation/nested exclusions,
+  auditable numerator/denominator counts and empty-package non-applicability.
+* Implemented project-level sensitivity aggregation for partial metric values,
+  including separate lower/upper endpoints, observed-fragment counts, reasons
+  and coverage evidence, plus safe interval endpoint handling.
+* Added deterministic JSON and CSV export of project-level aggregations in
+  `ProjectAggregationExporter`.
+* Updated documentation to remove obsolete next-steps backlog and reference the
+  normative M3 metric set.
+* Implemented normalized Martin main-sequence distance as `java.distance`,
+  preserving input non-applicability and deriving partial point or interval
+  results from incomplete instability evidence.
+* Added 55 manually derived package-level oracle rows and a reproducible Martin
+  validation report spanning exact, partial and not-applicable outcomes.
+* Corrected recovered JDT type bindings to remain unresolved in dependency
+  evidence and binding coverage instead of masquerading as resolved externals.
+* Added the primary project aggregation model with completeness counts,
+  explicit no-value results and Hyndman--Fan Type 7 descriptive statistics
+  over exact `OK` measurements only.
+* Implemented `java.lcom4` as connected components of eligible instance
+  methods linked by shared declared fields or direct intra-type calls,
+  including accessor expansion, applicability reasons, low-information
+  metadata and partial upper bounds for unresolved evidence.
+* Added immutable per-measurement attributes to JSON export so graph size,
+  edge counts, exclusions and unresolved counts remain auditable.
+* Added 25 manually derived LCOM4 corpus expectations (16 exact and 9 not
+  applicable) and a reproducible validation report combining corpus and
+  algorithmic boundary evidence.
+
+== 2026-11-21
+
+* Added the immutable, object-linked LCOM4 cohesion evidence model with
+  explicit method exclusions, instance-field accesses, intra-type calls and
+  unresolved-reference counters.
+* Added JDT extraction of LCOM4 evidence, including structural accessor
+  recognition, overload and recursive-call mapping, lambda inclusion,
+  nested-scope isolation and conservative unresolved-reference classification.
+* Made JDT compilation-unit naming recognize public types with intervening
+  modifiers such as `abstract`, preserving bindings without filename mismatch
+  diagnostics in in-memory and fixture sources.
+* Promoted static/instance initializer blocks and lambda expressions to
+  independent measurement subjects with deterministic identities, source
+  spans, enclosing-subject links and physical LOC/NCLOC measurements.
+* Began native metric implementation with exact `SourceSpan` provenance and
+  physical LOC/NCLOC for project, file, package, type, method and constructor,
+  including nested-type-exclusive variants and lexical handling of comments
+  and text blocks.
+* Completed the manually derived physical LOC/NCLOC corpus oracle with 186
+  values for 25 types, 39 methods/constructors, two initializers and two
+  lambdas across all nine cases, including unresolved bindings and
+  inclusive/exclusive nested-range behavior.
+* Added a configuration guard rejecting enabled CK runs with
+  `variables-and-fields=false` and a consolidated CK validation report for
+  later use in the manuscript.
+* Decoupled the CK test runtime from Maven's Java 27 runtime: real-CK tests now
+  require `-Dck.java` pointing to a Java 21 executable instead of inheriting
+  `java.home`.
+* Completed type-level CK validation for CBO/modified CBO, fan-in/fan-out,
+  LCOM/LCOM*, and TCC/LCC across all 23 stable type subjects.
+* Completed method/constructor-level CK CBO and modified-CBO validation for
+  all 38 stable member subjects, including signatures, invocations, overloads,
+  local/anonymous construction and unresolved types.
+* Completed method/constructor-level CK fan-in and fan-out validation for all
+  38 stable member subjects, closing the scope matrix of the 18 published CK
+  metric definitions.
+* Recorded a reproducible CK TCC/LCC limitation: the pinned standalone JAR
+  resolves no method field usage in the corpus and also returns zero for
+  upstream cohesion fixtures whose source tests expect non-zero TCC.
+* Isolated the TCC/LCC cause outside `java-metrics`: CK disables
+  `MethodLevelFieldUsageCount` when `variablesAndFields=false` while still
+  emitting zero cohesion values. Switched validation and documented production
+  runs to `true`, re-established the non-zero oracle and retained both metrics
+  for the article.
+* Refactored `CkMetricDefinition` to use `Set.of` instead of
+  `Collections.unmodifiableSet(EnumSet.of(...))`.
+* Moved CK failure cleanup in `CkProcessRunner` into a `finally` block
+  guarded by a success flag.
+* Added shared validation helpers `Strings.requireNonBlank`,
+  `Strings.ensureNonBlank`, `Strings.requireNonNull` and
+  `Strings.ensureNonNull`; applied them in `ProviderRunMetadata`,
+  `SubjectRef`, `MeasurementKey`, `MetricMeasurement`, `MeasurementStore`
+  and `MetricCatalog`.
+* Added `Lists.filtered` helper and used it in `MeasurementStore`.
+* Replaced `Collections.unmodifiableSet(EnumSet.copyOf(...))` with
+  `Set.copyOf(...)` where applicable.
+* Turned `MeasurementStore.Builder` into a `record`.
+
+== 2026-11-20
+
+* Added a provider-neutral validation corpus with eight isolated Maven projects,
+  machine-readable build/subject/measurement oracles and executable checks for
+  compilation, JDT subject mapping and built-in member-count metrics.
+* Added an opt-in real-CK corpus test covering all eight projects, required
+  subject mapping, provider-specific exclusions and future `ck.*` oracle rows.
+* Completed the first manually derived CK measurement oracle across the corpus
+  for type-level method/public-method and field/public-field counts, including
+  constructors, interfaces, overloads, nested and modern Java types, and an
+  unresolved external dependency.
+* Completed corpus-wide CK DIT/NOC validation and documented its class-only
+  inheritance semantics, including the exclusion of interface and sealed
+  implementation edges when bindings are resolved.
+* Completed CK parameter-count validation for all stable explicit method and
+  constructor subjects, including overload signatures, nested and modern Java
+  types, and a syntactically identified unresolved parameter type.
+* Completed CK WMC validation for all 61 stable type, method and constructor
+  subjects and documented CK's branch and standalone-comparison semantics.
+* Completed CK RFC validation for all 61 stable type, method and constructor
+  subjects: RFC 0 for 49 cases, non-zero only for real MethodInvocation/
+  SuperMethodInvocation nodes; nested/local/anonymous class calls are isolated and
+  field/expression operations do not count.
+* Completed CK LOC validation for all 61 stable subjects, including normalized
+  AST rendering behavior for nested, anonymous, record and enum declarations.
+* Fixed parser traversal of local and anonymous types: prevented recursive
+  reprocessing of the root anonymous declaration and mutation during type iteration.
+* Documented the oracle as independently established expected evidence rather
+  than the output of CK, CKJM-extended or the provider under test.
+* Fixed GitLab CI configuration: moved `variables` from `default` to the global `variables` section.
+* Documented Maven Site with Javadoc (published via GitLab Pages) as an achieved result in `docs/03-design.adoc`, `README.adoc` and `docs/01-research-plan.adoc`.
+* Added `HISTORY.adoc` to track project-wide changes (design, implementation, docs, manuscript).
+
+== 2026-11-18
+
+* Integrated Eclipse JDT Core for AST parsing.
+* Added support for nested and anonymous classes.
+* Fixed incorrect method counting.
+
+== 2026-11-15
+
+* Established initial Maven project structure.
+* Implemented basic type and method metrics.

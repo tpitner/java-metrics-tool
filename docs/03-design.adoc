@@ -1,0 +1,781 @@
+== Návrh: CLI analyzátor Java metrik (Eclipse JDT Core 3.47.0)
+
+____
+Fáze: *průběžně implementovaný návrh*. T0/T1 a základ objektového modelu T2
+jsou implementovány; další části dokumentu vymezují navazující architekturu.
+____
+
+=== 1. Cíl MVP
+
+Pro zadaný soubor `.java` vypsat:
+
+* název balíku,
+* všechny deklarované typy (`class`, `interface`, `enum`, `record`,
+`@interface`),
+* hierarchii vnoření,
+* kanonická měření počtů přímo deklarovaných metod, konstruktorů a polí.
+
+Příklad výstupu:
+
+....
+Package: cz.utulnykoutek.example
+
+Outer [class]
+  Declared: methods=2, constructors=1, fields=3
+
+  Inner [class]
+    Declared: methods=3, constructors=1, fields=2
+
+    DeepInner [class]
+      Declared: methods=2, constructors=0, fields=0
+....
+
+=== 2. CLI
+
+....
+java-metrics [<file.java|directory> ...] [--config <file.toml>]
+             [--validate-config] [--print-effective-config]
+             [--pom <pom.xml>] [--format text|json|preview]
+             [--sourcepath <dir[:dir]>] [--classpath <jar[:jar]>] [--release <level>]
+             [--recursive|--no-recursive] [--include-tests] [--no-compile]
+....
+
+* Vstup: jeden `.java` soubor, adresář (rekurzivně ve výchozím stavu),
+nebo Maven projekt přes `--pom`.
+* Dodatečné zdrojové kořeny (`--sourcepath`) se také prohledávají a
+balíky se slučují podle názvu.
+* Výchozí výstup: text na stdout. `--format json` vrací strojově čitelný
+JSON (včetně baseline metadat), `--format preview` barevný stromový
+náhled.
+* TOML se načítá pouze po explicitním `--config`; precedence je
+  defaults < TOML < explicitní CLI. `--validate-config` provede validaci bez
+  analýzy a `--print-effective-config` vypíše deterministickou výslednou
+  konfiguraci.
+* Exit kódy: `0` OK, `1` syntaktické chyby analýzy, `2` špatné argumenty
+/ chyba IO / chyba řešení projektu.
+
+=== 3. Vrstvy
+
+....
+cli/            - parsování argumentů, spuštění, formátování výstupu
+config/         - načtení TOML, typovaný model, defaults, precedence, validace a provenance
+parser/         - adaptér na Eclipse JDT (ASTParser -> doménový model)
+domain/         - čistý hierarchický model (bez závislosti na JDT)
+metrics/        - výpočty, definice metrik, výsledky měření a provider rozhraní
+export/         - textový a JSON výstup (rozhraní pro budoucí SQLite)
+....
+
+Závislosti tečou směrem dolů: `cli -++>++ parser -++>++ domain`,
+`metrics -++>++ domain`, `export -++>++ domain`. Doména nezná JDT ani
+úložiště.
+
+=== 4. Doménový model (návrh)
+
+==== 4.1 Společný základ `Compound`
+
+`Compound` je abstraktní uzel stromu, který může obsahovat další
+`Compound`-y (vnořené typy) a `Member`-y. Záměrně je společný pro *balík
+i typy*, protože oba jsou „kontejnery“ s hierarchií a počty členů.
+
+Vlastnosti:
+
+[width="100%",cols="34%,33%,33%",options="header",]
+|===
+|Vlastnost |Typ |Popis
+|`id` |`String` |stabilní identifikátor (viz §5)
+
+|`kind` |`CompoundKind` |`PACKAGE`, `CLASS`, `INTERFACE`, `ENUM`,
+`RECORD`, `ANNOTATION`
+
+|`name` |`String` |jednoduché jméno (`Outer`, balík `cz...`)
+
+|`qualifiedName` |`String` |FQN (pro typy) / plně kvalifikovaný název
+balíku
+
+|`parent` |`Compound` (nullable) |rodič ve stromu
+
+|`children` |`List++<++Compound++>++` |vnořené typy (u balíku top-level
+typy) — seřazeno dle zdroje
+
+|`members` |`List++<++Member++>++` |přímo deklarované členy — seřazeno
+dle zdroje
+
+|===
+
+Metrické hodnoty nejsou stavem uzlu. Počty deklarovaných členů se odvozují
+z `ProviderResult`/`MeasurementStore` produkovaného `JavaMetricsProvider`;
+rekurzivní counts se implicitně nepočítají.
+
+==== 4.1.1 Volba `List` vs `Set`
+
+* *`List`* pro vše, kde záleží na pořadí ze zdroje: `children`,
+`members`, `parameters`, `interfaces`, `typeParameters`. Zachovává
+deklarační pořadí (důležité pro výstup i determinismus) a umožňuje
+duplikáty jen tam, kde jsou v Javě povoleny (parametry se stejným jménem
+nejsou, ale např. `throws` může opakovat — zde neřešíme).
+* *`Set`/`EnumSet`* pro neuspořádané unikátní kolekce: `modifiers` (sada
+příznaků), případně množiny ID ve vztazích (`MethodOverrideRelation`
+atd.).
+* Unikátnost jmen typů v rámci jednoho obalu je v Javě vynucena
+kompilátorem, takže `List` dětí nepotřebuje deduplikaci; parser ji může
+kontrolovat a při kolizi vyhodit chybu.
+* Pokud bychom chtěli garantovat unikátnost i v modelu, lze použít
+`LinkedHashSet` a exponovat `List` view — pro MVP zůstáváme u `List`
+{plus} validace v parseru.
+
+==== 4.2 Typy
+
+`TypeCompound extends Compound` přidává metadata specifická pro typ:
+
+* `superclass` : `TypeRef` (nullable) — dědičnost třídy
+* `interfaces` : `List++<++TypeRef++>++` — implementovaná/rozšířená
+rozhraní (pořadí ze zdroje)
+* `modifiers` : `EnumSet++<++Modifier++>++` (`public`, `static`,
+`abstract`, `final`, `sealed`, …)
+* `nesting` : `NestingKind` — viz níže
+* `typeParameters` : `List++<++String++>++` (generika, volitelně
+později)
+
+==== 4.2.1 `NestingKind` a rozpoznání „inner“ třídy
+
+....
+enum NestingKind { TOP_LEVEL, STATIC_MEMBER, INNER_MEMBER, LOCAL, ANONYMOUS }
+....
+
+* `INNER++_++MEMBER` = vnořený typ, který *není* `static` a není
+implicitně statický.
+* V Javě jsou implicitně statické: vnořená `interface`, `enum`,
+`record`, `@interface` a `static class`.
+* Proto je „inner class“ prakticky pouze nestatická vnořená `class`
+(`class Foo ++{++ class Bar ++{++} }`).
+* Odvození v parseru: `Modifier.isStatic(type.getModifiers())` {plus}
+`kind` {plus} zda je typ členem jiného typu (ne top-level).
+Lokální/anonymní typy se poznají podle rodičovského uzlu AST
+(blok/metoda), ne podle modifikátorů.
+* Pomocná metoda
+`TypeCompound.isInner() == (nesting == INNER++_++MEMBER)`.
+* V MVP (§6) lokální/anonymní typy vynecháme, ale pole `nesting` model
+připravuje.
+
+`PackageCompound extends Compound` má navíc seznam importů (volitelně,
+pro budoucí metriky).
+
+`TypeRef` = lehký odkaz na typ (`qualifiedName`, případně `id`), bez
+plného objektu — kvůli cyklům a serializaci.
+
+==== 4.2.2 Cohesion evidence pro LCOM4
+
+`TypeCompound.cohesionEvidence` je `null`, dokud neproběhne specializovaná
+JDT extrakce. Poté odkazuje na immutable `TypeCohesionEvidence`, které drží
+přímo objekty instančních `Field` deklarovaných typem a deklarované pořadí
+`MethodCohesionEvidence`; neduplikuje jejich identity do stringového modelu.
+
+`MethodCohesionEvidence` obsahuje:
+
+* odkaz na příslušnou přímo deklarovanou `Method`;
+* množinu důvodů vyloučení z grafu (`STATIC_METHOD`, `NO_BODY`,
+  `TRIVIAL_ACCESSOR`); prázdná množina znamená eligible vertex;
+* přímo odkazované instanční fields stejného vlastníka;
+* přímo volané deklarované metody stejného vlastníka;
+* počty nerozřešených field accesses a potenciálních intra-type calls.
+
+Konstruktory nejsou v seznamu metod vůbec. Evidence vyloučených accessorů se
+zachovává, protože volání accessorů z eligible metody se později rozvine na
+přístup k backing fieldu. Kolekce jsou defensive-copy immutable a konstruktor
+validuje vlastníka, instanční charakter fields, duplicity a nezáporné unresolved
+počty. Toto je vstupní auditní model; vlastní výpočet komponent grafu provede
+samostatný `Lcom4Computer`.
+
+Implementovaný `CohesionEvidenceExtractor` se spouští v `JdtParser` po načtení
+všech deklarovaných členů běžného i anonymního typu. Prochází těla metod včetně
+lambda expressions, ale zastaví se na hranici local, member a anonymous type.
+Resolved field/method bindings mapuje přímo na existující doménové objekty;
+u chybějících bindings označí jako unresolved pouze jméno shodné s přímo
+deklarovaným fieldem nebo volání se shodným názvem a aritou deklarované metody.
+Neznámé volání bez takového kandidáta se za intra-type evidence nepovažuje.
+
+Triviální getter musí mít bezparametrické tělo tvořené jediným `return` přímého
+instance fieldu. Triviální setter má právě jeden parametr a jediný jednoduchý
+assignment tohoto parametru do přímého instance fieldu. Výpočtový getter ani
+vícestatementový setter se nevylučují. Overload cíl se určuje bindingem, nikoliv
+jen jménem; rekurzivní call se zachová jako self-reference. Unit name pro
+`ASTParser` se odvodí z veřejné type deklarace včetně mezilehlých modifikátorů,
+aby bindings fungovaly také pro `public abstract class` a současně nevznikla
+falešná diagnostika při analýze zdroje předaného pod jiným názvem souboru.
+
+==== 4.3 Členové (`Member`)
+
+Společný základ:
+
+[cols=",",options="header",]
+|===
+|Vlastnost |Typ
+|`id` |`String`
+|`owner` |`Compound`
+|`name` |`String`
+|`modifiers` |množina
+|`javaType` |`String` (FQN návratového/pole typu, kde dává smysl)
+|===
+
+Podtypy:
+
+* `Method` — `returnType`, `parameters: List++<++Parameter++>++`,
+`thrownExceptions`, `isOverride` (později),
+`overriddenMethod: MethodRef` (později)
+* `Constructor` — `parameters`
+* `Field` — `type`, `isStatic`, `isFinal`, inicializátor (volitelně)
+
+`Parameter` = `++{++ name, type: String (FQN nebo primitivum) }`.
+
+Poznámka: v JDT jsou konstruktory reprezentovány jako
+`MethodDeclaration` s `isConstructor() == true`. V doméně je oddělujeme
+do `Constructor` pro přehlednost metrik.
+
+==== 4.4 Vztahy (rozšiřitelnost)
+
+Pro pozdější metriky navrhuji samostatné „relation“ objekty místo
+přímých referencí, aby se daly snadno serializovat (JSON/SQLite) a
+dotazovat:
+
+* `InheritanceRelation ++{++ subtypeId, supertypeId }`
+* `InterfaceImplementationRelation ++{++ typeId, interfaceId }`
+* `MethodOverrideRelation ++{++ overridingMethodId, overriddenMethodId }`
+* `MethodOverloadRelation ++{++ methodIds }` (volitelné)
+* `FieldHidingRelation` (volitelné)
+
+V MVP stačí uložit `superclass`/`interfaces` přímo v `TypeCompound` a
+`overriddenMethod` v `Method`; relation objekty lze odvodit později.
+Model to však musí umožnit (ID-based).
+
+=== 5. Identifikátory
+
+Deterministické, cestové (ne UUID), aby byly stabilní mezi běhy:
+
+* Balík: `pkg:++<++qualifiedPackage++>++` (např.
+`pkg:cz.utulnykoutek.example`)
+* Typ:
+`type:++<++package++>++:++<++enclosingTypePath++>++:++<++simpleName++>++`
+(např. `type:cz.utulnykoutek.example:Outer.Inner`)
+* Člen:
+`member:++<++ownerTypeId++>++:++<++kind++>++:++<++signature++>++` (např.
+`member:...:method:foo(int,java.lang.String)`)
+
+FQN typu slouží jako „java type“ identita; `id` je pro interní
+graf/vazby.
+
+=== 6. Mapování JDT -++>++ doména
+
+JDT API (3.47.0):
+
+* `ASTParser` s `AST.getJLSLatest()` (aktuálně JLS26),
+`setKind(ASTParser.K++_++COMPILATION++_++UNIT)`.
+* `CompilationUnit.getPackage()` -++>++ `PackageDeclaration` -++>++
+jméno balíku.
+* Typy:
+** `TypeDeclaration` -++>++ `CLASS` / `INTERFACE` (podle
+`isInterface()`)
+** `EnumDeclaration` -++>++ `ENUM`
+** `RecordDeclaration` -++>++ `RECORD`
+** `AnnotationTypeDeclaration` -++>++ `ANNOTATION`
+* Členové z `bodyDeclarations()`:
+** `MethodDeclaration`:
+*** `isConstructor() == true` -++>++ `Constructor`
+*** jinak -++>++ `Method`
+*** u anotačních typů jsou členy také `MethodDeclaration` (počítáme jako
+metody)
+** `FieldDeclaration` -++>++ pro každý `VariableDeclarationFragment`
+jeden `Field` (tj. `int a, b;` = 2 pole)
+** vnořené typy -++>++ rekurze (jsou v `bodyDeclarations()` jako
+`AbstractTypeDeclaration`); modifikátory přes `getModifiers()` a
+`Modifier.isStatic(...)` pro určení `NestingKind`
+* lokální/anonymní typy v MVP přeskočit (detekce dle rodičovského uzlu
+AST)
+* Konstruktory recordů: compact constructor je `MethodDeclaration` s
+`isConstructor()`.
+
+Volitelné (MVP ne): lokální/anonymní třídy — zatím ignorovat (nebo
+volitelný přepínač).
+
+=== 7. Měření přímo deklarovaných členů
+
+[arabic]
+. Parser postaví strom `Compound` (balík -++>++ top-level typy -++>++
+vnořené typy) a naplní `members`.
+. `JavaMetricsProvider` spustí `MemberCountComputer` nad každým typem.
+. Computer vytvoří přesná type-level měření `java.declared-methods`,
+  `java.declared-constructors` a `java.declared-fields`.
+. Výstupní formátovače čtou hodnoty z `ProviderResult`/`MeasurementStore`;
+  doménový strom se měřením nemutuje.
+
+Rekurzivní counts se nepočítají. Každý nested, local nebo anonymous typ je
+samostatný subjekt. Enum konstanty se do `java.declared-fields` nezapočítávají.
+
+=== 7.1 Definice a identita metrik
+
+T2 výsledky se neukládají do obecného `Compound.metrics` a provider nemění
+doménový strom. Identita metriky je strukturovaná dvojice
+`MetricId(MetricNamespace, MetricName)`, například `java.dit`, `ck.dit` nebo
+`pmd.cyclomatic`. Stejný krátký název v různých namespaces proto neznamená
+automaticky stejnou operační definici.
+
+`MetricDefinition` je interface s vlastnostmi `id`, `supportedScopes`, `unit`
+a verzovaným `specificationKey`. Vestavěné definice implementuje enum
+`BuiltInMetricDefinition`; externí providery dostanou vlastní sady definic.
+`MetricCatalog` je immutable `NavigableMap` řazená explicitním
+lexikografickým pořadím `MetricId` a odmítá duplicitní identifikátory.
+
+`MetricScope` rozlišuje projekt, soubor, balík, typ, metodu, konstruktor,
+inicializační blok a lambdu. `MetricUnit` současně určuje numerický tvar:
+`COUNT` a `LINES` jsou integrální, zatímco `RATIO` a
+`NORMALIZED_DISTANCE` připouštějí desetinné hodnoty.
+
+=== 7.2 Výsledky měření
+
+Jedno `MetricMeasurement` měří právě jeden `SubjectRef` a je identifikováno
+trojicí metrika, subjekt a běh provideru. Doménový objekt se do výsledku
+nevkládá přímo; stabilní ID umožňuje mapování výstupů externích nástrojů,
+deterministickou serializaci a porovnání běhů.
+
+Uzavřená hierarchie `MeasurementResult` nepoužívá volné kombinace nullable
+polí:
+
+* `NumericResult` nese číslo a vztah `EXACT`, `AT_LEAST`, `AT_MOST` nebo
+  `OBSERVED_FRAGMENT`;
+* `IntervalResult` nese inkluzivní dolní a horní mez;
+* `UnavailableResult` vysvětluje, proč nelze obhajitelnou hodnotu určit;
+* `NotApplicableResult` vysvětluje, proč metrika pro konkrétní subjekt nemá
+  hodnotu.
+
+Nepřesné výsledky nesou strojově čitelné `ReasonCode` a případně typovanou
+`CoverageEvidence`. Stav `OK`/`PARTIAL`/`UNAVAILABLE`/`NOT_APPLICABLE` se
+odvozuje z konkrétního typu výsledku, takže se nemůže dostat do rozporu s
+hodnotou.
+
+`MeasurementStore` je immutable a deterministicky řazený. Při sestavení
+ověřuje existenci definice, podporovaný scope, jednotku hodnoty a unikátnost
+klíče `(metricId, subject, providerRunId)`. Staré `Counts` ani obecná mapa
+`Compound.metrics` již nejsou součástí doménového modelu.
+
+=== 7.3 Provider kontrakt
+
+Nemutující `MeasurementProvider` přijme projektový `AnalysisContext` a vrátí
+`ProviderResult` s měřeními, `ProviderRunMetadata` a diagnostikou. Statické
+schopnosti provideru se odvozují z jeho `definitions()`; samostatný
+`ProviderDescriptor` není potřeba. `JavaMetricsProvider` orchestruje
+`BuiltInMetricComputer`, aktuálně `MemberCountComputer`. Každý externí
+provider si spravuje vlastní parser nebo CLI a cizí AST se nepřenáší do
+doménového modelu.
+
+=== 7.4 Konfigurace běhu a provenance
+
+`ConfigLoader` načítá pomocí TomlJ explicitně předaný TOML do řídkého
+`ToolConfig`: přítomnost hodnoty je odlišena od defaultu. Loader odmítá
+neznámé klíče a nesprávné typy. `EffectiveConfigResolver` následně aplikuje
+precedence defaults < TOML < explicitní `CliOverrides`, normalizuje cesty a
+vytvoří plně typované `EffectiveConfig`. Cross-field a filesystem omezení
+ověřuje `ConfigValidator`.
+
+Výsledná konfigurace je složena z `ProjectConfig`, `OutputConfig` a
+`ProviderConfigs`; provider-specific části jsou `JavaProviderConfig` a
+`CkProviderConfig`. CK JAR není implicitně odvozován z `../ck`: cesta je
+volitelná při vypnutém provideru a povinná při jeho zapnutí. Relativní cesty v
+TOML se řeší vůči adresáři TOML, zatímco CLI cesty vůči working directory.
+
+Schema verze 1 záměrně nepodporuje auto-discovery konfiguračních souborů,
+includes, environment interpolation ani shell expansion. `--validate-config`
+validuje bez měření; `--print-effective-config` vypíše deterministický TOML s
+absolutními cestami. `ConfigurationProvenance` uchovává zdrojovou cestu a
+SHA-256, effective TOML a jeho SHA-256 i seznam CLI override klíčů. Tyto údaje
+se propisují do `BaselineMetadata.configuration` a JSON exportu.
+
+=== 7.5 Binding resolution (přeložitelnost a metriky)
+
+Aby bylo možné použít JDT bindings smysluplně (skutečná přeložitelnost a
+metriky nad rozřešenými typy), je třeba:
+
+* *Zapnout bindings* v `ASTParser`: `setResolveBindings(true)`,
+`setBindingsRecovery(true)`, `setStatementsRecovery(true)`.
+* *Dodat prostředí* přes
+`setEnvironment(classpath, sourcepath, encodings, includeBootclasspath)`:
+** `classpath`: JARy závislostí {plus} zkompilované třídy projektu
+{plus} modulová cesta (JPMS).
+** `sourcepath`: kořeny zdrojů (pro rozřešení typů ze zdrojů).
+** bootclasspath/JRT: JDK moduly (`jrt:/` nebo `JAVA++_++HOME/jmods`).
+* *Nastavit `unitName`* (relativní cesta k souboru) a *kompilátorové
+volby* (source/target/release, compliance, preview features) přes
+`JavaCore`/`CompilerOptions`.
+* *Kompilovatelnost ověřit* (volitelně) samostatným krokem
+(`javax.tools.JavaCompiler` nebo JDT compiler) před měřením, aby se
+metriky počítaly jen nad přeložitelným kódem.
+* *Zacházet s chybějícími závislostmi*: bindings mohou být `null` nebo JDT
+  `isRecovered()`; recovered binding poskytuje nanejvýš syntaktickou identitu,
+  ale není resolved důkazem. Parser nesmí selhat, metriky závislé na bindings se přeskočí nebo označí
+jako neznámé.
+* *Verze Javy*: JDT 3.47 podporuje do JLS26; pro Java 27 použít nejvyšší
+podporovanou úroveň (nebo aktualizovat JDT).
+* *Projektový režim*: pro větší projekty použít JDT Java model
+(`IJavaProject`), který spravuje classpath/sourcepath automaticky místo
+ručního `setEnvironment`.
+
+==== Důsledky pro model
+
+* `TypeRef` se naplní skutečnými FQN (včetně `id` vazby).
+* Vztahy (dědičnost, implementace, override) lze odvodit z bindings.
+* Metriky závislé na typech (např. počty přepsaných metod) vyžadují
+bindings.
+
+=== 8. Budoucí rozšíření (bez přepracování)
+
+* *JSON export*: serializace `Compound` stromu {plus} measurements {plus}
+(později) relations. Rozhraní `Exporter`.
+* *YAML export*: smysluplné kvůli čitelnosti pro člověka (hierarchie,
+komentáře, méně závorek než JSON). Doporučení: implementovat až po JSON
+jako další `Exporter`, sdílet stejný model/serializační logiku; YAML
+vhodný pro ruční inspekci a konfiguraci, JSON pro strojové zpracování.
+Závislost: SnakeYAML (nebo Jackson YAML). Nevýhody: menší ekosystém
+toolingu, riziko rozdílů v serializaci oproti JSON.
+* *SQLite*: tabulky `compound`, `member`, `relation`; DAO vrstva nad
+stejným modelem.
+* *Další metriky*: např. hloubka vnoření, počet přepsaných metod, LOC,
+cyklomatická složitost — jako další `Metric` implementace nad
+`Compound`.
+* *PMD jako volitelný doplněk*: PMD (a jeho JavaParser-based AST) nabízí
+hotové metriky (cyklomatická složitost, kognitivní složitost, LOC,
+duplicita, code smells) a bohatou sadu pravidel. Doporučení: *ne* míchat
+PMD AST s JDT AST v jednom modelu. Místo toho implementovat
+`PmdMetricsProvider` za `MeasurementProvider`, který si sám naparsuje soubor
+a vrátí oddělená měření. PMD dává smysl až pro metriky, které JDT
+nepokrývá (složitost, code smells) — strukturální metriky (počty,
+hierarchie) nechte na JDT.
+* *Checkstyle jako threshold/violation provider*: izolovaný
+`CheckstyleMetricsProvider` spustí zmrazený XML ruleset a převezme šest
+Metrics Checks (Boolean Expression Complexity, Class Data Abstraction
+Coupling, Class Fan-Out Complexity, Cyclomatic Complexity, JavaNCSS a NPath
+Complexity) spolu se style/design nálezy. Checkstyle AST se nebude míchat s
+JDT modelem ani používat pro počty/hierarchii. Provider uloží check, location,
+severity, skutečnou hodnotu z nálezu, limit, tokens a exclusions. Bez
+zvláštního complete-value adaptéru nejde o úplnou numerickou distribuci:
+absence nálezu znamená pouze nepřekročení prahu.
+* *LLM/AI-orientované metriky (budoucnost)*: metriky zaměřené na kvalitu
+kódu generovaného/assistovaného LLM. Kandidáti pro budoucí
+`MeasurementProvider` (nebo samostatnou vrstvu nad modelem):
+** *Funkční správnost*: `pass@k` (HumanEval/MBPP styl), úspěšnost
+kompilace, úspěšnost testů, počet selhávajících testů.
+** *Strukturální kvalita generovaného kódu*: cyklomatická/kognitivní
+složitost, délka metod, hloubka vnoření, počet parametrů, duplicita
+(PMD/CPD), maintainability index.
+** *Bezpečnost*: počet zranitelností (Snyk/Semgrep/SpotBugs), OWASP top
+10 nálezy, tajemství v kódu.
+** *Halucinace a konzistence*: reference na neexistující API/symboly,
+nesoulad s deklarovanými typy, „code hallucination rate“.
+** *Čitelnost a styl*: konvence pojmenování, dokumentace (Javadoc
+coverage), formátování (Checkstyle).
+** *Udržovatelnost a technický dluh*: code smells, „AI technical debt“,
+churn generovaného kódu, poměr upraveného vs. přijatého kódu.
+** *Efektivita*: tokenová délka řešení, počet iterací do funkčního
+výsledku, latence generování.
+** *Hodnocení LLM-as-a-judge*: skóre kvality od jiného modelu, párové
+preference, rubric-based hodnocení.
+** *Benchmarky/datasety*: HumanEval, MBPP, SWE-bench, CodeContests,
+EvalPlus, BigCode Evaluation Harness.
+** *Detekce AI kódu*: watermarking/stylometrie (pokud relevantní).
+** Poznámka: většina těchto metrik není čistě statická — vyžadují
+spuštění testů, LLM volání nebo specializované nástroje. Proto je model
+navržen tak, aby je šlo přidat jako další `MeasurementProvider`/vrstvu nad
+`Compound`, bez zásahu do jádra.
+* *Využití bindingů*: z již zapnutého binding resolution
+(`setResolveBindings(true)`) naplnit `TypeRef.id` skutečnými FQN a
+odvodit vztahy (dědičnost, override). Doména to neovlivní (jen `TypeRef`
+se lépe naplní).
+* *Více souborů / projekt*: balík jako kořen agregující více CU.
+
+=== 9. Otevřené otázky k rozhodnutí
+
+[arabic]
+. *Počítání polí*: fragmenty (`int a,b;` = 2) vs. deklarace (1). Návrh:
+fragmenty (běžná praxe metrik).
+. *Enum konstanty*: počítat jako pole? Návrh: ne (jsou
+`EnumConstantDeclaration`, ne `FieldDeclaration`).
+. *Anotační členy*: počítat jako metody? Návrh: ano.
+. *Lokální/anonymní třídy*: zahrnout? Návrh: v MVP vynechat, později
+přepínač.
+. *Records*: kompaktní konstruktor {plus} kanonický — počítat všechny
+`isConstructor()`.
+. *Rozhraní*: metody v rozhraní (včetně default/static) počítat jako
+metody.
+
+=== 10. Doporučená struktura balíků (Java)
+
+....
+cz.utulnykoutek.metrics
+├── cli.Main
+├── config.ConfigLoader, ToolConfig, EffectiveConfigResolver, ConfigValidator
+├── config.ProjectConfig, OutputConfig, ProviderConfigs, ConfigurationProvenance
+├── parser.JdtParser
+├── domain.Compound, TypeCompound, PackageCompound, Member, Method, Constructor, Field, SymbolRef
+├── metrics.MeasurementProvider, JavaMetricsProvider, BuiltInMetricComputer
+├── metrics.MemberCountComputer, SourceLineMetricsComputer, Lcom4Computer
+├── metrics.AnalysisContext, ProviderResult
+├── metrics.ck.CkProcessRunner, CkCsvReader, CkSubjectMapper, CkMetricsProvider
+└── export.TextExporter, JsonExporter, YamlPreviewConverter
+....
+
+=== 11. Další krok
+
+Původní MVP je implementováno. Aktuální pokračování je popsáno v §12.2 a v
+`docs/01-research-plan.adoc`; další vlastní metriky vznikají jako
+`BuiltInMetricComputer` pod `JavaMetricsProvider`.
+
+`Lcom4Computer` je implementován jako třetí built-in computer. Nad eligible
+methods vytvoří neorientovaný graf, propojí dvojice sdílející effective
+instance field a přidá hrany přímých intra-type calls. Volání vyloučeného
+triviálního accessoru se rozvine na jeho backing field. Union-find určí počet
+komponent bez závislosti na pořadí průchodu.
+
+Při unresolved field/call evidence je pozorovaný počet komponent horní mez
+(`PARTIAL`, `AT_MOST`), protože chybějící hrana může komponenty pouze spojit.
+Interface/annotation, static utility type, accessors-only a obecný stav bez
+eligible methods mají samostatné `NOT_APPLICABLE` reason codes. Přesná hodnota
+jediné eligible metody je 1 a measurement nese `lowInformation=true`.
+Immutable measurement attributes v JSON dále uvádějí počet eligible metod,
+instančních fields, field/call hran, accessorů a unresolved evidencí.
+
+==== 11.1 Package dependency graph
+
+`PackageDependencyGraphBuilder` vytváří immutable projekci type-level
+`DependencyEdge` na orientované package edges. Interní cíl drží přímý odkaz na
+`PackageCompound`; external a JDK cíl uchovává binding-derived package name.
+Hrany stejné uspořádané dvojice balíků se sloučí, ale pro audit zůstane množina
+`DependencyUsage` a počet unikátních type-to-type dependencies. Self-package
+hrany a primitive/type-parameter references se odstraní. Default package má
+stabilní jméno `<default>`.
+
+Nerozřešený target netvoří fiktivní package edge, protože jeho cílový balík
+není známý; graph místo toho uchovává počet unresolved outgoing evidencí pro
+zdrojový balík. `PackageDependencyGraph` poskytuje deterministické seznamy
+outgoing hran podle originu a incoming interních hran.
+
+`SymbolRef.packageName` se při JDT bindings plní z `ITypeBinding.getPackage()`,
+nikoliv odříznutím posledního segmentu FQN; to je nutné pro nested external
+types. JDT body extractor doplňuje local-variable types, instantiations a
+constructor calls, method calls, field accesses, casts, `instanceof`, class
+literals, method/creation references, catch types, lambda target types a
+konkrétní generic arguments. Lambda patří enclosing executable scope; těla
+local/anonymous typů zůstávají u jejich vlastního `TypeCompound`. Chybějící
+type/call/explicit-field binding vytváří unresolved edge bez domyšleného cíle.
+Graph tak obsahuje deklarativní i schválené body-level usages pro Ca/Ce.
+
+`MartinCouplingComputer` graph sestaví jednou pro celý `AnalysisContext` a pro
+každý `PackageCompound` publikuje `java.ca`, `java.ce` a odvozenou
+`java.instability`. Primární numerická
+hodnota používá pouze unikátní interní package edges. `Ce` je při unresolved
+outgoing targetu známá dolní mez. `Ca` je dolní mez, pokud má unresolved
+outgoing evidence kterýkoli jiný analyzovaný balík; vlastní unresolved outgoing
+hrana nemůže zvýšit incoming coupling téhož balíku, protože self-package edge
+je z definice vyloučena.
+
+Measurement attributes uchovávají interní incoming/outgoing počet, external a
+JDK outgoing počty, celkový resolved outgoing počet a unresolved outgoing i
+potential incoming evidence. Globální external incoming coupling se
+nepublikuje.
+
+Instability se počítá jako `Ce / (Ca + Ce)`. Při úplném grafu a nulovém
+jmenovateli vrací `NOT_APPLICABLE/NO_PACKAGE_DEPENDENCIES`. Jakákoli relevantní
+unresolved evidence se propaguje: při nenulovém pozorovaném jmenovateli je
+poměr `PARTIAL/OBSERVED_FRAGMENT`, protože podíl není monotónní funkcí obou
+neúplných vstupů; při nulovém pozorovaném jmenovateli je bezpečným výsledkem
+interval `[0,1]`.
+
+`AbstractnessComputer` pracuje přímo nad top-level dětmi každého
+`PackageCompound`. Vstupní `AnalysisContext` je zároveň manifestem produkčních
+zdrojů; provider z názvů cest nehádá testovací source set. Do jmenovatele patří
+class, interface, record a enum, do čitatele interface a explicitně abstract
+class. Annotation a non-top-level typy se nezapočítají. Výstupní attributes
+uchovávají oba počty i počty hlavních vyloučených kategorií.
+
+`java.distance` vzniká ve stejném průchodu package graphem jako instability,
+aby používala totožné Ca/Ce a unresolved evidence. Přesné A a I dávají přesné
+stem:[|A+I-1|]. `OBSERVED_FRAGMENT` vstupu zůstává observed fragmentem. Interval
+I se přes absolutní funkci transformuje na bezpečný interval D včetně vnitřního
+minima v bodě stem:[I=1-A]. Neaplikovatelnost kteréhokoli vstupu se zachová.
+
+'''''
+
+_Tento dokument je živý; změny modelu zde zaznamenávat před
+implementací._
+
+=== Projektové agregace
+
+`ProjectMetricAggregator` vybírá measurements současně podle `MetricId`,
+zdrojového `MetricScope` a `providerRunId`, takže nemůže tiše smíchat providery
+ani úrovně měření. `AggregationCounts` uchovává úplnost vstupu. Primární
+`AggregatedStatistics` vznikají výhradně z výsledků `OK`; při nulovém počtu je
+výsledkem samostatný `NoAggregatableValues`, nikoli prázdná či nulová statistika.
+Kvartily a percentily používají Hyndman–Fan Type 7 s `MathContext.DECIMAL128`.
+`PARTIAL` hodnoty se agregují v oddělené sensitivity vrstvě (`SensitivityAggregation`):
+lower/upper endpointy, observed fragments, reasons a coverage evidence. Export je
+deterministický v `ProjectAggregationExporter`.
+
+=== 12. Plán a aktuální stav
+
+==== 12.1 Aktuální stav (hotovo)
+
+* Maven projekt s Eclipse JDT Core 3.47.0, Java 27.
+* Striktní TOML schema 1 přes TomlJ, typovaný raw/effective model,
+  defaults/TOML/CLI precedence, validace, relativní cesty a SHA-256 provenance.
+* Doménový model §4 (`Compound`, package/type a member model) bez mutujících
+  metrických polí.
+* Nemutující `MeasurementProvider`, projektový `AnalysisContext`,
+  `ProviderResult` a `ProviderRunMetadata`.
+* `JavaMetricsProvider` s rozšiřitelnou sadou `BuiltInMetricComputer`.
+* Izolovaný `CkProcessRunner`, přesně zmrazené class/method CSV schema,
+  `CkSubjectMapper` a `CkMetricsProvider` pro první sadu 18 `ck.*` definic.
+* `JdtParser` (§6): parsování balíku, typů, vnoření, členů,
+modifikátorů, nesting.
+* `MemberCountComputer`: přesná měření přímo deklarovaných metod,
+  konstruktorů a fields; rekurzivní counts odstraněny.
+* Kořenové `BuiltInDemo.java` a `run-demo.sh`: sestavení a end-to-end ukázka
+  toku JDT parser -++>++ `AnalysisContext` -++>++ `JavaMetricsProvider`
+  -++>++ `MeasurementStore` -++>++ text/ANSI preview.
+* `TextExporter` {plus} CLI `Main` (§2): výstup odpovídá navrženému
+formátu.
+* `JsonExporter`: JSON serializace stromu, obecných `providerRuns` a
+  `measurements`, declared member counts, dependencies a baseline metadat.
+* `YamlPreviewConverter`: barevný ANSI stromový preview.
+* `TypeRef.id` se plní FQN z JDT bindings (mimo Java Core API).
+* `TypeCompound.dependencies`: souhrn závislostí (FQN, bez Java Core API
+typů).
+* Podpora Maven projektu přes `--pom` (source roots, classpath,
+release).
+* Maven Site s Javadocem: `mvn site` generuje API dokumentaci
+  (maven-javadoc-plugin) a projektové reporty; v CI se publikuje přes
+  GitLab Pages (`deploy-pages` job, `pages.publish: target/site`).
+* Test `JdtParserTest` (JUnit 5) na ukázkovém souboru s vnořenými typy —
+zelený.
+* Integrační test nad malým Maven projektem
+(`MavenProjectIntegrationTest`) — zelený.
+* `JdtParser` ve výchozím stavu zapíná binding resolution
+(`setResolveBindings(true)`), bindings recovery, statements recovery a
+předává classpath/sourcepath/release.
+* Provider-neutral validační corpus v `validation/`: osm izolovaných Maven
+  projektů, build/subject/measurement oracle a `ValidationCorpusTest` pro
+  přesné built-in počty. Corpus již regresně kryje průchod lokálními a
+  anonymními typy; jeho formální role je popsána v
+  `docs/40-validation-corpus.adoc`.
+
+==== 12.2 Plán dalších kroků
+
+Plán je sladěn se současnými cíli nástroje a výzkumnými otázkami
+(RQ1–RQ4, viz `docs/01-research-plan.adoc`): reprodukovatelné a transparentně
+definované měření, pokrytí metrik potřebných pro strukturální srovnání a
+ověření konstruktové validity, validace nástroje a podpora auditovatelné
+provenance experimentů. Hotovo (viz 12.1, `docs/04-t0-baseline.adoc`, `docs/05-t1-symbol-identity.adoc`):
+baseline/T0, identita symbolů, relace a binding coverage/T1. Níže zůstávají
+pouze neuzavřené kroky.
+
+[arabic]
+. *T2a – stabilizace dokončené první integrace CK*:
+type-level oracle všech 17 CK definic podporujících type scope a member oracle
+osmnácté definice `ck.parameters` jsou dokončeny; všechny publikované CK scope
+mají oracle. Zbývají stabilní identity local/anonymous typů, generics
+a formální report známých neshod. Teprve po operačním rozhodnutí zpřístupnit
+další sloupce již zmrazeného CSV schématu. Lokální vývojový checkout je dostupný v
+sibling adresáři `../ck` na
+revizi `8a1ef91` (`ck-0.7.0-21-g8a1ef91`, POM `0.7.1-SNAPSHOT`). Slouží k
+sestavení a ověření adaptéru, ale publikovaný provider nesmí existenci této
+relativní cesty předpokládat: přijme explicitní cestu k JARu a uloží commit,
+verzi a hash artefaktu do provenance. Detailní kontrakt je níže v §12.3 a v
+`docs/01-research-plan.adoc`.
+. *T2b – další externí providery a vlastní metriky*:
+přidat izolovaný `CkjmMetricsProvider` 2.11 pro compiled subset a jeho
+bytecode/QMOOD varianty DAM, MOA, MFA, CAM, IC, CBM, AMC, LCOM3 a CC. Přidat
+`PmdMetricsProvider` 7.29.0 pro všech 13 metrik `JavaMetrics` (ATFD,
+CYCLO, Cognitive Complexity, FAN_OUT, LOC, NCSS, NPATH_COMP, NPATH, NOAM,
+NOPA, TCC, WMC, WOC) a oddělený export rule violations.
+Přidat `CheckstyleMetricsProvider` pro šest Metrics Checks a zmrazený
+style/design ruleset; jeho threshold výsledky držet odděleně od úplných PMD
+řad. Přidat izolovaný `DesigniteMetricsProvider` pro Apache-2.0 Community
+edition: 17 design smells, 10 implementation smells a její 13 metrických
+variant z CSV; spouštět pouze v novém prázdném dočasném adresáři a `LCOM=-1`
+mapovat na neaplikovatelný/neúplný výsledek. Z vlastních metrik implementovat
+jen to, co CK, CKJM, PMD, Checkstyle ani DesigniteJava Community neposkytují
+v potřebné podobě: physical LOC/NCLOC a LCOM4 jsou hotové; zbývají Martinovy
+package metriky, coverage-aware relation a vybrané QMOOD/L&K metriky,
+provenance a projektové agregace.
+Export musí nést provider, verzi, definici, úroveň, `status` a úplnost
+podkladu. CK je omezen na dokumentovanou Java 21 syntaxi; novější zdroje se
+nesmějí analyzovat tiše.
+. *T3 – validace měřicího nástroje* (podmínka pro RQ1–RQ4): rozšířit
+implementovaný společný corpus a jeho ručně stanovený oracle o další metriky
+a provider-specific očekávání; doplnit boundary cases (generics,
+nested/local/anonymous, records, enums, annotations, sealed typy, unresolved
+dependencies), differential testing proti zavedenému nástroji, klasifikace
+nesouladů (definice/konfigurace/chyba) a report shody/omezení pro každou
+metriku použitelnou v článku.
+. *T4 – experiment runner, provenance a podpora benchmarkingu* (RQ1–RQ4):
+manifest běhu (zadání, model/verze, prompt, seed/ID, čas, konfigurace),
+uchování raw/final artefaktů, automatizovaný build/test a selection funnel,
+normalizovaná analytická tabulka a auditní JSON, hash zdrojů/výstupů/konfigurace,
+oddělení neúspěšných/částečných/funkčně správných řešení; postupy a šablony
+sladit s https://llm-guidelines.org/study-types/benchmarking/[LLM benchmarking guidelines].
+. *Rozšíření analýzy závislé na bindings*: využít existující relace/coverage
+pro metriky a reporty (např. přesnější odvození override/NOC/CBO z grafu,
+jasné oddělení in-scope vs. external vlivů); případné doplnění hran z těl
+metod jen pokud to vyžaduje schválená definice metriky.
+. *Další metriky a poskytovatelé* (až po stabilizaci T2/T3 definic): PMD/CPD,
+Checkstyle, SpotBugs a RefactoringMiner pouze pro oblasti, které nepokrývá CK
+nebo vlastní jádro; vždy s mapováním definic, verzí a konfigurace.
+. *Rozsah analýzy a úložiště*: agregace více kompilačních jednotek/projektu
+nad rámec současné podpory tam, kde je to potřeba pro studie; volitelné
+SQLite úložiště (DAO, tabulky compound/member/relation/metric results) pro
+větší datasety.
+. *Artefakty a interoperabilita*: propagace `BaselineMetadata` i do ne-JSON
+výstupů (text/preview) tam, kde to pomůže auditovatelnosti, formální JSON
+Schema pro baseline a exporty, stabilní dokumentace operačních definic metrik.
+. *LLM/AI-orientované metriky* (§8): pass@k, bezpečnostní nálezy, MI a
+podobné ukazatele řešit až jako navazující vrstvu s jasnou metodikou sběru
+(odděleně od strukturálních OO metrik jádra nástroje), pokud to bude vyžadovat
+rozsah studie.
+
+==== 12.3 Implementovaný `CkMetricsProvider`
+
+Lokální checkout `../ck` je kompletní sestavitelný upstream projekt CK. Pro
+vývoj adaptéru je zmrazen výchozí stav:
+
+* upstream `mauricioaniche/ck`, revize `8a1ef91`, popis
+  `ck-0.7.0-21-g8a1ef91`, čistý worktree;
+* POM verze `0.7.1-SNAPSHOT`, licence Apache-2.0, JDT Core 3.44.0;
+* standalone entry point `com.github.mauricioaniche.ck.Runner` a assembly JAR
+  `jar-with-dependencies`;
+* CLI argumenty: project directory, `useJars`, partition size,
+  `variablesAndFields`, output directory a ignorované adresáře;
+* stabilní názvy výstupů `class.csv`, `method.csv` a při detailním režimu také
+  `variable.csv` a `field.csv`.
+
+První integrační iterace používá `variablesAndFields=true`, protože na
+`MethodLevelFieldUsageCount` závisejí TCC/LCC. Načítá `class.csv` a
+`method.csv`; detailní `variable.csv` a `field.csv` zatím neimportuje.
+Implementace obsahuje:
+
+. `CkMetricDefinition` pro 18 namespacovaných `ck.*` definic a jejich jednotky;
+. `CkProviderConfig`, který nese explicitní JAR,
+  Java executable, `useJars`, partition size, detailní režim, timeout, raw CSV
+  policy a ignored directories;
+. `CkProcessRunner` pro izolovaný proces, nový bezpečný output adresář,
+  zachycení příkazu, runtime, exit code, stdout/stderr a hash JARu;
+. `CkCsvReader` s kontrolou úplných ordered hlaviček a jejich fingerprinty;
+. `CkSubjectMapper` pro mapování CK class/method identity na `SubjectRef` z
+  modelu `java-metrics`, včetně explicitního stavu nejednoznačného či
+  chybějícího mapování;
+. `CkMetricsProvider implements MeasurementProvider`, který složí běh,
+  mapování a validovaný `MeasurementStore` do `ProviderResult`;
+. deterministický fake-process test a opt-in integrační test proti skutečnému
+  připnutému JARu nad malým Maven fixture; test změny schématu a nenulového
+  exit kódu.
+
+CK zůstane odděleným procesem: jeho JDT 3.44/Java 21 model se nesmí linkovat do
+parserového procesu `java-metrics` s JDT 3.47. Výsledky budou vždy pod
+namespace `ck.*`; shodný krátký název se nesloučí s `java.*` ani jiným
+providerem.
+Přesná hlavička, fingerprinty a mapování publikovaných sloupců jsou normativně
+uvedeny v `docs/20-ck-csv-schema.adoc`.

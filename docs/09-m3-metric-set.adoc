@@ -1,0 +1,35 @@
+= M3 metric set
+:toc:
+
+== Primární metriky
+
+[cols="1,1,1,1,1,1",options="header"]
+|===
+| Dimenze | Primární metrika | Provider | Scope | Unit | spec key / chování při neúplnosti
+| Size | `java.physical-loc` (NCLOC) | java | type/package | lines | exact; partial jako interval/meze
+| Complexity | `ck.wmc` | ck | type | count | exact/interval dle CK
+| Complexity | `java.cyclo` (method-level) | java | method | count | plánovaná mezera
+| Coupling | `ck.cbo` | ck | type | count | exact
+| Coupling | `java.ca`, `java.ce` | java | package | count | lower bounds + interval
+| Cohesion | `java.lcom4` | java | type | count | exact/upper bound partial
+| Inheritance | `ck.dit`, `ck.noc` | ck | type | count | exact
+| Martin | `java.instability`, `java.abstractness`, `java.distance` | java | package | ratio | exact/interval/NA
+|===
+
+== Mapování na RQs
+
+* RQ1: strukturální profily — primárně size (`java.physical-loc`/NCLOC), complexity (`ck.wmc`), coupling (`ck.cbo`, `java.ca/ce`), cohesion (`java.lcom4`), inheritance (`ck.dit`, `ck.noc`), Martin (`java.instability`, `java.abstractness`, `java.distance`).
+* RQ2: konstruktová validita — stejné primární metriky + sensitivity varianty (TCC/LCC, intervaly) jako comparison.
+* RQ3: robustnost/confounders — kontrolní proměnné (LOC, počty deklarovaných členů, provider run).
+* RQ4: design guidance — stejná sada jako RQ1, bez nových metrik mimo M3.
+
+== Kontrolní a auditní metriky
+
+* `ck.rfc`, `ck.fan-in`, `ck.fan-out`, `ck.methods`, `ck.public-methods`, `ck.fields`
+* `java.declared-*`, source-line metriky
+* CK TCC/LCC jsou sensitivity/comparison varianty, ne primární M3 (pokud RQ2 nevyžaduje).
+
+== Poznámky
+
+* Rozhodnutí: QMOOD/Li & Henry metriky (NOP, DCC) nejsou v M3 sadě pro RQ1/RQ3/RQ4. Pro RQ2 zůstávají volitelné comparison metriky; pokud RQ2 explicitně vyžádá jejich konstruktovou validitu, zmrazit pouze nejmenší nutnou podmnožinu (NOP a DCC) v samostatné fázi.
+* Každá nová metrika musí projít stejným postupem jako LCOM4 a Martinovy metriky.

@@ -1,0 +1,69 @@
+case_id,scope,qualified_name,role
+basic-members,type,validation.basic.Empty,empty type
+basic-members,type,validation.basic.Members,member-count subject
+basic-members,constructor,validation.basic.Members#<init>(),zero-argument constructor
+basic-members,constructor,validation.basic.Members#<init>(java.lang.String),one-argument constructor
+basic-members,method,validation.basic.Members#count(),zero-argument method
+basic-members,method,validation.basic.Members#name(),zero-argument method
+basic-members,method,validation.basic.Members#increment(),zero-argument method
+inheritance,type,validation.inheritance.Base,hierarchy root
+inheritance,type,validation.inheritance.Middle,intermediate type
+inheritance,type,validation.inheritance.Leaf,deep descendant
+inheritance,type,validation.inheritance.Sibling,second direct child
+inheritance,constructor,validation.inheritance.Base#<init>(int),one-argument base constructor
+inheritance,method,validation.inheritance.Base#value(),base accessor
+inheritance,constructor,validation.inheritance.Middle#<init>(),zero-argument intermediate constructor
+inheritance,method,validation.inheritance.Middle#doubled(),intermediate method
+inheritance,method,validation.inheritance.Leaf#doubled(),overriding leaf method
+inheritance,constructor,validation.inheritance.Sibling#<init>(),zero-argument sibling constructor
+interfaces,type,validation.interfaces.Root,root interface
+interfaces,type,validation.interfaces.Extended,extended interface
+interfaces,type,validation.interfaces.Implementation,implementing class
+interfaces,method,validation.interfaces.Root#id(),root interface method
+interfaces,method,validation.interfaces.Extended#label(),default interface method
+interfaces,method,validation.interfaces.Implementation#id(),implementation method
+coupling,type,validation.coupling.api.Service,API interface
+coupling,type,validation.coupling.impl.Helper,implementation collaborator
+coupling,type,validation.coupling.impl.ServiceImpl,service implementation
+coupling,type,validation.coupling.client.Controller,API client
+coupling,method,validation.coupling.api.Service#execute(java.lang.String),API method
+coupling,constructor,validation.coupling.client.Controller#<init>(validation.coupling.api.Service),client constructor
+coupling,method,validation.coupling.client.Controller#handle(java.lang.String),client method
+coupling,method,validation.coupling.impl.Helper#normalize(java.lang.String),helper method
+coupling,constructor,validation.coupling.impl.ServiceImpl#<init>(validation.coupling.impl.Helper),implementation constructor
+coupling,method,validation.coupling.impl.ServiceImpl#execute(java.lang.String),implementation method
+overloads,type,validation.overloads.Overloaded,overload mapping subject
+overloads,constructor,validation.overloads.Overloaded#<init>(),zero-argument constructor
+overloads,constructor,validation.overloads.Overloaded#<init>(java.lang.String),one-argument constructor
+overloads,method,validation.overloads.Overloaded#run(),zero-argument overload
+overloads,method,validation.overloads.Overloaded#run(int),primitive-argument overload
+overloads,method,validation.overloads.Overloaded#run(java.lang.String),reference-argument overload
+overloads,method,"validation.overloads.Overloaded#run(int,java.lang.String)",two-argument overload
+nested-types,type,validation.nested.Outer,outer class
+nested-types,type,validation.nested.Outer.StaticNested,static nested class
+nested-types,type,validation.nested.Outer.Inner,inner class
+nested-types,constructor,validation.nested.Outer#<init>(int),outer constructor
+nested-types,method,validation.nested.Outer#factory(),outer factory method
+nested-types,method,validation.nested.Outer.StaticNested#answer(),static nested method
+nested-types,method,validation.nested.Outer.Inner#outerValue(),inner method
+modern-types,type,validation.modern.Point,record
+modern-types,type,validation.modern.Mode,enum
+modern-types,type,validation.modern.Marker,annotation
+modern-types,type,validation.modern.Shape,sealed interface
+modern-types,type,validation.modern.Circle,permitted record
+modern-types,type,validation.modern.Rectangle,permitted final class
+modern-types,method,validation.modern.Point#sum(),record method
+modern-types,method,validation.modern.Mode#fast(),enum method
+modern-types,method,validation.modern.Shape#area(),sealed interface method
+modern-types,method,validation.modern.Circle#area(),record implementation method
+modern-types,constructor,"validation.modern.Rectangle#<init>(double,double)",two-argument class constructor
+modern-types,method,validation.modern.Rectangle#area(),class implementation method
+initializers-lambdas,type,validation.initializers.InitLambda,initializer and lambda owner
+initializers-lambdas,initializer,validation.initializers.InitLambda#<initializer:static:1>,static initializer
+initializers-lambdas,initializer,validation.initializers.InitLambda#<initializer:instance:1>,instance initializer
+initializers-lambdas,lambda,validation.initializers.InitLambda#<lambda:1>,block lambda in instance initializer
+initializers-lambdas,lambda,validation.initializers.InitLambda#<lambda:2>,expression lambda in field initializer
+initializers-lambdas,method,validation.initializers.InitLambda#apply(int),ordinary method beside executable subjects
+unresolved-dependency,type,validation.unresolved.Broken,source-only subject
+unresolved-dependency,constructor,validation.unresolved.Broken#<init>(Dependency),constructor with syntactically identified unresolved external type
+unresolved-dependency,method,validation.unresolved.Broken#dependency(),method returning unresolved external type

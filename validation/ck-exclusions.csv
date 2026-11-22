@@ -1,0 +1,2 @@
+case_id,scope,subject,reason
+modern-types,type,validation.modern.Marker,CK does not emit a class.csv row for annotation declarations

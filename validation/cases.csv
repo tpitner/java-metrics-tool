@@ -1,0 +1,10 @@
+case_id,project_dir,source_root,expected_build,feature
+basic-members,cases/basic-members,cases/basic-members/src/main/java,true,"empty type; fields; constructors; methods"
+inheritance,cases/inheritance,cases/inheritance/src/main/java,true,"multi-level inheritance; multiple children"
+interfaces,cases/interfaces,cases/interfaces/src/main/java,true,"interface inheritance; default method; implementation"
+coupling,cases/coupling,cases/coupling/src/main/java,true,"cross-package type and call dependencies"
+overloads,cases/overloads,cases/overloads/src/main/java,true,"overloaded constructors and methods"
+nested-types,cases/nested-types,cases/nested-types/src/main/java,true,"static nested; inner; local; anonymous"
+modern-types,cases/modern-types,cases/modern-types/src/main/java,true,"record; enum; annotation; sealed hierarchy"
+initializers-lambdas,cases/initializers-lambdas,cases/initializers-lambdas/src/main/java,true,"static and instance initializers; block and expression lambdas"
+unresolved-dependency,cases/unresolved-dependency,cases/unresolved-dependency/src/main/java,false,"syntactically valid source with a missing external dependency"

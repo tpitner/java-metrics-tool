@@ -1,0 +1,40 @@
+schema-version = 1
+
+[project]
+inputs = ["src/test/resources/cz/utulnykoutek/metrics/sample/Nested.java"]
+recursive = true
+include-tests = false
+compile = true
+sourcepath = []
+classpath = []
+release = "17"
+
+[output]
+format = "text"
+destination = "-"
+retain-provider-artifacts = false
+provider-artifacts-directory = "target/java-metrics/providers"
+
+[providers.java]
+enabled = true
+metrics = [
+  "java.declared-methods",
+  "java.declared-constructors",
+  "java.declared-fields",
+  "java.physical-loc",
+  "java.ncloc",
+  "java.physical-loc-exclusive",
+  "java.ncloc-exclusive",
+]
+
+[providers.ck]
+enabled = false
+# The path is resolved relative to this TOML file; uncomment it when enabling CK:
+# jar = "../ck/target/ck-0.7.1-SNAPSHOT-jar-with-dependencies.jar"
+java-executable = "java"
+use-jars = true
+max-files-per-partition = 0
+variables-and-fields = true
+ignored-directories = [".git", "target", "build"]
+timeout-seconds = 600
+retain-raw-csv = true

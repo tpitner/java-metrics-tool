@@ -1,0 +1,777 @@
+= T2: Specifikace metrik
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: rouge
+:stem: latexmath
+
+[IMPORTANT]
+====
+Tento dokument obsahuje metrickou specifikaci pro fázi T2
+(`docs/01-research-plan.adoc`), operační definice a odkazy na definiční zdroje.
+Přijatá rozhodnutí jsou normativně evidována v decision logu; případné dosud
+neuzavřené body musejí být explicitně označeny jako `OTEVŘENO`.
+
+Přijatá rozhodnutí a jejich implementační důsledky jsou průběžně evidovány v
+`docs/07-t2-metric-decisions.adoc`. V případě rozdílu má novější explicitní rozhodnutí v
+decision logu přednost před dřívější variantou označenou zde jako návrh.
+====
+
+== Účel a vazba na plán
+
+Cíl: pro každou metriku T2 mít před implementací jednotnou specifikaci
+(jednotka, vzorec, zahrnutí/vyloučení, závislost na AST/bindings, chování při
+neúplnosti) a odkaz na definiční zdroj, aby bylo možné v T3 stavět oracle a
+interpretovat rozdíly vůči jiným nástrojům.
+
+Navazuje na T1 (`docs/05-t1-symbol-identity.adoc`): typy/členy/lokalní i anonymní deklarace,
+`SymbolRef` s `resolved/origin`, relační hrany (`inheritance`, `implementations`, `overrides`) a `dependencyEdges` + `BindingCoverage`.
+
+Společným validačním základem je provider-neutral corpus v `validation/`
+popsaný v `docs/40-validation-corpus.adoc`. Provider-specific očekávání se v
+measurement oracle ukládají odděleně; shoda názvu metriky proto neznamená
+shodu její operační definice.
+
+== Společný rámec
+
+=== Rozhodnutí o využití CK
+
+Nástroj CK (aniche) bude externím providerem, nikoliv zdrojovým kódem
+kopírovaným do `java-metrics`. CK analyzuje Java zdroje pomocí JDT a exportuje
+class-, method- a volitelně variable-level CSV. V T2 z něj převezmeme pod
+namespace `ck.*` zejména:
+
+* WMC/McCabe, CBO, modified CBO, fan-in, fan-out, DIT, NOC a RFC;
+* LCOM1, Henderson-Sellers LCOM*, TCC a LCC;
+* method-level complexity, SLOC a syntaktické counts;
+* podle potřeby invocations, field/variable usage, Javadoc, lexical a logging
+  charakteristiky.
+
+Tyto varianty nebudeme reimplementovat jen kvůli získání stejného čísla.
+Vlastní jsou LCOM4, Martinovy package metriky, QMOOD/Li & Henry mezery,
+coverage-aware relation metrics, physical LOC/NCLOC, normalizace, provenance a
+agregace. Paralelní hodnota z jiného provideru se ukládá jako samostatná
+measurement variant, nikoliv jako náhrada.
+
+Physical LOC/NCLOC a `java.lcom4` jsou již implementovány. LCOM4 používá
+vlastní JDT cohesion evidence a neslučuje se s `ck.lcom`, `ck.lcom-star` ani
+budoucím `ckjm.lcom3`.
+
+První podoba CK provideru je implementována. Typovaná TOML konfigurace
+(`CkProviderConfig`) nese explicitní relativní/absolutní cestu k JARu;
+`CkProcessRunner` spouští připnutý standalone JAR izolovaně a
+`CkMetricsProvider` importuje první sadu class/method metrik. Úplné ordered
+hlavičky, fingerprinty a publikované mapování jsou zmrazeny v
+`docs/20-ck-csv-schema.adoc`. Izolace zabraňuje konfliktu verzí JDT:
+dokumentovaný CK parser používá Java 21, zatímco `java-metrics` cílí na Java
+27. Následuje rozšíření oracle pro identity a konstrukty, nikoliv změna
+namespace či tiché přijímání nového schématu.
+
+První validační checkpoint je dokončen pro type-level `ck.methods`,
+`ck.public-methods`, `ck.fields` a `ck.public-fields` napříč společným
+corpusem. Potvrdil, že CK započítává explicitní konstruktory mezi metody,
+vyžaduje explicitní `public`, počítá `FieldDeclaration` namísto logických
+proměnných/record components a nepočítá implicitní, generované ani zděděné
+členy. Podrobný audit je v `docs/40-validation-corpus.adoc` a hodnoty v
+`validation/measurements.csv`.
+
+Druhý checkpoint je dokončen pro `ck.dit` a `ck.noc`. Corpus potvrdil minimum
+DIT 1, započtení `Object`, přímé class-only potomky v NOC a ignorování
+interface inheritance, implementation a sealed `permits` hran při resolved
+bindings. Tyto hodnoty jsou provider-specific a nesmějí být zaměněny s naší
+schválenou graph-based definicí DIT/NOC, která má odlišnou sémantiku pro
+rozhraní a in-scope hrany.
+
+Třetí checkpoint je dokončen pro `ck.parameters` na úrovni metod a
+konstruktorů. Canonical subject identity obsahuje owner, scope, jméno a typy
+parametrů, takže spolehlivě rozlišuje overloady včetně stejné arity. Oracle
+zahrnuje primitivní, JDK, projektové i syntakticky identifikované nerozřešené
+typy; implicitní/generované a dosud nestabilní local/anonymous členy nezahrnuje.
+
+Čtvrtý checkpoint je dokončen pro `ck.wmc` na 61 stabilních type/method/
+constructor subjects. Potvrdil základ 1 za explicitní member declaration,
+class-level agregaci a zvýšení nejen za řídicí větve, ale v implementaci CK i
+za samostatné relační operátory (`<`, `>`, `<=`, `>=`, `==`, `!=`) mimo
+řídicí výraz. `ck.wmc` proto zůstává explicitně provider-specific variantou a
+nesmí se bez převodu zaměňovat s jinou definicí cyclomatic complexity.
+
+Pátý checkpoint je dokončen pro `ck.rfc` na stejných 61 stabilních type/method/
+constructor subjects. Potvrdil, že CK počítá pouze skutečné
+`MethodInvocation`/`SuperMethodInvocation` uzly; konstruktory (včetně
+this/super chaining), field access, aritmetiku, porovnání enumů a `Math.PI`
+nezapočítává. Volání uvnitř lokálních a anonymních tříd se nešíří do
+vnějšího typu ani jeho metod. Oracle vychází ve 49 případech na RFC 0 a
+nenulové hodnoty se vyskytují jen u reálných method invocation (inheritance,
+coupling, overloads). U nerozřešené závislosti zůstávají hodnoty 0, protože
+field access není method invocation.
+
+Šestý checkpoint je dokončen pro `ck.loc` na 61 stabilních type/method/
+constructor subjects. Hodnota vzniká počítáním neprázdných nekomentářových
+řádků z JDT `ASTNode.toString()`, nikoli z původního souboru. Je proto závislá
+na AST serializaci a má specifické chování pro nested/anonymous, records a
+enums; zůstává oddělená od vlastní physical LOC/NCLOC varianty.
+
+Sedmý checkpoint pokrývá type-level `ck.cbo`, `ck.cbo-modified`, `ck.fan-in`
+a `ck.fan-out` pro všech 23 stabilních typů. Osmý checkpoint ve stejném rozsahu
+pokrývá `ck.lcom`, `ck.lcom-star`, `ck.tcc` a `ck.lcc`. TCC/LCC odhalily
+konfigurační past CK: `variables-and-fields=false` vypne jejich method-field
+podklad, ale CK přesto publikuje nuly. Produkční i validační běh proto povinně
+používá `variables-and-fields=true`; nenulový oracle za této konfigurace
+umožňuje `ck.tcc` a `ck.lcc` použít v článku. Přesná reprodukce obou konfigurací
+je v `docs/21-ck-tcc-lcc-anomaly.adoc`.
+
+Navazující member-level checkpoint dokončuje `ck.cbo` a `ck.cbo-modified` pro
+26 metod a 12 konstruktorů. Základní CBO zde sleduje ne-JDK typy ze signatur a
+výrazů, zatímco modified CBO vychází z příchozích a odchozích method/
+constructor invocation hran; obě hodnoty se proto mohou legitimně lišit.
+Stejných 38 subjects má dokončené také `ck.fan-in` a `ck.fan-out`; jejich součet
+se v každém případě rovná member-level `ck.cbo-modified`.
+
+Operační odlišnosti, které musejí být zachovány v metadatech:
+
+* `ck.dit` zahrnuje `java.lang.Object` a má minimum 1 pro běžnou třídu;
+* `ck.cbo` ignoruje Java/JDK typy; `ck.cboModified` zahrnuje příchozí i odchozí
+  závislosti;
+* `ck.rfc` má známé omezení pro overloady se stejným počtem parametrů;
+* `ck.wmc` je McCabe/branch complexity;
+* `ck.loc` je CK SLOC a u vnější třídy zahrnuje inner class;
+* CK vytváří samostatné class records pro inner/anonymous typy, ne pro lambdy.
+
+=== Rozhodnutí o využití CKJM-extended
+
+CKJM-extended 2.11 bude druhým externím providerem pro compiled subset.
+Analyzuje `.class` a JAR soubory pomocí BCEL a doplňuje source-based CK o
+bytecode a QMOOD pohled. Pod namespace `ckjm.*` převezmeme:
+
+* WMC/NOM, DIT, NOC, CBO, RFC, LCOM1, class-level Ca/Ce a NPM/CIS;
+* LCOM3, DAM, MOA, MFA a CAM;
+* IC, CBM, AMC a method-level cyclomatic complexity.
+
+Nebudeme reimplementovat stejné CKJM varianty DAM/MOA/MFA/CAM/IC/CBM/AMC.
+Vlastní zůstávají LCOM4, package-level Martinovy metriky, chybějící QMOOD/L&K
+metriky, physical LOC/NCLOC, binding coverage a agregace.
+
+CKJM hodnoty jsou použitelné pouze po úspěšné kompilaci. Provider proto musí
+uchovat build status a nesmí vyloučit nekompilovatelné projekty z datasetu bez
+reportování. Přesný význam hlavních variant:
+
+* `ckjm.wmc` = počet metod (váha každé metody je 1), nikoliv `ck.wmc`/McCabe;
+* `ckjm.cbo` zahrnuje afferent i efferent coupling;
+* `ckjm.rfc` = vlastní metody + přímo volané metody, bez tranzitivního uzávěru;
+* `ckjm.ca`/`ckjm.ce` jsou class-level, nikoliv Martin package metrics;
+* `ckjm.loc` = pole + metody + bytecode instrukce;
+* `ckjm.amc` = průměrný počet bytecode instrukcí na metodu;
+* `ckjm.lcom3` je Henderson-Sellers varianta a není zaměnitelná s LCOM4.
+
+Standardně se ignorují Java SDK coupling edges; `-s` je zahrne. `-p` omezí
+výpočet na public methods a `-x` aktivuje XML. Tyto volby jsou povinnou
+součástí provenance. Pro úplný classpath se provider spouští jako hlavní třída
+s `ckjm_ext.jar`, analyzed classes a dependency JARs na `-cp`; `java -jar`
+se při externích závislostech nepoužije.
+
+JAR se nebude bundlovat ani redistribuovat, dokud nebude samostatně ověřena
+licenční kompatibilita. Konfigurace provideru proto musí podporovat externě
+dodanou cestu k `ckjm_ext.jar` a uložit její hash.
+
+=== Rozhodnutí o využití PMD 7.29.0
+
+PMD bude třetím source providerem. Přes `JavaMetrics`/`MetricsUtil` převezmeme
+všech 13 vestavěných Java metrik pod namespace `pmd.*`:
+
+* `ACCESS_TO_FOREIGN_DATA` (ATFD), `CYCLO`, `COGNITIVE_COMPLEXITY`, `FAN_OUT`;
+* `LINES_OF_CODE`, `NCSS`, `NPATH_COMP`, `NPATH`;
+* `NUMBER_OF_ACCESSORS` (NOAM), `NUMBER_OF_PUBLIC_FIELDS` (NOPA),
+  `TIGHT_CLASS_COHESION` (TCC), `WEIGHED_METHOD_COUNT` (WMC) a
+  `WEIGHT_OF_CLASS` (WOC).
+
+Nebudeme reimplementovat stejné PMD varianty. PMD WMC je součet PMD CYCLO;
+FAN_OUT je odchozí coupling a standardně ignoruje `java.lang`; TCC používá
+přímé společné přístupy k atributům; WOC vylučuje konstruktory/getters/setters
+z funkčních metod. LOC, NCSS, NPATH a NPATH_COMP jsou samostatné metriky a
+nesmějí být vzájemně zaměněny.
+
+`PmdMetricsProvider` musí explicitně iterovat podporované AST uzly, ověřit
+`supports(node)` a přes `MetricsUtil` exportovat hodnotu, scope a options.
+Nepodporovaný uzel/`NaN` se mapuje na `NOT_APPLICABLE`. Provenance obsahuje PMD
+verzi 7.29.0, language version (Java 27/preview), metric options, ruleset,
+language properties a `auxClasspath`. Numerické `pmd.*` metriky a rule
+violations jsou dvě oddělené kolekce výsledků.
+
+=== Rozhodnutí o využití Checkstyle Metrics Checks
+
+Checkstyle převezmeme jako threshold/violation provider pro šest checks pod
+namespace `checkstyle.*`: Boolean Expression Complexity, Class Data
+Abstraction Coupling, Class Fan-Out Complexity, Cyclomatic Complexity,
+JavaNCSS a NPath Complexity. Nebudeme reimplementovat jeho parser ani engine.
+
+Standardním výsledkem je violation při překročení konfigurovaného limitu.
+Absence violation znamená pouze `value <= max`, nikoli hodnotu nula. Bez
+úplného value adapteru se proto Checkstyle použije pro četnost a hustotu
+nálezů a pro shodu s jinými providery, ne pro průměry či percentily metrik.
+PMD a Checkstyle varianty CYCLO, NCSS a NPath zůstanou oddělené; Checkstyle
+JavaNCSS má vlastní pravidla agregace včetně nested classes a jeho cyclomatic
+complexity závisí na zvolené množině tokenů.
+
+Provenance musí obsahovat přesnou verzi Checkstyle, celý XML ruleset, severity
+a všechny properties. Konkrétně uložíme `max` a `tokens` pro boolean
+complexity; `max` a class/package exclusions pro DAC a fan-out; `max`,
+`tokens` a `switchBlockAsSingleDecisionPoint` pro cyclomatic complexity;
+method/record/class/file maxima pro JavaNCSS a `max` pro NPath.
+
+=== Rozhodnutí o využití DesigniteJava Community
+
+Veřejnou Apache-2.0 Community edition integrujeme jako izolovaný externí
+CLI/CSV provider. Převezmeme 17 design smells, 10 implementation smells a 13
+metrik pod namespace `designite.*`: method-level LOC, CC a PC a class-level
+NOF, NOPF, NOM, NOPM, WMC, NC, DIT, LCOM, FANIN a FANOUT. Stejnojmenné
+varianty jiných providerů zůstávají oddělené.
+
+Provider spustí JAR sestavený z připnutého Git commitu v novém prázdném
+dočasném output directory, načte a archivuje původní CSV a uloží commit/JAR
+hash, verzi Javy a úplný příkaz. Tento požadavek je bezpečnostně významný:
+DesigniteJava před během maže existující obsah zadaného output directory.
+Hodnota Designite LCOM `-1` se mapuje na `NOT_APPLICABLE` nebo `PARTIAL`, ne
+na numerickou hodnotu koheze. Professional-only architecture, testability a
+test smells nejsou součástí reprodukovatelného Community kontraktu.
+
+=== Jednotky analýzy
+
+[cols="1,2,2",options="header"]
+|===
+|Úroveň |Primární metriky |Poznámka
+
+|Metoda/konstruktor/inicializátor
+|physical LOC/NCLOC (vlastní), `ck.*` cyclomatic complexity a syntaktické
+charakteristiky, délka/nesting (pokud budou zahrnuty do rozsahu T2)
+|CK hodnoty jsou importované; vlastní AST + text slouží pro přesné source
+ranges a metriky nepokryté CK.
+
+|Typ (class/interface/enum/record/annotation, vč. local/anonymous dle T1)
+|`ck.*` WMC, DIT, NOC, CBO, fan-in/fan-out, RFC, LCOM1/LCOM*/TCC/LCC;
+`ckjm.*` bytecode/QMOOD varianty; `pmd.*` ATFD/FAN_OUT/TCC/WMC/WOC/NOAM/NOPA;
+vlastní LCOM4 a počty override/impl vztahů
+|CK, CKJM a PMD varianty se importují. Vlastní graf/bindings poskytuje coverage
+a metriky, které externí providery neposkytují nebo definují jinak.
+
+|Balík
+|Ca, Ce, I, A, D
+|Počítáno nad typy/balíky v analyzovaném rozsahu.
+
+|Kolekce hodnot (typ/balík/projekt)
+|sum, mean, median, maximum, IQR, horní percentily
+|Agregace nad definovanou populací hodnot.
+|===
+
+=== Reprezentace výsledku a úplnost
+
+Každý publikovaný metrický výsledek (T2) ponese minimálně:
+
+* `name`, `level`, `scopeId`
+* `value` (číslo / struktura) nebo `null` pokud nepoužitelné
+* `status`: `OK` | `PARTIAL` | `UNAVAILABLE` | `NOT_APPLICABLE`
+* `basis`: `AST` | `GRAPH` | `MIXED`
+* `coverageRef`: odkaz na relevantní kategorie `BindingCoverage` (T1) nebo AST evidenci
+
+Pravidla:
+
+* *AST* metrika: `OK` při úspěšném zpracování zdroje; chybějící tělo (abstraktní
+  metoda, chybějící blok) → `NOT_APPLICABLE` nebo definovaná hodnota (viz metrika).
+* *GRAPH/bindings* metrika: `OK` jen při úplně resolved podkladu; jinak `PARTIAL`
+  s hodnotou z známé části + vyznačením neúplnosti, nebo `UNAVAILABLE` pokud nelze
+  spočítat smysluplně. Nikdy tiše interpretovat neúplný graf jako úplný.
+
+=== Zdrojové kořeny a rozsah
+
+* Analyzují se typy a jednotky v rozsahu předaném nástroji (soubory/adresáře/`--pom`
+  a sloučené balíky dle T0/T1).
+* Metriky se počítají i pro `LOCAL`/`ANONYMOUS` typy jako samostatné typové
+  uzly se stabilním syntetickým ID a zachovaným `typeKind`/`nesting`. Jednotlivé
+  metriky mohou mít užší primární scope podle D0 v `docs/07-t2-metric-decisions.adoc`.
+
+== Metriky velikosti a složitosti
+
+=== Počty přímo deklarovaných členů
+
+`java.declared-methods`, `java.declared-constructors` a
+`java.declared-fields` jsou přesné type-level counts produkované
+`MemberCountComputer` přes `JavaMetricsProvider`. Započítávají pouze členy
+přímo deklarované v měřeném typu. Zděděné členy a členy nested/local/anonymous
+typů se nezapočítávají; každý typ je samostatný `SubjectRef`. Enum konstanty
+nejsou fields této metriky. Rekurzivní counts nejsou definovány; vyšší úrovně
+se budou počítat explicitní agregací. Podrobnosti viz D13 v
+`docs/07-t2-metric-decisions.adoc`.
+
+=== LOC a NCLOC
+
+[cols="1,3",options="header"]
+|===
+|Položka |Definice
+
+|Jednotka
+|metoda/konstruktor/inicializátor a typ (součet/rozsah deklarace); volitelně kompil. jednotka.
+
+|Definice
+|*LOC (physical)* = počet fyzických řádků ve zdrojovém rozsahu uzlu.
+*NCLOC* (non-comment, non-blank lines of code) = počet řádků, které po
+odstranění komentářů obsahují alespoň jeden netoken-whitespace znak; prázdné
+řádky a řádky tvořené pouze komentářem se nezapočítávají.
+
+|Zahrnutí/vyloučení
+|Započítává se deklarace a tělo v rozsahu uzlu; komentáře (řádkové `//`,
+blokové `/* */`, Javadoc `/** */`) se z NCLOC vylučují. Řádek se smíšeným kódem
+a komentářem se do NCLOC započítá.
+
+|Závislost
+|AST rozsahy (`startPosition/length`, line mapping z `CompilationUnit`) + zdrojový text.
+
+|Neúplnost
+|AST/zdroj nedostupný → `UNAVAILABLE`.
+
+|Definiční zdroje
+|Koncept LOC/SLOC/NCLOC a potíže s nejednotností definic: Park R. E.,
+*Software Size Measurement: A Framework for Counting Source Statements*, SEI
+CMU/SEI-92-TR-020, 1992. Běžné nástrojové vymezení NCLOC (ELOC/LLOC varianty):
+např. dokumentace/metodiky nástrojů SonarQube, CKJM/Understand (pro srovnání v T3
+bude nutné uvést přesné mapování).
+|===
+
+Přijaté vymezení per-line NCLOC, rozsahů deklarací a inclusive/exclusive
+variant typů je v D1 v `docs/07-t2-metric-decisions.adoc`.
+
+=== Cyclomatic complexity (metoda)
+
+[cols="1,3",options="header"]
+|===
+|Položka |Návrh
+
+|Jednotka
+|metoda, konstruktor, inicializační blok s tělem.
+
+|Definice (návrh)
+|Cyklická složitost dle McCabe: počet lineárně nezávislých cest; operačně
+stem:[v(G)=d+1], kde stem:[d] je počet rozhodovacích bodů v těle.
+
+|Rozhodovací body (navržený základ)
+|`if`, `for`, `foreach` (`EnhancedForStatement`), `while`, `do`, každá `case`
+rule/statement group mimo `default`, `catch`, ternární `?:`, guarded `when` a
+každý short-circuit operátor. Samotný `switch`, `default`, `else`, `try`,
+`finally`, `return`, `throw`, `break`, `continue` a `assert` se nezapočítávají.
+
+|Zahrnutí/vyloučení
+|Jedna `case` rule nebo statement group přidává jedno rozhodnutí bez ohledu na
+počet labels. Lambda je samostatný operation-like scope se základem 1 a její
+rozhodovací body se nepřičítají enclosing metodě. Přesná konfigurace je v D2.
+
+|Neaplikovatelné
+|Abstraktní metoda / metoda bez těla → `NOT_APPLICABLE` (hodnota `null`).
+
+|Závislost
+|AST těla.
+
+|Definiční zdroje
+|McCabe T. J., *A Complexity Measure*, IEEE Transactions on Software
+Engineering, SE-2(4), 1976. Praktické rozšíření o logické operátory je běžné v
+nástrojích (např. tradice „extended cyclomatic“/McCabe+boolean ops); přesná
+pravidla budou v T3 porovnána s referenčním nástrojem.
+|===
+
+Přijatá pravidla pro `switch`, logické operátory a lambdy jsou v D2 v
+`docs/07-t2-metric-decisions.adoc`.
+
+=== WMC — Weighted Methods per Class
+
+[cols="1,3",options="header"]
+|===
+|Položka |Návrh
+
+|Jednotka
+|typ.
+
+|Definice (návrh)
+|stem:[WMC = \sum_{i=1}^{n} c_i], kde stem:[c_i] je cyclomatic complexity
+deklarované metody s vlastním tělem.
+
+|Zahrnutí
+|Deklarované metody s vlastním tělem. Metody bez těla mají CC
+`NOT_APPLICABLE` a do WMC nepřispívají. Konstruktory, inicializační bloky,
+lambdy, zděděné a syntetické metody se nezapočítávají; jejich complexity se
+podle D3 exportuje odděleně.
+
+|Závislost
+|AST (přes cyclomatic).
+
+|Definiční zdroje
+|Chidamber S. R., Kemerer C. F., *A Metrics Suite for Object Oriented Design*,
+IEEE Transactions on Software Engineering, 20(6), 1994. (CK definují WMC jako
+součet složitostí metod; volba váhy/complexity metriky je parametr — zde
+explicitně cyclomatic complexity.)
+|===
+
+== Dědičnost a overriding
+
+=== DIT — Depth of Inheritance Tree
+
+[cols="1,3",options="header"]
+|===
+|Položka |Návrh
+
+|Jednotka
+|typ.
+
+|Definice (návrh)
+|Počet `extends` hran od class-like typu k `java.lang.Object`. `Object` má DIT
+0 a typ přímo pod ním DIT 1. Pro interfaces/annotations je DIT
+`NOT_APPLICABLE`; jejich samostatná metrika `interfaceInheritanceDepth` je
+maximální počet hran k root interface.
+
+|Zahrnutí/vyloučení
+|Implicitní superclass, včetně `Enum` a `Record`, se započítává. Rozřešení
+zahrnuje interní, externí i JDK předky. Nerozřešený předek znamená známou dolní
+mez se stavem `PARTIAL`; cyklus znamená `UNAVAILABLE` podle D4.
+
+|Závislost
+|`InheritanceEdge`, `SymbolRef`, bindings/coverage (`superTypes`).
+
+|Definiční zdroje
+|Chidamber S. R., Kemerer C. F., 1994 (viz WMC).
+|===
+
+=== NOC — Number of Children
+
+[cols="1,3",options="header"]
+|===
+|Položka |Návrh
+
+|Jednotka
+|typ.
+
+|Definice
+|Počet přímých pojmenovaných class descendants přes `extends` v manifestem
+vymezeném analyzovaném scope.
+
+|Zahrnutí
+|Primární varianta zahrnuje top-level a member classes v produkčním source
+setu a vylučuje local, anonymous a enum-constant-body typy. Pro interfaces a
+annotations je NOC `NOT_APPLICABLE`; samostatně se exportují
+`directSubinterfaceCount` a `directImplementingClassCount`. Podrobnosti a
+neúplnost viz D5.
+
+|Závislost
+|Inverze hran dědičnosti/implementace z grafu.
+
+|Definiční zdroje
+|Chidamber S. R., Kemerer C. F., 1994.
+|===
+
+=== Override/implementation vztahy (počet)
+
+[cols="1,3",options="header"]
+|===
+|Položka |Návrh
+
+|Jednotka
+|typ (a volitelně metoda).
+
+|Definice (návrh)
+|Počet metod typu, které přepisují metodu nadtřídy (`OVERRIDES_CLASS`) a/nebo
+implementují deklaraci rozhraní (`IMPLEMENTS_INTERFACE`), dle `OverrideEdge` (T1).
+
+|Závislost
+|`OverrideEdge`, coverage `overrideRelations`.
+
+|Definiční zdroje
+|Operační metrika nad vazbou override; souvisí s polymorfismem v OO návrhu
+(CK/objektově orientovaná teorie návrhu). Přesná sémantika hran viz
+`docs/06-t1-data-model.adoc`.
+|===
+
+== Coupling a fan metriky
+
+=== CBO — Coupling Between Object classes
+
+[cols="1,3",options="header"]
+|===
+|Položka |Návrh
+
+|Jednotka
+|typ.
+
+|Definice
+|Počet unikátních sousedních typů v obou směrech. Fan-out a fan-in jsou počty
+unikátních cílových, respektive zdrojových typů.
+
+|Zahrnutí
+|Primární varianta používá deklarativní i body hrany a zahrnuje inheritance.
+Cíle se klasifikují jako `INTERNAL`, `EXTERNAL`, `JDK` nebo `UNRESOLVED`;
+primární metriky článku používají interní coupling a ostatní origins/total se
+reportují odděleně. Exportují se také declaration/body/no-inheritance varianty
+podle D6.
+
+|Závislost
+|Graf závislostí, `SymbolRef.origin`, coverage `dependencyEdges`/`typeReferences`.
+
+|Definiční zdroje
+|Chidamber S. R., Kemerer C. F., 1994. (Různé nástroje se liší v tom, co tvoří
+„coupling“; nutná přesná operační definice.)
+|===
+
+=== Fan-in / Fan-out (typ)
+
+[cols="1,3",options="header"]
+|===
+|Položka |Návrh
+
+|Jednotka
+|typ.
+
+|Definice (návrh)
+|*Fan-out*: počet odchozích závislostí typu na jiné typy (unikátní cíle).
+*Fan-in*: počet příchozích závislostí z jiných typů v rozsahu na daný typ.
+Směr a množina hran stejné jako u CBO (sjednotit definici).
+
+|Závislost
+|`dependencyEdges` + inverze v rámci analyzovaného rozsahu.
+
+|Definiční zdroje
+|Henry S., Kafura D., *Software Structure Metrics Based on Information Flow*,
+IEEE TSE, SE-7(5), 1981 (původní informační tok); v OO kontextu běžně
+adaptováno jako class-level fan-in/fan-out nad závislostmi. (Nutno citovat i
+přijatou OO adaptaci v implementační dokumentaci, pokud se upřesní.)
+|===
+
+== Cohesion a response
+
+=== LCOM4 — Lack of Cohesion of Methods (Hitz & Montazeri)
+
+[cols="1,3",options="header"]
+|===
+|Položka |Definice
+
+|Jednotka
+|typ.
+
+|Definice
+|LCOM4 je počet souvislých komponent grafu stem:[G=(V,E)], kde stem:[V] jsou
+metody typu a hrana existuje, pokud dvě metody sdílejí alespoň jedno pole
+(instance), nebo jedna volá druhou (podle definice). stem:[LCOM4 = k] (počet
+komponent); stem:[LCOM4=1] indikuje soudržný typ, vyšší hodnoty nižší soudržnost.
+
+|Zahrnutí/vyloučení
+|Eligible jsou přímo deklarované instance metody s tělem kromě konstruktorů,
+static metod a strukturálně rozpoznaných trivial accessors. Používají se pouze
+přímo deklarované instance fields. Typ bez eligible metod, interface,
+annotation a static utility typ jsou `NOT_APPLICABLE`; typ s jednou metodou má
+LCOM4 1 a `lowInformation=true`. Úplná pravidla jsou v D7.
+
+|Implementace a neúplnost
+|`CohesionEvidenceExtractor` mapuje JDT field/method bindings na doménové
+objekty a `Lcom4Computer` počítá komponenty union-find algoritmem. Volaný
+triviální accessor se rozvine na backing field. Nevyřešené relevantní
+field/call vazby dávají `PARTIAL` a `AT_MOST`, protože pozorovaný počet
+komponent je horní mez. Measurement attributes nesou velikost grafu, počty
+hran, accessorů a unresolved evidencí.
+
+|Definiční zdroje
+|Hitz M., Montazeri B., *Measuring Coupling and Cohesion in Object-Oriented
+Systems*, Proc. ISACC 1995. (LCOM4 jako grafová varianta navazující na dřívější
+LCOM definice Chidamber & Kemerer 1994 / Li & Henry 1993.)
+|===
+
+=== RFC — Response For a Class
+
+[cols="1,3",options="header"]
+|===
+|Položka |Návrh
+
+|Jednotka
+|typ.
+
+|Definice (návrh)
+|stem:[RFC = |RS|], kde stem:[RS] je response set: množina metod, které mohou
+být vykonány v reakci na zprávu přijatou objektem třídy. Operačně navrženo:
+stem:[RS = M \cup R], kde stem:[M] jsou metody deklarované v typu a stem:[R]
+jsou metody/konstruktory přímo volané z těl metod/konstruktorů typu.
+
+|Zahrnutí/vyloučení
+|stem:[M] obsahuje přímo deklarované metody, nikoliv konstruktory ani zděděné
+metody. stem:[R] obsahuje unikátní přímo volané staticky rozřešené operace,
+včetně explicitně volaných konstruktorů a zděděných metod. Volání není
+tranzitivní. Unresolved call sites se nezapočítají a způsobují `PARTIAL` s
+dolní mezí podle D8.
+
+|Závislost
+|AST těl + (výhodně) bindings pro identifikaci cílů volání.
+
+|Definiční zdroje
+|Chidamber S. R., Kemerer C. F., 1994. (Různé interpretace RS — lokální vs.
+zahrnutí děděných/tranzitivních — jsou častým zdrojem neshod nástrojů.)
+|===
+
+== Balíkové metriky (Martin)
+
+Balík je identifikován plně kvalifikovaným jménem balíku v analyzovaném rozsahu.
+
+=== Ca — Afferent Couplings
+
+Počet jiných balíků, které závisejí na typech daného balíku (příchozí závislosti).
+
+=== Ce — Efferent Couplings
+
+Počet jiných balíků, na jejichž typech daný balík závisí (odchozí závislosti).
+
+*Zdroje hran*: odvozeno z `dependencyEdges`/type relations agregovaných přes
+typy balíku s deduplikací na úroveň balíku. Primární Ca/Ce používají pouze
+produkční balíky analyzovaného projektu; external a JDK Ce se reportují
+odděleně a globální external Ca se netvrdí. Podrobnosti viz D9.
+
+Immutable package projekce, klasifikace targetů a unresolved evidence jsou
+implementovány v `PackageDependencyGraphBuilder`. JDT parser dodává
+deklarativní i body-level usages schválené v D6; graph je připraven pro
+výpočet Ca/Ce. `MartinCouplingComputer` publikuje primární interní varianty
+pod `java.ca` a `java.ce`. Při unresolved targetu je pozorovaný počet
+`PARTIAL`/`AT_LEAST`; external a JDK outgoing počty jsou auditní attributes,
+nikoliv součást primární hodnoty. Globální external Ca se netvrdí.
+
+=== I — Instability
+
+[stem]
+++++
+I = \frac{Ce}{Ca + Ce}
+++++
+
+*Okrajový případ*: pokud stem:[Ca + Ce = 0], výsledek je `NOT_APPLICABLE` s
+důvodem `NO_PACKAGE_DEPENDENCIES`, nikoliv nula (D10).
+
+`java.instability` je implementována nad interními Ca/Ce. Je-li package graph
+neúplný, nenulový pozorovaný poměr je `PARTIAL/OBSERVED_FRAGMENT`; nulový
+pozorovaný jmenovatel dává konzervativní interval `[0,1]`.
+
+Definiční zdroje: Martin R. C., *OO Design Quality Metrics: An Analysis of
+Dependencies*, 1994; dále popularizováno v Martin R. C., *Agile Software
+Development: Principles, Patterns, and Practices*, 2002/2003.
+
+=== A — Abstractness
+
+[stem]
+++++
+A = \frac{N_a}{N_c}
+++++
+
+`java.abstractness` je implementována podle D10. stem:[N_c] obsahuje top-level
+class/interface/record/enum typy z manifestem vybraných produkčních zdrojů;
+stem:[N_a] obsahuje interfaces a explicitně abstract classes. Annotations a
+non-top-level typy jsou vyloučeny. Při stem:[N_c=0] se vrací
+`NOT_APPLICABLE/NO_ELIGIBLE_TYPES`.
+
+kde stem:[N_a] je počet abstraktních typů v balíku a stem:[N_c] celkový počet
+typů v balíku.
+
+stem:[N_c] zahrnuje top-level produkční classes, interfaces, records a enums;
+stem:[N_a] zahrnuje interfaces a explicitně abstract classes. Annotation,
+member/nested, local, anonymous, syntetické a testovací typy se nezapočítávají.
+Při stem:[N_c=0] je výsledek `NOT_APPLICABLE` (D10).
+
+Zdroje: Martin 1994/2003.
+
+=== D — Distance from the Main Sequence
+
+Primární forma je stem:[D = |A + I - 1|] v intervalu [0,1]. D11 počítá také se
+signed deviation stem:[D_s = A + I - 1]. Eukleidovská varianta dělená
+stem:[\sqrt{2}] se jako primární nepoužije (D11).
+
+Primární forma je implementována jako `java.distance`. `NOT_APPLICABLE` vstupu
+se zachovává; částečný bod I dává `PARTIAL/OBSERVED_FRAGMENT` a interval I se
+transformuje na bezpečný interval D. Signed deviation je zatím plánované
+samostatné rozšíření, nikoli publikovaná metrika.
+
+Zdroje: Martin 1994/2003.
+
+== Agregace metrik
+
+Pro kolekci hodnot stem:[X=\{x_1,\ldots,x_n\}] (po filtrování `NOT_APPLICABLE`/
+`UNAVAILABLE` dle pravidla níže):
+
+[cols="1,3",options="header"]
+|===
+|Agregace |Definice (návrh)
+
+|`sum` |stem:[\sum x_i]
+|`mean` |aritmetický průměr stem:[\frac{1}{n}\sum x_i]
+|`median` |pro sudé stem:[n] aritmetický průměr dvou středních hodnot
+|`maximum` |stem:[\max(x_i)]
+|`IQR` |stem:[Q_3 - Q_1], kvartily a percentily podle Hyndman–Fan Type 7
+|`upper percentiles` |p90, p95 a p99 metodou Type 7; maximum se exportuje zvlášť
+|===
+
+Pravidla:
+
+* prázdná množina `OK` hodnot po filtrování → agregace `NOT_APPLICABLE`;
+* primární agregace používá pouze `OK`; `PARTIAL` vstupy se zpracují oddělenou
+  sensitivity agregací přes známé dolní/horní meze;
+* export uvádí `nTotal`, `nOk`, `nPartial`, `nNotApplicable` a `nUnavailable`.
+
+== Zmrazená M3 specifikace
+
+Pro každou vybranou metriku platí: `MetricId`, provider, scope, unit,
+`specificationKey`, agregace (primární `OK` only + oddělená sensitivity), a
+chování při `PARTIAL`/intervalu (`AT_LEAST`/`AT_MOST`/`OBSERVED_FRAGMENT`).
+
+* Size: `java.physical-loc` / `java.ncloc` — exact, project-level agregace bez
+  imputace.
+* Complexity: `ck.wmc` exact; method-level `java.cyclo` plánovaná mezera.
+* Coupling: `ck.cbo`, `java.ca`, `java.ce` — exact nebo partial s mezi.
+* Cohesion: `java.lcom4` — exact nebo upper bound partial.
+* Inheritance: `ck.dit`, `ck.noc` — exact.
+* Martin: `java.instability`, `java.abstractness`, `java.distance` — exact/interval/NA.
+* Agregace: primární pouze `OK`; sensitivity lower/upper endpointy; export
+  deterministický JSON/CSV s completeness counts.
+* QMOOD/Li & Henry (NOP, DCC) nejsou v M3, pokud RQ2 explicitně nevyžádá.
+
+== Shrnutí přijatých rozhodnutí
+
+. Rozsah typů: zahrnout `LOCAL`/`ANONYMOUS` jako měřené typy? Rozhodnutí: ANO
+. LOC/NCLOC: per-line NCLOC, hranice rozsahu metody/typu. Rozhodnutí: physicalLOC je počet fyzických řádků protnutých source range entity, včetně prázdných řádků a komentářů. NCLOC je počet fyzických řádků v tomto rozsahu, které po lexikálním odstranění komentářů a obsahu víceřádkových literálů obsahují alespoň jeden Java token. Každý řádek se započítá nejvýše jednou. Rozsah metody nebo typu začíná první anotací příslušné deklarace a končí posledním tokenem deklarace. Javadoc bezprostředně před deklarací do rozsahu nepatří. U typů se exportuje inclusive i exclusive varianta vzhledem k nested types. File a project LOC se počítají přímo ze souborů, nikoliv součtem hodnot typů či metod.
+
+. Cyclomatic: pravidla pro `switch`/logické operátory/lambdy. Rozhodnutí: Cyclomatic complexity se počítá samostatně pro každou metodu, konstruktor, inicializační blok a lambdu jako 1 + počet rozhodovacích bodů. Rozhodovacími body jsou if, každá smyčka, catch, ternární operátor, každá case rule nebo statement group mimo default, guarded when a každý short-circuit operátor && nebo ||. Samotné switch, else, default, try, finally, return, throw, break, continue, assert a non-short-circuit operátory se nezapočítávají. Rozhodovací body uvnitř lambdy se nepřičítají enclosing metodě.
+
+. WMC: příspěvek metod bez těla a inicializačních bloků. Rozhodnutí: Primární java.wmc je součet cyclomatic complexity metod deklarovaných přímo v typu a majících vlastní tělo. Metody bez těla mají CC NOT_APPLICABLE, do WMC nepřispívají a jejich počet se reportuje. Konstruktory, inicializační bloky a lambdy nejsou součástí WMC; jejich complexity se exportuje samostatně a může být zahrnuta do java.totalExecutableComplexity. Zděděné a syntetické metody se nezapočítávají.
+
+. DIT: kořen `Object`, chování pro rozhraní a neúplnou hierarchii. Rozhodnutí: java.dit je počet hran extends na nejdelší rozřešené cestě od měřeného class-like typu k java.lang.Object; Object má DIT 0. U Java tříd je dědičnost jednoduchá, takže cesta je jednoznačná. Implicitní superclass typů se započítává, včetně Enum a Record. Vztahy implements se nezapočítávají. Pro interfaces a annotation types je java.dit NOT_APPLICABLE; jejich vícečetná dědičnost se měří samostatnou metrikou java.interfaceInheritanceDepth jako maximální počet hran k root interface. Pokud hierarchie končí nerozřešeným předkem, exportuje se známá dolní mez se stavem PARTIAL. Při cyklu je výsledek UNAVAILABLE.
+
+. NOC: sémantika pro třídy vs. rozhraní, in-scope pravidlo. Rozhodnutí: java.noc je počet přímých pojmenovaných class descendants měřené třídy v manifestem vymezeném analyzovaném scope. Započítávají se top-level a member classes; local, anonymous a enum-constant-body typy se v primární variantě nezapočítávají. Počítají se pouze přímé extends vztahy, nikoli tranzitivní potomci ani implements. Pro interfaces a annotation types je java.noc NOT_APPLICABLE. Rozhraní mají samostatné metriky java.directSubinterfaceCount a java.directImplementingClassCount. Primární experiment používá produkční source set; testovací typy se reportují odděleně. NOC je přesná pouze vzhledem k analyzovanému scope. Nerozřešené inheritance edges způsobují PARTIAL, pokud nelze vyloučit, že míří na měřený typ.
+
+. CBO/fan-in/fan-out: pouze deklarativní hrany vs. těla, zacházení s JDK/externími. Rozhodnutí: Dependency graph obsahuje klasifikované směrové hrany z deklarací i těl metod. Deklarativní hrany zahrnují inheritance, field/parameter/return/throws typy, type bounds, annotations, record components a všechny konkrétní generic type arguments. Body hrany zahrnují lokální typy, instantiations, staticky rozřešené method/constructor calls a field accesses, casts, instanceof/patterns, class literals, method references, catch types a rozřešené lambda target types. Imports, primitives, self-references a výskyty pouze v textu se nezapočítávají. Fan-out a fan-in jsou počty unikátních cílových, respektive zdrojových typů; CBO je počet unikátních sousedních typů v obou směrech. Primární varianty používají všechny deklarativní i body hrany a zahrnují inheritance. Zároveň se exportují declaration-only a no-inheritance varianty. Každý cíl je klasifikován jako INTERNAL, EXTERNAL, JDK nebo UNRESOLVED. Primární metriky článku používají interní coupling; external, JDK a total varianty se reportují odděleně. Nerozřešené hrany způsobují PARTIAL a publikovaná hodnota je pouze známá dolní mez.
+
+. LCOM4: množina metod/polí, prázdné/utility typy. Rozhodnutí: java.lcom4 je počet komponent souvislosti neorientovaného grafu eligible instance metod deklarovaných přímo v měřeném class-like typu. Eligible jsou metody s tělem, kromě konstruktorů, static metod a strukturálně rozpoznaných triviálních getterů/setterů. Abstraktní, zděděné, syntetické a compiler-generated metody, inicializační bloky a lambdy jako samostatné uzly se nezapočítávají. Hrana vzniká, pokud dvě metody přistupují ke stejnému instance fieldu deklarovanému přímo v typu nebo pokud jedna staticky rozřešeně volá druhou. Static a inherited fields se nezapočítávají. Přístupy uvnitř lambdy náležejí enclosing metodě; těla local/anonymous types nikoliv. Typ bez eligible metod má stav NOT_APPLICABLE; typ s jednou eligible metodou má LCOM4 1 s příznakem lowInformation. Interfaces, annotations a static utility typy jsou NOT_APPLICABLE. Records a enums se měří jako class-like typy. Při nerozřešených field accesses nebo intra-type calls je výsledek PARTIAL a pozorovaná hodnota představuje horní mez.
+
+. RFC: členství stem:[M]/stem:[R], děděné metody, tranzitivita, unresolved volání. Rozhodnutí: java.rfc je velikost sjednocení metod deklarovaných přímo v class-like typu a unikátních operací přímo volaných z jejich těl. Konstruktory nejsou členy \(M\), ale explicitně volané konstruktory mohou patřit do \(R\). Zděděné metody nejsou v \(M\), ale mohou být v \(R\). Použije se pouze přímá, nikoliv tranzitivní množina volání. Nerozřešená volání způsobují PARTIAL a hodnota je dolní mez.
+
+. Ca/Ce: projektové vs. externí balíky. Rozhodnutí: Primární Ca a Ce jsou počty unikátních incoming a outgoing package dependencies mezi produkčními balíky analyzovaného projektu. External a JDK outgoing coupling se reportuje odděleně; globální external incoming coupling se netvrdí. Použijí se deklarativní i body hrany včetně inheritance. Nerozřešené hrany způsobují PARTIAL.
+
+. I při stem:[Ca+Ce=0], definice stem:[A] (co je abstraktní, co je stem:[N_c]). Rozhodnutí: A = Na/Nc, kde Nc je počet top-level produkčních classes, interfaces, records a enums a Na je počet interfaces a explicitně abstract classes. Annotation, member, local, anonymous, syntetické a testovací typy se nezapočítávají. Při Nc=0 je výsledek NOT_APPLICABLE.
+
+. D: normalizovaná vs. ne-normalizovaná forma. Rozhodnutí: Primární distance je |A+I−1|; navíc se exportuje signed deviation.
+
+. Agregace: medián pro sudé stem:[n], metoda kvartilů/percentilů, konkrétní horní percentily, zacházení s `PARTIAL`. Rozhodnutí: Primární agregace obsahují pouze OK; PARTIAL se používá v oddělené sensitivity analýze. Medián sudého počtu je průměr prostředních hodnot, percentily používají Type 7 a exportují se P90, P95, P99 i maximum.
+
+== Reference (definiční zdroje)
+
+[bibliography]
+* [[[mccabe1976]]] McCabe, T. J. A Complexity Measure. _IEEE Transactions on Software Engineering_, SE-2(4):308–320, 1976. doi:10.1109/TSE.1976.233837.
+* [[[ck1994]]] Chidamber, S. R.; Kemerer, C. F. A Metrics Suite for Object Oriented Design. _IEEE Transactions on Software Engineering_, 20(6):476–493, 1994. doi:10.1109/32.295895.
+* [[[lihenry1993]]] Li, W.; Henry, S. Object-Oriented Metrics that Predict Maintainability. _Journal of Systems and Software_, 23(2):111–122, 1993. doi:10.1016/0164-1212(93)90077-B.
+* [[[hitz1995]]] Hitz, M.; Montazeri, B. Measuring Coupling and Cohesion in Object-Oriented Systems. _Proceedings of the International Symposium on Applied Corporate Computing (ISACC)_, 1995.
+* [[[henry1981]]] Henry, S.; Kafura, D. Software Structure Metrics Based on Information Flow. _IEEE Transactions on Software Engineering_, SE-7(5):510–518, 1981. doi:10.1109/TSE.1981.231113.
+* [[[martin1994]]] Martin, R. C. OO Design Quality Metrics: An Analysis of Dependencies. 1994. (často citováno; dostupné v archívech autora / workshop materiálech).
+* [[[martin2003]]] Martin, R. C. _Agile Software Development: Principles, Patterns, and Practices_. Prentice Hall, 2002/2003. (kapitoly o package metrics: Ca, Ce, I, A, D / main sequence).
+* [[[park1992]]] Park, R. E. Software Size Measurement: A Framework for Counting Source Statements. Technical Report CMU/SEI-92-TR-020, Software Engineering Institute, Carnegie Mellon University, 1992.
+
+[NOTE]
+====
+Pro LCOM existuje více variant (CK LCOM1, Li-Henry, Henderson-Sellers LCOM*,
+Hitz-Montazeri LCOM4 aj.). Plán T2 výslovně uvádí *LCOM4*; proto je jako
+primární definiční zdroj veden <<hitz1995>>. RFC, CBO a fan metriky mají v praxi
+více operačních interpretací — v T3 budou rozdíly vůči referenčnímu nástroji
+klasifikovány dle `docs/01-research-plan.adoc:173`.
+====

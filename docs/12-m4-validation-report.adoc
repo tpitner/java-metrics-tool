@@ -1,0 +1,18 @@
+= M4 validation report
+:toc:
+
+== Differential testing
+
+* CK provider validován nad validačním corpusem (balík `metrics.ck`).
+* Další nástroje (ckjm-extended, PMD, Checkstyle, DesigniteJava) nejsou součástí
+  M4, protože nepřidávají metriku vybranou do M3 sady.
+
+== Klasifikace neshod
+
+* Neshody mimo CK nejsou reportovány, protože odpovídající provider není použit.
+* Interní oracle (`ValidationCorpusTest`, `ProjectMetricAggregatorTest`) procházejí.
+
+== Závěr
+
+M4 je uzavřen v rozsahu M3 metric set; produkční konfigurace neobsahuje implicitní
+provider ani metriku bez známé verze, definice a provenance.

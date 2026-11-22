@@ -46,10 +46,15 @@ schema fingerprints, and retained raw artifacts when requested.
 
 == Current boundary
 
-The default suite does not execute the external CK JAR and therefore reports
-the two real-CK tests as skipped unless their required properties are supplied.
-Release automation must run those tests separately before version 1.1.0 is
-tagged.
+The default local suite does not execute the external CK JAR and therefore
+reports the two real-CK tests as skipped unless their required properties are
+supplied. GitHub Actions has a separate required job that checks out revision
+`8a1ef91`, builds its standalone JAR, and runs both tests on Java 21.
+
+CK emits method-like rows for static and instance initializers, but initializer
+scope is not part of the published CK adapter contract. The corpus test requires
+the two known rows to be diagnosed explicitly rather than imported or silently
+discarded.
 
 Other tools such as CKJM Extended, PMD, Checkstyle, and DesigniteJava are not
 part of the release validation matrix. No equivalence is claimed between their

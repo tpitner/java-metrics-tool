@@ -92,18 +92,26 @@ class CkValidationCorpusTest {
     }
 
     private static void assertExpectedDiagnostics(CorpusCase corpusCase, List<String> diagnostics) {
-        if (!"nested-types".equals(corpusCase.id())) {
-            assertTrue(diagnostics.isEmpty(),
+        switch (corpusCase.id()) {
+            case "nested-types" -> {
+                assertFalse(diagnostics.isEmpty(),
+                        "CK currently reports local/anonymous types that have no frozen cross-tool identity");
+                assertTrue(diagnostics.stream().allMatch(message ->
+                                message.contains("validation.nested.Outer$1Local")
+                                        || message.contains("validation.nested.Outer$Anonymous1")),
+                        () -> "Unexpected nested-types CK diagnostics: " + diagnostics);
+            }
+            case "initializers-lambdas" -> {
+                assertEquals(2, diagnostics.size(),
+                        () -> "Unexpected initializer CK diagnostics: " + diagnostics);
+                assertTrue(diagnostics.stream().anyMatch(message -> message.contains("#(initializer 1)")),
+                        () -> "Missing first initializer diagnostic: " + diagnostics);
+                assertTrue(diagnostics.stream().anyMatch(message -> message.contains("#(initializer 2)")),
+                        () -> "Missing second initializer diagnostic: " + diagnostics);
+            }
+            default -> assertTrue(diagnostics.isEmpty(),
                     () -> corpusCase.id() + " CK mapping diagnostics: " + diagnostics);
-            return;
         }
-
-        assertFalse(diagnostics.isEmpty(),
-                "CK currently reports local/anonymous types that have no frozen cross-tool identity");
-        assertTrue(diagnostics.stream().allMatch(message ->
-                        message.contains("validation.nested.Outer$1Local")
-                                || message.contains("validation.nested.Outer$Anonymous1")),
-                () -> "Unexpected nested-types CK diagnostics: " + diagnostics);
     }
 
     private static void assertRequiredSubjectsWereMeasured(

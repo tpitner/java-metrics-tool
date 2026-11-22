@@ -116,10 +116,11 @@ the external CK process.
 
 == CK validation boundary
 
-The pinned CK revision has two explicitly controlled subject-mapping limits:
-local and anonymous types do not yet have a frozen cross-tool identity, and an
-annotation declaration has no `class.csv` row. Any other mapping diagnostic
-fails the test.
+The pinned CK revision has explicitly controlled mapping limits: local and
+anonymous types do not yet have a frozen cross-tool identity, an annotation
+declaration has no `class.csv` row, and CK emits two method-like initializer
+rows even though initializer scope is outside the published CK adapter
+contract. Any other mapping diagnostic fails the test.
 
 The manually reviewed CK oracle covers:
 

@@ -4,6 +4,9 @@
 
 == 2026-11-22
 
+* Added a required Ubuntu CI job that builds pinned CK revision `8a1ef91` and
+  runs both real-CK integration tests; classified CK's two method-like
+  initializer rows as explicit out-of-contract diagnostics.
 * Added an executable CLI contract test for success, syntax-error, and invalid
   input exit codes, plus byte-for-byte JSON determinism checks both in-process
   and across separate packaged-CLI JVM runs in CI.

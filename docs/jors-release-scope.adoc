@@ -1,0 +1,155 @@
+= JORS 1.1.0 release scope
+:toc: left
+:toclevels: 2
+
+This document freezes the intended public scope of the `java-metrics` release
+submitted with the Journal of Open Research Software (JORS) software metapaper.
+Changes that expand this scope require an explicit decision and are not release
+blockers unless stated below. Correctness, portability, documentation, and
+reproducibility fixes remain in scope.
+
+== Release identity
+
+The target release is `java-metrics` 1.1.0. The Git tag, Maven project version,
+`CITATION.cff`, GitHub release, executable JAR, checksums, documentation, and
+version-specific preservation DOI must all identify the same release.
+
+== Supported metrics
+
+=== Built-in `java` provider
+
+The following metrics are computed directly by `java-metrics` and form the
+required, independently usable core of the JORS release:
+
+* type-level declared method, constructor, and field counts;
+* physical lines of code and non-comment lines of code (NCLOC) at project,
+  file, package, type, method, constructor, initializer, and lambda scopes;
+* exclusive physical LOC and exclusive NCLOC at type scope;
+* LCOM4 cohesion at type scope;
+* afferent coupling (`Ca`) and efferent coupling (`Ce`) at package scope;
+* instability, abstractness, and normalized distance from the main sequence at
+  package scope.
+
+The release must publish an operational definition and validation evidence for
+each metric above. Metric identifiers declared in the source catalog but not
+implemented by a built-in metric computer are not advertised as built-in
+metrics.
+
+=== Optional `ck` provider
+
+The optional CK adapter imports the following metrics from the frozen CK CSV
+contract at upstream revision `8a1ef91`:
+
+* CBO, modified CBO, fan-in, fan-out, WMC, RFC, and LOC at type, method, and
+  constructor scopes where CK supplies the value;
+* DIT, NOC, LCOM, LCOM*, TCC, LCC, total/public method counts, and total/public
+  field counts at type scope;
+* parameter count at method and constructor scope.
+
+CK is an external, separately executed provider. The built-in provider must be
+fully usable without CK. The JORS release does not redistribute the CK JAR.
+
+== Supported inputs
+
+The command-line interface supports:
+
+* one or more individual `.java` source files;
+* directories containing Java sources, recursively by default and optionally
+  non-recursively;
+* Maven projects selected by `pom.xml`, with optional compilation and optional
+  inclusion of test sources;
+* explicit source-path and classpath entries;
+* an explicit Java source release level;
+* an explicit TOML configuration file using schema version 1.
+
+Input paths may be supplied by TOML configuration or command-line arguments.
+Configuration discovery, environment-variable interpolation, shell expansion,
+and remote source acquisition are not supported.
+
+The JORS release supports parsing Java source levels 8 through 27. This range
+must be covered by release-gate fixtures for representative language features;
+unsupported or future source levels must fail with a diagnostic rather than be
+silently accepted.
+
+== Output formats
+
+The supported public output formats are:
+
+* `json` for deterministic, machine-readable measurements, provenance,
+  diagnostics, coverage information, and project aggregation;
+* `text` for a human-readable structural and metric summary;
+* `preview` for an ANSI-coloured YAML-like interactive preview.
+
+The aliases `ansi` and `yaml-preview` are accepted for `preview`. Output may be
+written to standard output or to an explicitly configured destination file.
+
+CSV is not a public output format in 1.1.0. CSV files produced by CK are
+provider input artifacts and may optionally be retained for audit purposes.
+
+== Supported Java platform
+
+The executable 1.1.0 JAR targets Java 21 LTS. Java 21 is therefore the minimum
+and reference runtime for building and running the tool. Later Java runtimes may
+work, but only runtimes exercised by the release CI matrix are claimed as
+verified.
+
+The Java runtime used to execute `java-metrics` is distinct from the source
+release level of the project being analysed.
+
+== Supported operating systems
+
+The supported operating systems are:
+
+* Linux;
+* macOS;
+* Windows.
+
+Support requires a Java 21 runtime and a conventional local filesystem. Maven
+project analysis additionally requires Maven to be available. Each operating
+system must pass the packaged-JAR quickstart in GitHub Actions before 1.1.0 is
+released. Architectures not exercised by CI are not explicitly certified.
+
+== Known limitations
+
+* Binding-dependent metrics can be incomplete when dependencies, source roots,
+  or classpath entries are missing. The result model records coverage and
+  unavailable or partial measurements instead of silently substituting zero.
+* Syntax errors are reported and produce a non-zero exit status. Results from
+  successfully parsed files may still be emitted and must not be interpreted as
+  a complete project measurement.
+* Maven is the only build system resolved automatically. Other projects require
+  explicit input, source-path, and classpath configuration.
+* CK integration requires a separately obtained compatible CK JAR and an
+  additional Java executable. Its CSV schema is deliberately restricted to the
+  frozen upstream revision.
+* Method matching for CK uses class identity, name, arity, and parameter types.
+  Ambiguous or unmappable rows are diagnosed and not imported.
+* Large repositories are processed as an in-memory analysis and may require
+  substantial heap space. No performance or maximum-project-size guarantee is
+  made for 1.1.0.
+* Generated sources, annotation-processor output, and unusual custom build
+  layouts may require explicit configuration.
+
+== Explicitly out of scope
+
+The following are not part of the JORS 1.1.0 release commitment:
+
+* adding new metrics beyond the sets frozen above;
+* CSV, database, HTML, SARIF, or graphical output;
+* a graphical user interface, web service, IDE plugin, or Maven plugin;
+* analysis of bytecode, binaries, or languages other than Java;
+* automatic resolution of Gradle, Ant, Bazel, or other non-Maven builds;
+* automatic download, installation, or redistribution of CK;
+* statistical hypothesis testing, visualisation, corpus acquisition, or other
+  workflows belonging to the separate empirical study;
+* backwards compatibility with undocumented internal Java APIs or JSON fields
+  not identified as part of the public schema;
+* performance benchmarking claims or guarantees for repository-scale analysis.
+
+== Release gate
+
+Version 1.1.0 may be tagged only when all supported metrics have documented
+definitions and validation evidence, the CI matrix and packaged-JAR quickstart
+pass on all supported operating systems, public documentation matches the CLI,
+and the downloadable release artifacts and preservation record use consistent
+version metadata.

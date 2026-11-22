@@ -1,0 +1,34 @@
+schema-version = 1
+
+[project]
+inputs = ["src/Inventory.java"]
+recursive = true
+include-tests = false
+compile = false
+sourcepath = []
+classpath = []
+release = "21"
+
+[output]
+format = "text"
+destination = "-"
+retain-provider-artifacts = false
+provider-artifacts-directory = "artifacts/providers"
+
+[providers.java]
+enabled = true
+metrics = [
+  "java.declared-methods",
+  "java.declared-constructors",
+  "java.declared-fields",
+]
+
+[providers.ck]
+enabled = false
+java-executable = "java"
+use-jars = true
+max-files-per-partition = 0
+variables-and-fields = true
+ignored-directories = [".git", "target", "build"]
+timeout-seconds = 600
+retain-raw-csv = false

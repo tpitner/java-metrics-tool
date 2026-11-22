@@ -38,10 +38,11 @@ jobs:
 
       - name: Smoke-test packaged CLI
         run: |
-          java -jar target/java-metrics-1.0-SNAPSHOT.jar \
-            --config java-metrics.example.toml \
-            > target/smoke-output.txt
-          grep -F "Package: cz.utulnykoutek.metrics.sample" target/smoke-output.txt
+          cd examples/quickstart
+          java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+            --config java-metrics.toml \
+            > actual.txt
+          diff -u expected.txt actual.txt
 
       - name: Upload test reports
         if: always()

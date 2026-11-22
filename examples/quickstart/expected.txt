@@ -1,0 +1,3 @@
+Package: org.example.quickstart
+Inventory [class]
+  Declared: methods=2, constructors=1, fields=1

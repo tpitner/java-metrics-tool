@@ -1,0 +1,47 @@
+= Quickstart
+
+This example is the minimal reviewer path for a packaged `java-metrics` JAR. It
+uses only the built-in provider and requires no external project or CK checkout.
+
+From the repository root, build the tool and enter this directory:
+
+[source,bash]
+----
+mvn --batch-mode --no-transfer-progress package
+cd examples/quickstart
+----
+
+Run the packaged CLI:
+
+[source,bash]
+----
+java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+  --config java-metrics.toml
+----
+
+The output must match `expected.txt`. On a Unix-like shell it can be verified
+directly:
+
+[source,bash]
+----
+java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+  --config java-metrics.toml > actual.txt
+diff -u expected.txt actual.txt
+----
+
+The configuration path is explicit. Relative input and output paths in the TOML
+file are resolved against the directory containing that file, so this example
+does not depend on the caller's working directory.
+
+For machine-readable output, override the configured format without editing the
+file:
+
+[source,bash]
+----
+java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+  --config java-metrics.toml --format json
+----
+
+The JSON output includes the effective configuration and its hash, runtime and
+parser provenance, structural entities, coverage information, provider runs,
+and measurements.

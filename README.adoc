@@ -60,6 +60,9 @@ Maven project:
 java -jar target/java-metrics-1.0-SNAPSHOT.jar --pom pom.xml
 ----
 
+For a complete minimal input, configuration, expected output, and verification
+command, see `examples/quickstart/README.adoc`.
+
 === Output formats
 
 The CLI supports `text`, deterministic `json`, and the ANSI-coloured `preview`

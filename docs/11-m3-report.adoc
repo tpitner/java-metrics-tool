@@ -1,25 +1,24 @@
 = M3 report
 :toc:
 
-== Zahrnuté metriky
+== Included metrics
 
-Viz `09-m3-metric-set.adoc`. Primárně: size, complexity (`ck.wmc`, `java.cyclo`),
-coupling (`ck.cbo`, `java.ca/ce`), cohesion (`java.lcom4`), inheritance
-(`ck.dit`, `ck.noc`), Martin (`java.instability`, `java.abstractness`,
-`java.distance`).
+See `09-m3-metric-set.adoc`. Primary: size, complexity (`ck.wmc`, `java.cyclo`),
+coupling (`ck.cbo`, `java.ca/ce`), cohesion (`java.lcom4`), inheritance (`ck.dit`,
+`ck.noc`), Martin (`java.instability`, `java.abstractness`, `java.distance`).
 
-== Odmítnuté metriky
+== Excluded metrics
 
-QMOOD/Li & Henry (NOP, DCC) nejsou v M3, pokud RQ2 explicitně nevyžádá.
+QMOOD/Li & Henry (NOP, DCC) are not in M3 unless RQ2 explicitly requires.
 
-== Validace
+== Validation
 
-* `ValidationCorpusTest` a `ProjectMetricAggregatorTest` procházejí.
-* Differential testing s externími nástroji je omezen na CK; další providery nejsou
-  součástí M3.
+* `ValidationCorpusTest` and `ProjectMetricAggregatorTest` pass.
+* Differential testing with external tools is limited to CK; other providers are not
+  part of M3.
 
-== Omezení
+== Limitations
 
-* Method-level `java.cyclo` je implementován, ale další complexity metriky (nesting
-  depth) nejsou v M3.
-* Export je deterministický JSON/CSV v `ProjectAggregationExporter`.
+* Method-level `java.cyclo` is implemented, but additional complexity metrics
+  (nesting depth) are not in M3.
+* Export is deterministic JSON/CSV in `ProjectAggregationExporter`.

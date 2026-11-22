@@ -3,16 +3,16 @@
 
 == Differential testing
 
-* CK provider validován nad validačním corpusem (balík `metrics.ck`).
-* Další nástroje (ckjm-extended, PMD, Checkstyle, DesigniteJava) nejsou součástí
-  M4, protože nepřidávají metriku vybranou do M3 sady.
+* CK provider validated on the validation corpus (package `metrics.ck`).
+* Other tools (ckjm-extended, PMD, Checkstyle, DesigniteJava) are not part of M4
+  because they do not add a metric selected in the M3 set.
 
-== Klasifikace neshod
+== Issue classification
 
-* Neshody mimo CK nejsou reportovány, protože odpovídající provider není použit.
-* Interní oracle (`ValidationCorpusTest`, `ProjectMetricAggregatorTest`) procházejí.
+* Issues outside CK are not reported because the corresponding provider is not used.
+* Internal oracles (`ValidationCorpusTest`, `ProjectMetricAggregatorTest`) pass.
 
-== Závěr
+== Conclusion
 
-M4 je uzavřen v rozsahu M3 metric set; produkční konfigurace neobsahuje implicitní
-provider ani metriku bez známé verze, definice a provenance.
+M4 is closed within the M3 metric set; production configuration contains no implicit
+provider or metric without known version, definition, and provenance.

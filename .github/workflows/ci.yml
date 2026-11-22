@@ -43,6 +43,13 @@ jobs:
             --config java-metrics.toml \
             > actual.txt
           diff -u expected.txt actual.txt
+          java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+            --config java-metrics.toml --format json \
+            > actual-1.json
+          java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+            --config java-metrics.toml --format json \
+            > actual-2.json
+          diff -u actual-1.json actual-2.json
 
       - name: Upload test reports
         if: always()

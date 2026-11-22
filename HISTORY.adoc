@@ -4,6 +4,9 @@
 
 == 2026-11-22
 
+* Added an executable CLI contract test for success, syntax-error, and invalid
+  input exit codes, plus byte-for-byte JSON determinism checks both in-process
+  and across separate packaged-CLI JVM runs in CI.
 * Reorganized the public documentation by purpose, replacing the inherited
   numbered M3/M4 filenames with an index and stable architecture, metrics,
   validation, and JORS release-scope documents; translated and updated the

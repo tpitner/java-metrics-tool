@@ -1,0 +1,77 @@
+= Metrics
+:toc: left
+:toclevels: 2
+
+Every published metric has a provider-qualified `MetricId`, supported scope,
+unit, and specification key. Metrics implemented by `java-metrics` use the
+`java` namespace. Metrics imported from CK use the `ck` namespace so that
+similarly named metrics with different operational definitions are not
+silently conflated.
+
+== Built-in Java provider
+
+[cols="2,2,3",options="header"]
+|===
+|Metric identifiers |Scope |Meaning
+
+|`java.declared-methods`, `java.declared-constructors`,
+`java.declared-fields`
+|type
+|Directly declared members.
+
+|`java.physical-loc`, `java.ncloc`
+|project, file, package, type, method, constructor, initializer, lambda
+|Inclusive physical lines and non-comment lines.
+
+|`java.physical-loc-exclusive`, `java.ncloc-exclusive`
+|type
+|Type lines excluding nested type ranges.
+
+|`java.lcom4`
+|type
+|LCOM4 connected components over eligible instance methods, shared instance
+fields, and direct intra-type calls.
+
+|`java.ca`, `java.ce`
+|package
+|Afferent and efferent coupling over internal package dependencies.
+
+|`java.instability`, `java.abstractness`, `java.distance`
+|package
+|Robert Martin's package instability, abstractness, and normalized distance
+from the main sequence.
+|===
+
+Cyclomatic complexity, WMC, DIT, NOC, CBO, fan-in, fan-out, and RFC have
+catalog identifiers but no built-in metric computer. They must not be
+advertised under the `java` namespace. The corresponding supported CK metrics
+are available only when the optional CK provider is enabled.
+
+== Optional CK provider
+
+The CK adapter is frozen to upstream revision `8a1ef91` and imports:
+
+* CBO, modified CBO, fan-in, fan-out, WMC, RFC, and LOC at the type, method,
+  and constructor scopes for which CK supplies values;
+* DIT, NOC, LCOM, LCOM*, TCC, LCC, total/public method counts, and total/public
+  field counts at type scope;
+* parameter count at method and constructor scope.
+
+CK definitions retain CK semantics. For example, CK RFC is derived from unique
+method and super-method invocation nodes, and CK LOC reflects CK's normalized
+AST rendering rather than physical source lines.
+
+== Completeness and aggregation
+
+A measurement is `OK`, `PARTIAL`, `NOT_APPLICABLE`, or `UNAVAILABLE`. Missing
+bindings and unresolved dependencies are represented explicitly; they are not
+silently replaced with zero.
+
+Primary project aggregation uses only exact `OK` values. Partial measurements
+are handled separately as lower bounds, upper bounds, or intervals with
+coverage evidence. The programmatic `ProjectAggregationExporter` serializes
+aggregation results as deterministic JSON or CSV. Aggregation is not a CLI
+output mode in version 1.1.0.
+
+The release scope and exclusions are normative in
+`jors-release-scope.adoc`.

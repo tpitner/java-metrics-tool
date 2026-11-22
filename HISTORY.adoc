@@ -4,6 +4,10 @@
 
 == 2026-11-22
 
+* Reorganized the public documentation by purpose, replacing the inherited
+  numbered M3/M4 filenames with an index and stable architecture, metrics,
+  validation, and JORS release-scope documents; translated and updated the
+  validation-corpus guide.
 * Added the immutable package dependency graph as the foundation for Martin
   metrics, with package-edge deduplication, self-edge removal, internal target
   object links, external/JDK classification and unresolved outgoing evidence.

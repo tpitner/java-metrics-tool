@@ -100,4 +100,4 @@ Use an explicit TOML config file (`--config`). See `java-metrics.example.toml`.
 
 == Documentation
 
-Selected English documentation is in `docs/`.
+The documentation index is `docs/README.adoc`.

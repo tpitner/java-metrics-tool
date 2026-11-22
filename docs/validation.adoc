@@ -1,0 +1,56 @@
+= Validation and quality control
+:toc: left
+:toclevels: 2
+
+`java-metrics` combines executable tests, manually derived oracle values, and
+differential testing. An external metric tool is a comparison target, not an
+oracle by itself: a disagreement may be an adapter defect, an implementation
+defect, or a legitimate difference in operational definitions.
+
+== Automated test layers
+
+The default Maven test suite covers:
+
+* parser and symbol identity behaviour;
+* built-in metric definitions and computations;
+* configuration parsing, validation, and precedence;
+* measurement status and coverage semantics;
+* aggregation boundaries and deterministic serialization;
+* CK CSV schema, mapping, and provider behaviour using fixtures;
+* Maven-project resolution and the executable validation corpus.
+
+GitHub Actions runs the suite and the packaged-JAR quickstart on Linux, macOS,
+and Windows with Java 21.
+
+== Validation corpus
+
+The `validation/` directory contains small Maven projects and independent,
+manually reviewable expectations for builds, logical subjects, and metric
+measurements. It covers ordinary and modern Java constructs, inheritance,
+interfaces, coupling, overloads, nested types, initializers, lambdas, and an
+unresolved dependency.
+
+See `../validation/README.adoc` for the corpus structure, oracle rules, and
+commands.
+
+== CK differential testing
+
+The normal test suite validates the CK adapter without requiring an external
+checkout. Opt-in tests execute the pinned CK JAR against the corpus and compare
+the imported measurements with manually derived expectations. They require
+explicit `ck.jar` and `ck.java` properties.
+
+The provider rejects an unexpected CK CSV schema. Provider provenance includes
+the CK version, JAR hash, executed command, Java runtime, effective options,
+schema fingerprints, and retained raw artifacts when requested.
+
+== Current boundary
+
+The default suite does not execute the external CK JAR and therefore reports
+the two real-CK tests as skipped unless their required properties are supplied.
+Release automation must run those tests separately before version 1.1.0 is
+tagged.
+
+Other tools such as CKJM Extended, PMD, Checkstyle, and DesigniteJava are not
+part of the release validation matrix. No equivalence is claimed between their
+similarly named metrics and the definitions published here.

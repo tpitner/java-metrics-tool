@@ -1,0 +1,26 @@
+= Documentation
+:toc: left
+
+The public documentation is organised by purpose rather than by development
+milestone. The numbered filenames used during the initial research phase have
+been retired.
+
+`architecture.adoc`::
+The parser, domain model, measurement providers, completeness model,
+aggregation, and export boundaries.
+
+`metrics.adoc`::
+The metric sets published by the built-in Java provider and the optional CK
+provider, including scopes and important semantic distinctions.
+
+`validation.adoc`::
+The quality-control strategy, executable oracle corpus, differential testing,
+and current validation boundaries.
+
+`jors-release-scope.adoc`::
+The frozen functional and portability contract for the release accompanying
+the Journal of Open Research Software metapaper.
+
+The runnable minimal example is documented separately in
+`../examples/quickstart/README.adoc`. Detailed corpus structure and execution
+instructions are in `../validation/README.adoc`.

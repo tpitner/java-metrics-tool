@@ -1,0 +1,24 @@
+= Architecture
+:toc:
+
+== Overview
+
+`java-metrics` parses Java sources with Eclipse JDT Core and computes structural
+metrics at project, file, package, type, and member scope. CLI outputs are
+deterministic JSON, text, or an ANSI-coloured preview.
+
+== Architecture
+
+* Parser: `JdtParser` builds an `AnalysisContext`.
+* Providers: the built-in Java provider and optional isolated CK provider.
+* Measurements: `MeasurementStore` records values, status, provenance, and
+  coverage evidence.
+* Aggregation: `ProjectMetricAggregator` computes exact primary statistics and
+  separate sensitivity bounds.
+* Export: `JsonExporter` serves the CLI; `ProjectAggregationExporter` is a
+  programmatic JSON/CSV serializer for aggregation results.
+
+== Partial values
+
+`PARTIAL` values are never mixed into primary statistics; they are handled by
+separate sensitivity aggregation. Interval results provide safe lower/upper bounds.

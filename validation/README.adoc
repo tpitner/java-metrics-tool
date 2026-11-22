@@ -1,106 +1,107 @@
-= Validation Corpus
+= Validation corpus
 :toc: left
 :toclevels: 2
 
-Tento adresář obsahuje malý, ručně kontrolovatelný corpus pro validaci
-`java-metrics` a externích providerů nad stejnými zdroji. Není to experimentální
-dataset pro článek; jeho účelem je oddělit chybu adaptéru, rozdíl operační
-definice a chybu samotného nástroje.
+This directory contains a small, manually reviewable corpus for validating
+`java-metrics` and external measurement providers against the same sources. It
+is not an empirical dataset for the research article. Its purpose is to
+distinguish adapter defects, differences in operational definitions, and
+defects in the measured tool.
 
-== Význam oracle
+== Oracle model
 
-Oracle je předem stanovené očekávání, vůči kterému se posuzuje skutečný
-výsledek. V corpusu má tři vrstvy:
+An oracle is an independently established expectation against which an actual
+result is checked. The corpus has three layers:
 
-* _build oracle_ říká, zda je případ sestavitelný;
-* _subject oracle_ určuje, které logické typy musí provider najít a jednoznačně
-  namapovat;
-* _measurement oracle_ určuje očekávaný stav a hodnotu konkrétní metriky podle
-  její explicitní operační definice.
+* the _build oracle_ records whether a case is expected to compile;
+* the _subject oracle_ identifies the logical types that a provider must find
+  and map unambiguously;
+* the _measurement oracle_ records the expected status and value of a metric
+  according to its explicit operational definition.
 
-Oracle proto není další metrics tool ani většinový názor několika nástrojů.
-Hodnoty musí být odvozeny ručně nebo nezávislým postupem a zkontrolovány proti
-zdrojovému kódu. Výstupy CK a CKJM-extended jsou důležité pro diferenciální
-validaci, ale samy nejsou pravdou: neshoda může znamenat chybu našeho adaptéru,
-chybu externího nástroje nebo legitimní rozdíl definic. Provider ve sloupci
-`provider` váže očekávání ke konkrétní definici a brání tomu, aby se stejně
-pojmenované, ale jinak počítané metriky zaměnily.
+An external metric tool is not an oracle by itself. CK and other tools are
+useful differential-testing targets, but a disagreement may identify an
+adapter defect, an external-tool defect, or a legitimate definition mismatch.
+The `provider` column binds each expectation to a particular definition and
+prevents similarly named metrics from being conflated.
 
-== Struktura
+== Structure
 
 `cases.csv`::
-Manifest případů. Určuje stabilní `case_id`, adresář Maven projektu,
-zdrojový kořen, očekávaný výsledek kompilace a testovanou vlastnost.
+The case manifest. It defines the stable `case_id`, Maven project directory,
+source root, expected build outcome, and construct under test.
 
 `subjects.csv`::
-Oracle adresovatelných typů. Provider-specific mapper musí každý uvedený typ
-jednoznačně spojit se stejným logickým subjektem. Lokální a anonymní typy jsou
-v corpusu přítomné, ale dokud nebude jejich mezitoolová identita zmrazena,
-nejsou v tomto souboru požadovanými subjekty.
+The oracle of addressable logical types. A provider-specific mapper must link
+each required entry to the same logical subject. Local and anonymous types are
+present in the sources but are not required here until their cross-tool
+identity has been frozen.
 
 `measurements.csv`::
-Ručně kontrolovaný oracle měření. Jeden řádek identifikuje případ, provider,
-metriku, scope, subjekt, stav, vztah hodnoty a případnou hodnotu či meze.
-První verze obsahuje přesné built-in počty členů. Řádky `ck.*` a `ckjm.*`
-se doplní až po ručním výpočtu a klasifikaci definičních rozdílů; nesmějí být
-odvozeny pouze opsáním výstupu testovaného nástroje.
+The manually reviewed measurement oracle. Each row identifies a case,
+provider, metric, scope, subject, status, value relation, and optional value or
+bounds.
 
 `ck-exclusions.csv`::
-Explicitní provider-specific výjimky ze subject oracle. Výjimka musí mít
-důvod a test zároveň hlídá, zda nezastarala. První známou výjimkou je annotation
-declaration, pro kterou připnutá verze CK nevydává řádek v `class.csv`.
+Explicit CK-specific exceptions to the subject oracle. Every exception has a
+reason, and tests check whether the exception has become obsolete. The pinned
+CK revision, for example, emits no `class.csv` row for an annotation
+declaration.
 
 `cases/<case-id>/`::
-Samostatné malé Maven projekty bez externích závislostí. Každý případ má
-vlastní `pom.xml`, aby jej bylo možné nezávisle sestavit a předat CK nebo
-CKJM-extended.
+Small independent Maven projects without external dependencies. Each case can
+be compiled separately and passed to CK.
 
-== Případy
+== Cases
 
 [cols="1,1,3",options="header"]
 |===
-|Case |Build |Účel
+|Case |Expected build |Purpose
 
-|`basic-members` |úspěch
-|Prázdný typ a explicitní pole, konstruktory a metody.
+|`basic-members` |success
+|Empty type and explicit fields, constructors, and methods.
 
-|`inheritance` |úspěch
-|Víceúrovňová dědičnost a více přímých potomků.
+|`inheritance` |success
+|Multilevel inheritance and multiple direct children.
 
-|`interfaces` |úspěch
-|Interface inheritance, default metoda a implementující třída.
+|`interfaces` |success
+|Interface inheritance, a default method, and an implementing class.
 
-|`coupling` |úspěch
-|Vazby mezi třemi balíky přes pole, konstruktor, návratový typ a volání.
+|`coupling` |success
+|Dependencies across three packages through fields, constructors, return
+types, and calls.
 
-|`overloads` |úspěch
-|Přetížené metody a konstruktory se stejnou i různou aritou.
+|`overloads` |success
+|Overloaded methods and constructors with equal and different arities.
 
-|`nested-types` |úspěch
-|Static nested, inner, local a anonymous class.
+|`nested-types` |success
+|Static nested, inner, local, and anonymous classes.
 
-|`modern-types` |úspěch
-|Record, enum, annotation a sealed hierarchy v Java 17.
+|`modern-types` |success
+|A record, enum, annotation, and sealed hierarchy in Java 17.
 
-|`unresolved-dependency` |neúspěch
-|Zdroj je syntakticky validní, ale chybí externí typ; source provider jej smí
-analyzovat, bytecode provider musí vykázat nedostupnost místo tichého vyřazení.
+|`initializers-lambdas` |success
+|Static and instance initializers and lambda-expression subjects.
+
+|`unresolved-dependency` |failure
+|Syntactically valid source with a missing external type. A source provider may
+analyse it, while a bytecode provider must report unavailability rather than
+silently exclude it.
 |===
 
-== Spouštění
+== Running the corpus
 
-Výchozí testy ověřují manifest, očekávaný build status, mapování subjektů a
-built-in oracle:
+The default tests validate the manifest, expected build status, subject
+mapping, and built-in measurement oracle:
 
 [source,bash]
 ----
 mvn test
 ----
 
-`CkValidationCorpusTest` se spouští opt-in s připnutým standalone JARem. Již
-teď spustí CK nad všemi případy, ověří mapování povinných type subjects a
-provider-specific výjimky. Jakmile budou v `measurements.csv` řádky
-`provider=ck`, stejný test začne porovnávat také jejich status, hodnotu a důvod:
+`CkValidationCorpusTest` is opt-in because it executes a separately obtained CK
+JAR. It runs CK over every case, validates the required type mappings and
+provider-specific exclusions, and compares all `provider=ck` oracle rows:
 
 [source,bash]
 ----
@@ -109,48 +110,51 @@ mvn test -Dtest=CkValidationCorpusTest \
   -Dck.java=/absolute/path/to/jdk-21/bin/java
 ----
 
-Maven zůstává na Javě 27. Parametr `ck.java` je povinný spolu s `ck.jar` a
-vybírá podporovanou Java 21 JVM pouze pro externí CK proces; test nepřebírá
-`java.home` Maven procesu.
+Maven and `java-metrics` run on Java 21. The `ck.java` property is required
+together with `ck.jar` and explicitly selects the Java 21 executable used for
+the external CK process.
 
-Připnutá revize CK nyní vykazuje dvě explicitně kontrolovaná omezení: lokální
-a anonymní typ mají jinou, dosud nezmrazenou mezitoolovou identitu a annotation
-declaration nemá řádek v `class.csv`. Jakákoli jiná mapovací diagnostika test
-ukončí chybou.
+== CK validation boundary
 
-Ručně ověřený CK oracle nyní pokrývá type-level `ck.methods`,
-`ck.public-methods`, `ck.fields`, `ck.public-fields`, `ck.dit` a `ck.noc` pro
-všechny ostatní požadované typy a method/constructor-level `ck.parameters` pro
-všechny stabilně adresovatelné explicitní členy. `ck.wmc`, `ck.rfc` a `ck.loc`
-jsou ověřeny pro všech 61 stabilních type/method/constructor subjects. Další
-validační skupinou jsou couplingové metriky.
+The pinned CK revision has two explicitly controlled subject-mapping limits:
+local and anonymous types do not yet have a frozen cross-tool identity, and an
+annotation declaration has no `class.csv` row. Any other mapping diagnostic
+fails the test.
 
-Member subjects používají canonical zápis `owner#method(types)` nebo
-`owner#<init>(types)`. Signatura rozlišuje overloady; pokud binding typu není
-rozřešen, používá se syntakticky dostupné jméno místo domnělého FQN.
+The manually reviewed CK oracle covers:
 
-`ck.rfc` zde znamená počet unikátních method/super-method invocations, nikoli
-tradiční response set. `ck.loc` znamená řádky normalizovaného AST textu, nikoli
-fyzické řádky zdrojového souboru.
+* type-level method/public-method and field/public-field counts, DIT, and NOC;
+* method- and constructor-level parameter counts;
+* WMC, RFC, and LOC for all 61 stable type, method, and constructor subjects;
+* type- and member-level coupling metrics;
+* type-level LCOM, LCOM*, TCC, and LCC.
 
-Budoucí `CkjmMetricsProvider` musí nejprve zkompilovat každý případ s
-`expected_build=true`, analyzovat jeho `target/classes` se stejným classpath a
-u `expected_build=false` publikovat `UNAVAILABLE`. Zdrojová revize, build
-status, JDK, classpath, konfigurace provideru a hash JARu patří do provenance.
+Member subjects use the canonical form `owner#method(types)` or
+`owner#<init>(types)`. Signatures distinguish overloads. If a parameter type
+binding is unresolved, the syntactically available name is retained instead of
+inventing a fully qualified name.
 
-Built-in package oracle obsahuje také 55 ručně odvozených očekávání pro
-`java.ca`, `java.ce`, `java.instability`, `java.abstractness` a
-`java.distance`. Package subject je plně kvalifikované jméno balíku. Interval
-využívá sloupce `lower` a `upper`; úplný report je v
-`../docs/31-martin-validation-report.adoc`.
+CK RFC is the number of unique method and super-method invocation nodes, not a
+traditional response-set calculation. CK LOC represents lines in CK's
+normalized AST rendering, not physical source lines.
 
-== Pravidla rozšiřování
+== Built-in validation boundary
 
-* Jeden nový jev se přidává jako nejmenší samostatný případ nebo jako jasně
-  zdůvodněné rozšíření stávajícího případu.
-* Oracle se počítá ručně nebo nezávislým postupem; výstup měřeného provideru
-  není sám sobě oraclem.
-* Stejnojmenné metriky různých providerů se nesrovnávají bez kontroly
-  operačních definic.
-* Nekompilovatelný případ zůstává v corpus manifestu a v budoucím selection
-  funnel; nesmí být odstraněn kvůli bytecode provideru.
+The built-in oracle covers declared member counts, physical LOC and NCLOC,
+LCOM4, and package-level `Ca`, `Ce`, instability, abstractness, and distance.
+Package subjects use fully qualified package names. Interval expectations use
+the `lower` and `upper` columns.
+
+The overall validation strategy and current release boundary are summarized in
+`../docs/validation.adoc`.
+
+== Extension rules
+
+* Add one new construct as the smallest independent case or as a clearly
+  justified extension to an existing case.
+* Derive oracle values manually or by an independent procedure; output from
+  the provider under test cannot be its own oracle.
+* Do not compare equally named metrics from different providers without first
+  checking their operational definitions.
+* Keep a non-compiling case in the manifest and in any future selection funnel;
+  do not remove it merely to accommodate a bytecode provider.

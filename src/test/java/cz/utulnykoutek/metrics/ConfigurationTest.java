@@ -71,7 +71,7 @@ class ConfigurationTest {
         assertTrue(effective.provenance().sourceSha256().orElseThrow().matches("[0-9a-f]{64}"));
         assertTrue(effective.provenance().effectiveSha256().matches("[0-9a-f]{64}"));
         assertTrue(effective.provenance().effectiveToml().contains(
-                "inputs = [\"" + input + "\"]"));
+                "inputs = [\"" + tomlString(input) + "\"]"));
 
         EffectiveConfig repeated = EffectiveConfigResolver.resolve(loaded, cli, temporaryDirectory);
         assertEquals(effective.provenance().effectiveToml(), repeated.provenance().effectiveToml());
@@ -105,7 +105,7 @@ class ConfigurationTest {
                 enabled = true
                 jar = "%s"
                 variables-and-fields = false
-                """.formatted(jar));
+                """.formatted(tomlString(jar)));
 
         LoadedToolConfig loaded = ConfigLoader.load(
                 java.util.Optional.of(config), temporaryDirectory);
@@ -116,6 +116,10 @@ class ConfigurationTest {
 
         assertTrue(error.errors().contains(
                 "providers.ck.variables-and-fields must be true because CK TCC/LCC depend on method field usage"));
+    }
+
+    private static String tomlString(Path path) {
+        return path.toString().replace("\\", "\\\\");
     }
 
     @Test

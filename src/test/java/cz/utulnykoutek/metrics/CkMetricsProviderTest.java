@@ -21,6 +21,8 @@ import cz.utulnykoutek.metrics.metrics.measurement.SubjectRef;
 import cz.utulnykoutek.metrics.parser.JdtParser;
 import cz.utulnykoutek.metrics.parser.PackageMerger;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
@@ -45,6 +47,7 @@ class CkMetricsProviderTest {
     @TempDir Path temporaryDirectory;
 
     @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
     void runsIsolatedProcessMapsSubjectsAndImportsMetrics() throws Exception {
         Path fixture = Path.of("src/test/resources/maven-it/small/src/main/java")
                 .toAbsolutePath().normalize();
@@ -92,6 +95,7 @@ class CkMetricsProviderTest {
     }
 
     @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
     void reportsNonZeroProcessExit() throws Exception {
         Path fakeJar = fakeJar();
         Path executable = temporaryDirectory.resolve("failing-java");

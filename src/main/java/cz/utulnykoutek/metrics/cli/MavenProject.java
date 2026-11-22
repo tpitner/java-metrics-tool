@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -71,7 +72,7 @@ public final class MavenProject {
         Path cpFile = Files.createTempFile("java-metrics-cp-", ".txt");
         try {
             List<String> cmd = new ArrayList<>();
-            cmd.add("mvn");
+            cmd.add(mavenExecutable());
             cmd.add("-q");
             cmd.add("-f");
             cmd.add(pom.toString());
@@ -191,8 +192,14 @@ public final class MavenProject {
     }
 
     private static void runMaven(Path baseDir, Path pom, String goal) throws IOException, InterruptedException {
-        List<String> cmd = new ArrayList<>(List.of("mvn", "-q", "-f", pom.toString(), goal));
+        List<String> cmd = new ArrayList<>(List.of(
+                mavenExecutable(), "-q", "-f", pom.toString(), goal));
         runProcess(baseDir, cmd);
+    }
+
+    private static String mavenExecutable() {
+        String os = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+        return os.contains("windows") ? "mvn.cmd" : "mvn";
     }
 
     private static void runProcess(Path baseDir, List<String> cmd) throws IOException, InterruptedException {

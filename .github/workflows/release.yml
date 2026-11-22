@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - name: Check out java-metrics
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "21"
@@ -53,10 +53,10 @@ jobs:
         run: mvn --batch-mode --no-transfer-progress clean verify
 
       - name: Check out pinned CK revision
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: mauricioaniche/ck
-          ref: 8a1ef91
+          ref: 8a1ef916d597d33ad619d748b616bb7dbc3f0c36
           path: ck
 
       - name: Build pinned CK
@@ -89,7 +89,7 @@ jobs:
           echo "checksum=$checksum" >> "$GITHUB_OUTPUT"
 
       - name: Upload verified workflow artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: java-metrics-${{ steps.version.outputs.version }}
           path: |

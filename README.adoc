@@ -8,6 +8,16 @@ DOI: https://doi.org/10.5281/zenodo.24448730
 
 Java source-code metrics CLI based on Eclipse JDT Core 3.47.0.
 
+== Requirements
+
+Building and running `java-metrics` requires Java 21 LTS or later. Maven is
+required to build the tool and to analyse a Maven project via `--pom`; it is not
+required when running the packaged JAR against explicitly supplied Java source
+files or directories.
+
+The runtime used to execute `java-metrics` is independent of the source level
+selected for the analysed project with `--release`.
+
 == Build and run
 
 Build:

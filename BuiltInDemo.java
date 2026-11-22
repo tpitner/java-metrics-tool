@@ -9,7 +9,10 @@ import cz.utulnykoutek.metrics.metrics.AnalysisContext;
 import cz.utulnykoutek.metrics.metrics.JavaMetricsProvider;
 import cz.utulnykoutek.metrics.metrics.ProviderResult;
 import cz.utulnykoutek.metrics.metrics.definition.BuiltInMetricDefinition;
+import cz.utulnykoutek.metrics.metrics.measurement.IntervalResult;
+import cz.utulnykoutek.metrics.metrics.measurement.NotApplicableResult;
 import cz.utulnykoutek.metrics.metrics.measurement.NumericResult;
+import cz.utulnykoutek.metrics.metrics.measurement.UnavailableResult;
 import cz.utulnykoutek.metrics.parser.JdtParser;
 
 import java.nio.file.Path;
@@ -49,11 +52,17 @@ public final class BuiltInDemo {
         // 4. Measure without mutating the parsed domain tree.
         ProviderResult providerResult = provider.measure(context);
         providerResult.measurements().all().forEach(measurement -> {
-            NumericResult result = (NumericResult) measurement.result();
-            System.out.printf("%s  %s  value=%s  status=%s  run=%s%n",
+            String outcome = switch (measurement.result()) {
+                case NumericResult result -> "value=" + result.value();
+                case IntervalResult result ->
+                        "interval=[" + result.lower() + ", " + result.upper() + "]";
+                case NotApplicableResult result -> "reason=" + result.reason();
+                case UnavailableResult result -> "reasons=" + result.reasons();
+            };
+            System.out.printf("%s  %s  %s  status=%s  run=%s%n",
                     measurement.metricId(),
                     measurement.subject().id(),
-                    result.value(),
+                    outcome,
                     measurement.status(),
                     measurement.providerRunId());
         });

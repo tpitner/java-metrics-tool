@@ -6,7 +6,7 @@
 [cols="1,1,1,1,1,1",options="header"]
 |===
 | Dimension | Primary metric | Provider | Scope | Unit | specification / incomplete behavior
-| Size | `java.physical-loc` (NCLOC) | java | type/package | lines | exact; partial as bounds
+| Size | `java.physical-loc`, `java.ncloc` | java | project/file/package/type/member | lines | exact; partial as bounds
 | Complexity | `ck.wmc` | ck | type | count | exact/interval
 | Complexity | `java.cyclo` | java | method | count | planned gap
 | Coupling | `ck.cbo` | ck | type | count | exact

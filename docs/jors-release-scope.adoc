@@ -76,15 +76,17 @@ silently accepted.
 The supported public output formats are:
 
 * `json` for deterministic, machine-readable measurements, provenance,
-  diagnostics, coverage information, and project aggregation;
+  diagnostics, and coverage information;
 * `text` for a human-readable structural and metric summary;
 * `preview` for an ANSI-coloured YAML-like interactive preview.
 
 The aliases `ansi` and `yaml-preview` are accepted for `preview`. Output may be
 written to standard output or to an explicitly configured destination file.
 
-CSV is not a public output format in 1.1.0. CSV files produced by CK are
-provider input artifacts and may optionally be retained for audit purposes.
+The programmatic project-aggregation API has separate deterministic JSON and
+CSV serializers, but aggregation is not exposed as a CLI output mode in 1.1.0.
+CSV files produced by CK are provider input artifacts and may optionally be
+retained for audit purposes.
 
 == Supported Java platform
 
@@ -135,7 +137,7 @@ released. Architectures not exercised by CI are not explicitly certified.
 The following are not part of the JORS 1.1.0 release commitment:
 
 * adding new metrics beyond the sets frozen above;
-* CSV, database, HTML, SARIF, or graphical output;
+* CLI output in CSV, database, HTML, SARIF, or graphical form;
 * a graphical user interface, web service, IDE plugin, or Maven plugin;
 * analysis of bytecode, binaries, or languages other than Java;
 * automatic resolution of Gradle, Ant, Bazel, or other non-Maven builds;

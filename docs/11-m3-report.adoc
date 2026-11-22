@@ -3,9 +3,11 @@
 
 == Included metrics
 
-See `09-m3-metric-set.adoc`. Primary: size, complexity (`ck.wmc`, `java.cyclo`),
-coupling (`ck.cbo`, `java.ca/ce`), cohesion (`java.lcom4`), inheritance (`ck.dit`,
-`ck.noc`), Martin (`java.instability`, `java.abstractness`, `java.distance`).
+See `09-m3-metric-set.adoc`. Primary: size, complexity (`ck.wmc`), coupling
+(`ck.cbo`, `java.ca/ce`), cohesion (`java.lcom4`), inheritance (`ck.dit`,
+`ck.noc`), and Martin (`java.instability`, `java.abstractness`,
+`java.distance`). Built-in cyclomatic complexity remains a planned gap and is
+not published by the Java provider.
 
 == Excluded metrics
 
@@ -19,6 +21,8 @@ QMOOD/Li & Henry (NOP, DCC) are not in M3 unless RQ2 explicitly requires.
 
 == Limitations
 
-* Method-level `java.cyclo` is implemented, but additional complexity metrics
-  (nesting depth) are not in M3.
-* Export is deterministic JSON/CSV in `ProjectAggregationExporter`.
+* Method-level `java.cyclo` and additional complexity metrics such as nesting
+  depth are not implemented in M3.
+* Project aggregation export is deterministic JSON/CSV through the
+  programmatic `ProjectAggregationExporter` API. It is not exposed as a CLI
+  output mode.

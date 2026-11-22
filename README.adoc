@@ -18,6 +18,18 @@ files or directories.
 The runtime used to execute `java-metrics` is independent of the source level
 selected for the analysed project with `--release`.
 
+== Supported metrics
+
+The built-in provider computes declared method, constructor, and field counts;
+physical LOC and NCLOC; type-exclusive physical LOC and NCLOC; type-level
+LCOM4; and the package-level `Ca`, `Ce`, instability, abstractness, and distance
+metrics.
+
+The optional CK provider imports its frozen set of type- and member-level size,
+complexity, coupling, cohesion, and inheritance metrics. The exact JORS 1.1.0
+scope, metric scopes, and known limitations are documented in
+`docs/jors-release-scope.adoc`.
+
 == Build and run
 
 Build:
@@ -48,6 +60,13 @@ Maven project:
 java -jar target/java-metrics-1.0-SNAPSHOT.jar --pom pom.xml
 ----
 
+=== Output formats
+
+The CLI supports `text`, deterministic `json`, and the ANSI-coloured `preview`
+format. It does not support `--format csv`. Project aggregation and its JSON/CSV
+serializers currently exist as a programmatic API and are not wired into the
+command-line interface.
+
 == CK dependency (optional)
 
 java-metrics can use the CK tool. Clone and build it first:
@@ -56,8 +75,12 @@ java-metrics can use the CK tool. Clone and build it first:
 ----
 git clone https://github.com/mauricioaniche/ck.git ../ck
 cd ../ck
+git checkout 8a1ef91
 mvn -DskipTests package
 ----
+
+The adapter contract is frozen to CK revision `8a1ef91`. Using a different CK
+revision may fail when its CSV schema differs from the expected schema.
 
 Then point java-metrics to the CK jar:
 

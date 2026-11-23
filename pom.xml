@@ -5,7 +5,7 @@
 
     <groupId>cz.utulnykoutek</groupId>
     <artifactId>java-metrics</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1.0</version>
     <name>java-metrics</name>
     <description>CLI analyzer and research infrastructure for metrics of Java source code.</description>
     <url>https://github.com/tpitner/java-metrics-tool</url>

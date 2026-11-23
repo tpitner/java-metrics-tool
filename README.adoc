@@ -1,12 +1,12 @@
 = java-metrics
 
-DOI: https://doi.org/10.5281/zenodo.24448730
-:toc: left
 :toclevels: 2
 :icons: font
 :source-highlighter: rouge
 
-Java source-code metrics CLI based on Eclipse JDT Core 3.47.0.
+*Java source-code metrics CLI measurement tool* based on _Eclipse JDT Core 3.47.0_.
+
+DOI (Zenodo):: https://doi.org/10.5281/zenodo.24448730
 
 == Requirements
 
@@ -34,7 +34,7 @@ scope, metric scopes, and known limitations are documented in
 
 Each GitHub release contains a self-contained executable JAR, its SHA-256
 checksum, `LICENSE`, and `NOTICE`. Download all four files from the release page
-and verify the JAR before running it.
+and verify the JAR before running it. `<version>` is currently `1.1.0`.
 
 On Linux or macOS:
 

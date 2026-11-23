@@ -3,8 +3,8 @@
 
 package cz.utulnykoutek.metrics.analysis;
 
-import cz.utulnykoutek.metrics.parser.JdtParser;
 import cz.utulnykoutek.metrics.config.ConfigurationProvenance;
+import cz.utulnykoutek.metrics.parser.JdtParser;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public final class BaselineMetadata {
     }
 
     public static BaselineMetadata capture(JdtParser.Config config, ConfigurationProvenance provenance) {
-        String toolVersion = "1.0-SNAPSHOT";
+        String toolVersion = detectToolVersion();
         String jdt = detectJdtVersion();
         String jdkVersion = System.getProperty("java.version", "");
         String jdkVendor = System.getProperty("java.vendor", "");
@@ -81,6 +81,17 @@ public final class BaselineMetadata {
         } catch (Exception ignored) {
         }
         return "3.47.0";
+    }
+
+    static String detectToolVersion() {
+        Package pkg = BaselineMetadata.class.getPackage();
+        if (pkg != null) {
+            String version = pkg.getImplementationVersion();
+            if (version != null && !version.isBlank()) return version;
+        }
+        String testVersion = System.getProperty("javaMetricsProjectVersion");
+        if (testVersion != null && !testVersion.isBlank()) return testVersion;
+        return "development";
     }
 
     private static Object blankToNull(String s) {

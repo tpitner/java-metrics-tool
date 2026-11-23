@@ -52,6 +52,25 @@ jobs:
       - name: Build and run default test suite
         run: mvn --batch-mode --no-transfer-progress clean verify
 
+      - name: Verify packaged version provenance
+        shell: bash
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          jar="target/java-metrics-${version}.jar"
+          manifest_version="$(unzip -p "$jar" META-INF/MANIFEST.MF \
+            | sed -n 's/^Implementation-Version: //p' | tr -d '\r')"
+          if [[ "$manifest_version" != "$version" ]]; then
+            echo "JAR manifest version $manifest_version does not match $version" >&2
+            exit 1
+          fi
+          json_version="$(java -jar "$jar" \
+            --config examples/quickstart/java-metrics.toml --format json \
+            | sed -n 's/.*"toolVersion": "\([^"]*\)".*/\1/p' | head -n 1)"
+          if [[ "$json_version" != "$version" ]]; then
+            echo "Runtime provenance version $json_version does not match $version" >&2
+            exit 1
+          fi
+
       - name: Check out pinned CK revision
         uses: actions/checkout@v7
         with:

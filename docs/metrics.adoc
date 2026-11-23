@@ -47,6 +47,105 @@ catalog identifiers but no built-in metric computer. They must not be
 advertised under the `java` namespace. The corresponding supported CK metrics
 are available only when the optional CK provider is enabled.
 
+=== Operational definitions
+
+The specification keys below are stable identifiers stored in the metric
+catalog. They distinguish these definitions from similarly named metrics in
+other tools.
+
+==== Declared members
+
+`java.declared-methods` (`t2.declared-methods.v1`),
+`java.declared-constructors` (`t2.declared-constructors.v1`), and
+`java.declared-fields` (`t2.declared-fields.v1`) count the corresponding AST
+members declared directly by a type. Inherited members and members of nested,
+local, or anonymous types are not added to the enclosing type. Each nested
+type is measured separately. Multiple variables declared by one field
+declaration are represented and counted as separate fields.
+
+==== Source lines
+
+`java.physical-loc` (`t2.physical-loc.v1`) counts physical lines intersecting
+the subject's source range. At file scope it is the number of lines in the
+file, including blank and comment-only lines; an empty file has zero lines.
+Project and package values are sums of their distinct input files. Type,
+method, constructor, initializer, and lambda values are inclusive source-range
+counts, so lines belonging to nested subjects can also belong to their parent.
+
+`java.ncloc` (`t2.ncloc.v1`) counts lines containing at least one
+non-whitespace source token after JDT comment ranges have been removed. Blank
+and comment-only lines do not count. A text block is treated as one source
+token: its delimiter lines count when they contain the token, while its
+interior text is not mistaken for Java code.
+
+`java.physical-loc-exclusive` (`t2.physical-loc-exclusive.v1`) and
+`java.ncloc-exclusive` (`t2.ncloc-exclusive.v1`) apply only to types. They use
+the same rules but remove the source ranges of directly nested types. Because
+every nested type is itself measured, this prevents double counting when type
+measurements are aggregated. Local and anonymous type ranges are included in
+this exclusion when represented as children of the measured type.
+
+==== LCOM4
+
+`java.lcom4` (`t2.lcom4.v1`) is the number of connected components in an
+undirected graph of eligible methods declared by one type. Constructors,
+static methods, abstract or otherwise body-less methods, and trivial field
+accessors are not vertices. Two vertices are joined when they directly call
+one another or access a common declared instance field. A call through a
+trivial accessor contributes the fields accessed by that accessor.
+
+Interfaces and annotations, types with no eligible methods, static utility
+types, and accessor-only types receive `NOT_APPLICABLE` with a reason code.
+One eligible method yields the exact value 1 and is marked as low-information
+evidence. Unresolved field references or intra-type calls can only hide graph
+edges and merge components; the observed component count is therefore emitted
+as a `PARTIAL` upper bound rather than as an exact value.
+
+==== Package coupling and derived ratios
+
+The coupling universe is the set of packages present in the analysed input.
+An internal directed package dependency exists when source in package `P`
+refers to a resolved type declared in a different analysed package `Q`.
+Multiple type-level references between the same ordered pair of packages count
+once. Self-dependencies, JDK packages, and resolved external packages do not
+enter the internal coupling counts.
+
+For a package `P`:
+
+* `java.ca` (`t2.ca.v1`) is the number of distinct analysed packages with an
+  internal edge to `P`;
+* `java.ce` (`t2.ce.v1`) is the number of distinct analysed packages to which
+  `P` has an internal edge;
+* `java.instability` (`t2.instability.v1`) is `Ce / (Ca + Ce)`.
+
+If `Ca + Ce = 0`, instability is `NOT_APPLICABLE` when dependency resolution
+is complete. With unresolved package targets it is instead the interval
+`[0, 1]`. Unresolved targets make `Ca` and `Ce` lower bounds and make a derived
+instability value partial; diagnostic attributes report internal, external,
+JDK, and unresolved dependency counts separately.
+
+`java.abstractness` (`t2.abstractness.v1`) is `Na / Nc`, where `Nc` is the
+number of eligible top-level classes, interfaces, records, and enums in the
+package, and `Na` is the number of those types that are interfaces or abstract
+classes. Nested types and annotation declarations are excluded. A package with
+no eligible top-level types receives `NOT_APPLICABLE`.
+
+`java.distance` (`t2.distance.v1`) is the normalized distance from the main
+sequence, `|abstractness + instability - 1|`. It is `NOT_APPLICABLE` if either
+operand is not applicable. An interval or partial instability is propagated
+to a conservative distance interval or partial value rather than collapsed to
+an exact number.
+
+=== Measurement status
+
+`OK` means an exact value under the applicable definition. `PARTIAL` carries a
+value relation (for example lower bound, upper bound, observed fragment, or
+interval), reason codes, and available coverage evidence. `NOT_APPLICABLE`
+means the definition intentionally has no value for the subject.
+`UNAVAILABLE` means a value should be meaningful but the required evidence
+could not be obtained. Consumers must not replace any non-`OK` status with
+zero.
+
 == Optional CK provider
 
 The CK adapter is frozen to upstream revision `8a1ef91` and imports:

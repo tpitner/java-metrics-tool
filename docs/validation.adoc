@@ -27,6 +27,46 @@ through 27. Additional fixtures cover stable language constructs introduced in
 Java 8, 9, 10, 11, 14, 15, 16, 17, and 21. Values outside the published range,
 including future releases, are rejected as configuration errors before parsing.
 
+== Release evidence matrix
+
+[cols="3,3,4",options="header"]
+|===
+|Published metric or claim |Primary executable evidence |Independent expectation
+
+|Declared methods, constructors, and fields
+|`JavaMetricsProviderTest`, `ValidationCorpusTest`
+|`validation/measurements.csv` rows for `basic-members` and modern/nested types
+
+|Physical LOC, NCLOC, and exclusive variants
+|`SourceLineMetricsComputerTest`, `ValidationCorpusTest`
+|Hand-counted line expectations in `validation/measurements.csv`
+
+|LCOM4 and incomplete binding behaviour
+|`Lcom4ComputerTest`, `ValidationCorpusTest`
+|Small graph fixtures with manually determined connected components
+
+|Package `Ca`, `Ce`, instability, abstractness, and distance
+|`MartinCouplingComputerTest`, `AbstractnessComputerTest`,
+`ValidationCorpusTest`
+|The `coupling`, `interfaces`, `modern-types`, and unresolved-dependency corpus
+cases and their manually reviewed CSV expectations
+
+|CK metric import and subject mapping
+|`CkCsvReaderTest`, `CkMetricsProviderTest`, `CkValidationCorpusTest`,
+`CkActualIntegrationTest`
+|Provider-qualified CK rows in `validation/measurements.csv`; CK is a
+differential target rather than the oracle
+
+|Java source releases 8 through 27
+|`JavaReleaseCompatibilityTest`, `MainCliContractTest`
+|One fixture for every accepted release plus representative stable syntax and
+explicit rejection cases
+
+|CLI exit codes and deterministic JSON
+|`MainCliContractTest` and the packaged-JAR smoke test in GitHub Actions
+|Repeated-process byte comparison on Linux, macOS, and Windows
+|===
+
 == Validation corpus
 
 The `validation/` directory contains small Maven projects and independent,

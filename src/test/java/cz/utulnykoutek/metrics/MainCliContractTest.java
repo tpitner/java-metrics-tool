@@ -55,6 +55,23 @@ class MainCliContractTest {
     }
 
     @Test
+    void rejectsUnsupportedSourceReleaseWithConfigurationExitCode() throws Exception {
+        Path input = copySample("Nested.java");
+
+        CliResult tooOld = run(input.toString(), "--release", "7", "--format", "json");
+        CliResult future = run(input.toString(), "--release", "28", "--format", "json");
+        CliResult malformed = run(input.toString(), "--release", "latest", "--format", "json");
+
+        assertEquals(2, tooOld.exitCode(), tooOld.stderr());
+        assertTrue(tooOld.stderr().contains("supported range is 8 through 27"), tooOld.stderr());
+        assertEquals(2, future.exitCode(), future.stderr());
+        assertTrue(future.stderr().contains("supported range is 8 through 27"), future.stderr());
+        assertEquals(2, malformed.exitCode(), malformed.stderr());
+        assertTrue(malformed.stderr().contains("must be an integer from 8 through 27"),
+                malformed.stderr());
+    }
+
+    @Test
     void rendersIdenticalJsonForRepeatedRuns() throws Exception {
         Path input = copySample("Nested.java");
         String[] args = {input.toString(), "--release", "17", "--format", "json"};

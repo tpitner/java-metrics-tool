@@ -7,10 +7,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /** Cross-field and filesystem validation of a fully resolved configuration. */
 public final class ConfigValidator {
+    public static final int MINIMUM_SOURCE_RELEASE = 8;
+    public static final int MAXIMUM_SOURCE_RELEASE = 27;
     private static final Set<String> OUTPUT_FORMATS =
             Set.of("text", "json", "preview", "ansi", "yaml-preview");
 
@@ -45,6 +48,7 @@ public final class ConfigValidator {
                 errors.add("project.classpath entry is not readable: " + entry);
             }
         }
+        project.release().flatMap(ConfigValidator::sourceReleaseError).ifPresent(errors::add);
 
         if (!OUTPUT_FORMATS.contains(output.format())) {
             errors.add("Unsupported output.format: " + output.format());
@@ -89,5 +93,21 @@ public final class ConfigValidator {
             }
         }
         return List.copyOf(errors);
+    }
+
+    public static Optional<String> sourceReleaseError(String release) {
+        final int value;
+        try {
+            value = Integer.parseInt(release);
+        } catch (NumberFormatException exception) {
+            return Optional.of("project.release must be an integer from "
+                    + MINIMUM_SOURCE_RELEASE + " through " + MAXIMUM_SOURCE_RELEASE
+                    + ": " + release);
+        }
+        if (value < MINIMUM_SOURCE_RELEASE || value > MAXIMUM_SOURCE_RELEASE) {
+            return Optional.of("Unsupported project.release " + release + "; supported range is "
+                    + MINIMUM_SOURCE_RELEASE + " through " + MAXIMUM_SOURCE_RELEASE);
+        }
+        return Optional.empty();
     }
 }

@@ -22,6 +22,11 @@ The default Maven test suite covers:
 GitHub Actions runs the suite and the packaged-JAR quickstart on Linux, macOS,
 and Windows with Java 21.
 
+The source-release gate exercises every accepted `--release` value from 8
+through 27. Additional fixtures cover stable language constructs introduced in
+Java 8, 9, 10, 11, 14, 15, 16, 17, and 21. Values outside the published range,
+including future releases, are rejected as configuration errors before parsing.
+
 == Validation corpus
 
 The `validation/` directory contains small Maven projects and independent,

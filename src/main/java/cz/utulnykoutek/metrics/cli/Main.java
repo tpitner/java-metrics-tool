@@ -7,6 +7,7 @@ import cz.utulnykoutek.metrics.analysis.BaselineMetadata;
 import cz.utulnykoutek.metrics.config.CliOverrides;
 import cz.utulnykoutek.metrics.config.ConfigException;
 import cz.utulnykoutek.metrics.config.ConfigLoader;
+import cz.utulnykoutek.metrics.config.ConfigValidator;
 import cz.utulnykoutek.metrics.config.EffectiveConfig;
 import cz.utulnykoutek.metrics.config.EffectiveConfigResolver;
 import cz.utulnykoutek.metrics.config.LoadedToolConfig;
@@ -80,6 +81,13 @@ public final class Main {
                 }
             } catch (Exception e) {
                 System.err.println("Error resolving Maven project: " + e.getMessage());
+                return 2;
+            }
+        }
+        if (release != null && !release.isBlank()) {
+            var releaseError = ConfigValidator.sourceReleaseError(release);
+            if (releaseError.isPresent()) {
+                System.err.println("Error: " + releaseError.orElseThrow());
                 return 2;
             }
         }

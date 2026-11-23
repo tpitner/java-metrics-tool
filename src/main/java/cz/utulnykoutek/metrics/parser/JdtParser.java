@@ -338,6 +338,8 @@ public class JdtParser {
                 Constructor c = new Constructor(id, mb == null ? null : mb.getKey(), type, name, toModifiers(md.getModifiers()), params, thrown, mres);
                 c.sourceSpan = sourceSpan(md);
                 type.addMember(c);
+                type.cyclomaticComplexityEvidence.add(complexityEvidence(
+                        c.id, ExecutableKind.CONSTRUCTOR, md.getBody()));
                 return c;
             } else {
                 SymbolRef rt = md.getReturnType2() == null ? primitiveRef("void") : refForType(md.getReturnType2(), type, DependencyUsage.METHOD_RETURN);
@@ -346,6 +348,8 @@ public class JdtParser {
                 Method m = new Method(id, mb == null ? null : mb.getKey(), type, name, toModifiers(md.getModifiers()), rt, params, thrown, mres);
                 m.sourceSpan = sourceSpan(md);
                 type.addMember(m);
+                type.cyclomaticComplexityEvidence.add(complexityEvidence(
+                        m.id, ExecutableKind.METHOD, md.getBody()));
                 return m;
             }
         }
@@ -357,6 +361,8 @@ public class JdtParser {
             String id = type.symbolId + "#<initializer:" + category + ":" + sequence + ">";
             InitializerBlock block = new InitializerBlock(id, type, isStatic, sourceSpan(initializer));
             type.initializers.add(block);
+            type.cyclomaticComplexityEvidence.add(complexityEvidence(
+                    id, ExecutableKind.INITIALIZER, initializer.getBody()));
             collectLambdas(type, initializer, id);
         }
 
@@ -375,6 +381,8 @@ public class JdtParser {
                     String id = type.symbolId + "#<lambda:" + sequence + ">";
                     type.lambdas.add(new LambdaExpressionEntity(
                             id, type, enclosing.peek(), sourceSpan(node)));
+                    type.cyclomaticComplexityEvidence.add(complexityEvidence(
+                            id, ExecutableKind.LAMBDA, node.getBody()));
                     enclosing.push(id);
                     return true;
                 }
@@ -383,6 +391,43 @@ public class JdtParser {
                     enclosing.pop();
                 }
             });
+        }
+
+        CyclomaticComplexityEvidence complexityEvidence(
+                String subjectId, ExecutableKind kind, ASTNode body) {
+            if (body == null) {
+                return new CyclomaticComplexityEvidence(subjectId, kind, false, 0);
+            }
+            AtomicInteger decisions = new AtomicInteger();
+            body.accept(new ASTVisitor() {
+                @Override public boolean preVisit2(ASTNode node) {
+                    if (node == body) return true;
+                    return !(node instanceof LambdaExpression)
+                            && !(node instanceof AbstractTypeDeclaration)
+                            && !(node instanceof AnonymousClassDeclaration);
+                }
+
+                @Override public boolean visit(IfStatement node) { decisions.incrementAndGet(); return true; }
+                @Override public boolean visit(ForStatement node) { decisions.incrementAndGet(); return true; }
+                @Override public boolean visit(EnhancedForStatement node) { decisions.incrementAndGet(); return true; }
+                @Override public boolean visit(WhileStatement node) { decisions.incrementAndGet(); return true; }
+                @Override public boolean visit(DoStatement node) { decisions.incrementAndGet(); return true; }
+                @Override public boolean visit(CatchClause node) { decisions.incrementAndGet(); return true; }
+                @Override public boolean visit(ConditionalExpression node) { decisions.incrementAndGet(); return true; }
+                @Override public boolean visit(SwitchCase node) {
+                    if (!node.isDefault()) decisions.incrementAndGet();
+                    return true;
+                }
+                @Override public boolean visit(GuardedPattern node) { decisions.incrementAndGet(); return true; }
+                @Override public boolean visit(InfixExpression node) {
+                    if (node.getOperator() == InfixExpression.Operator.CONDITIONAL_AND
+                            || node.getOperator() == InfixExpression.Operator.CONDITIONAL_OR) {
+                        decisions.addAndGet(1 + node.extendedOperands().size());
+                    }
+                    return true;
+                }
+            });
+            return new CyclomaticComplexityEvidence(subjectId, kind, true, decisions.get());
         }
 
         String returnDisplay(MethodDeclaration md) { return md.getReturnType2() == null ? "void" : md.getReturnType2().toString(); }

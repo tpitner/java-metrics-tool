@@ -21,6 +21,7 @@ public class TypeCompound extends Compound {
     public final List<DependencyEdge> dependencyEdges = new ArrayList<>();
     public final List<InitializerBlock> initializers = new ArrayList<>();
     public final List<LambdaExpressionEntity> lambdas = new ArrayList<>();
+    public final List<CyclomaticComplexityEvidence> cyclomaticComplexityEvidence = new ArrayList<>();
     /** Null until cohesion evidence has been collected for this type. */
     public TypeCohesionEvidence cohesionEvidence;
     public String declaredInMemberId;

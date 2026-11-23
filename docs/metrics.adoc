@@ -27,6 +27,15 @@ silently conflated.
 |type
 |Type lines excluding nested type ranges.
 
+|`java.cyclomatic`
+|method, constructor, initializer, lambda
+|One plus the executable's decision points, with nested lambdas and types
+measured independently.
+
+|`java.wmc`
+|type
+|Sum of `java.cyclomatic` over directly declared methods with bodies only.
+
 |`java.lcom4`
 |type
 |LCOM4 connected components over eligible instance methods, shared instance
@@ -42,10 +51,10 @@ fields, and direct intra-type calls.
 from the main sequence.
 |===
 
-Cyclomatic complexity, WMC, DIT, NOC, CBO, fan-in, fan-out, and RFC have
-catalog identifiers but no built-in metric computer. They must not be
-advertised under the `java` namespace. The corresponding supported CK metrics
-are available only when the optional CK provider is enabled.
+DIT, NOC, CBO, fan-in, fan-out, and RFC have catalog identifiers but no
+built-in metric computer. They must not be advertised under the `java`
+namespace. Corresponding metrics supported by CK are available only when the
+optional CK provider is enabled and retain their separate `ck` semantics.
 
 === Operational definitions
 
@@ -84,6 +93,30 @@ the same rules but remove the source ranges of directly nested types. Because
 every nested type is itself measured, this prevents double counting when type
 measurements are aggregated. Local and anonymous type ranges are included in
 this exclusion when represented as children of the measured type.
+
+==== Cyclomatic complexity and WMC
+
+`java.cyclomatic` (`t2.cyclomatic.v1`) is computed separately for each method,
+constructor, initializer block, and lambda expression that has a body. Its
+value is one plus the number of decision points. Decision points are `if`,
+basic and enhanced `for`, `while`, `do`, `catch`, the ternary conditional
+operator, every non-default switch rule or statement group, guarded `when`
+patterns, and every short-circuit `&&` or `||` operator. Multiple operands in
+one short-circuit expression contribute one decision per operator.
+
+`else`, `default`, `switch` itself, `try`, `finally`, `return`, `throw`,
+`break`, `continue`, `assert`, and non-short-circuit boolean operators do not
+contribute. Decisions inside a nested lambda or nested/local/anonymous type do
+not contribute to the enclosing executable; those subjects are measured
+independently. A method without a body receives `NOT_APPLICABLE` with reason
+`EXECUTABLE_HAS_NO_BODY`.
+
+`java.wmc` (`t2.wmc.v1`) is the sum of `java.cyclomatic` for methods declared
+directly by the measured type and having their own bodies. Constructors,
+initializer blocks, lambdas, inherited methods, and body-less methods are not
+included. Its attributes report `includedMethodCount` and
+`bodylessMethodCount`; a type with no included methods has the exact value
+zero.
 
 ==== LCOM4
 

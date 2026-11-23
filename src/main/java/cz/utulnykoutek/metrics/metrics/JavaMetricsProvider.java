@@ -27,12 +27,14 @@ public final class JavaMetricsProvider implements MeasurementProvider {
 
     public JavaMetricsProvider() {
         this(List.of(new MemberCountComputer(), new SourceLineMetricsComputer(),
-                new Lcom4Computer(), new MartinCouplingComputer(), new AbstractnessComputer()));
+                new CyclomaticComplexityComputer(), new Lcom4Computer(),
+                new MartinCouplingComputer(), new AbstractnessComputer()));
     }
 
     public JavaMetricsProvider(Set<BuiltInMetricDefinition> selectedDefinitions) {
         this(List.of(new MemberCountComputer(), new SourceLineMetricsComputer(),
-                        new Lcom4Computer(), new MartinCouplingComputer(),
+                        new CyclomaticComplexityComputer(), new Lcom4Computer(),
+                        new MartinCouplingComputer(),
                         new AbstractnessComputer()),
                 selectedDefinitions);
     }

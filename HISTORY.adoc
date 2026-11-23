@@ -4,6 +4,14 @@
 
 == 2026-11-23
 
+* Implemented native `java.cyclomatic` for methods, constructors, initializer
+  blocks, and lambdas with nested-executable isolation and explicit
+  non-applicability for body-less methods.
+* Implemented method-only `java.wmc`, excluding constructors, initializers,
+  lambdas, inherited methods, and body-less declarations while reporting
+  included and excluded method counts.
+* Made JSON object serialization sort map keys, preserving byte-for-byte
+  determinism for the complete default metric set across separate JVM runs.
 * Opened post-JORS development as version `1.2.0-SNAPSHOT`; CI now derives the
   packaged JAR path from the Maven project version instead of hard-coding it.
 * Corrected `CITATION.cff` to identify the published `1.1.0` release while the

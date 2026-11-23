@@ -33,7 +33,7 @@ public enum BuiltInMetricDefinition implements MetricDefinition {
     NCLOC_EXCLUSIVE(MetricName.NCLOC_EXCLUSIVE, MetricUnit.LINES,
             scopeSet(TYPE), "t2.ncloc-exclusive.v1"),
     CYCLOMATIC(MetricName.CYCLOMATIC, MetricUnit.COUNT,
-            scopeSet(TYPE, METHOD, CONSTRUCTOR, INITIALIZER, LAMBDA), "t2.cyclomatic.v1"),
+            scopeSet(METHOD, CONSTRUCTOR, INITIALIZER, LAMBDA), "t2.cyclomatic.v1"),
     WMC(MetricName.WMC, MetricUnit.COUNT, scopeSet(TYPE), "t2.wmc.v1"),
     DIT(MetricName.DIT, MetricUnit.COUNT, scopeSet(TYPE), "t2.dit.v1"),
     NOC(MetricName.NOC, MetricUnit.COUNT, scopeSet(TYPE), "t2.noc.v1"),

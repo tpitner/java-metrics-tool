@@ -23,8 +23,8 @@ selected for the analysed project with `--release`.
 
 The built-in provider computes declared method, constructor, and field counts;
 physical LOC and NCLOC; type-exclusive physical LOC and NCLOC; type-level
-LCOM4; and the package-level `Ca`, `Ce`, instability, abstractness, and distance
-metrics.
+LCOM4; executable cyclomatic complexity; method-only type-level WMC; and the
+package-level `Ca`, `Ce`, instability, abstractness, and distance metrics.
 
 The optional CK provider imports its frozen set of type- and member-level size,
 complexity, coupling, cohesion, and inheritance metrics. The exact JORS 1.1.0

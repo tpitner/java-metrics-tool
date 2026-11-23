@@ -6,7 +6,8 @@
 
 *Java source-code metrics CLI measurement tool* based on _Eclipse JDT Core 3.47.0_.
 
-DOI (Zenodo):: https://doi.org/10.5281/zenodo.24448730
+Zenodo URL:: https://zenodo.org/records/24467111
+DOI:: 10.5281/zenodo.24467111
 
 == Requirements
 

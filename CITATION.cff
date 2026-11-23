@@ -1,10 +1,25 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "java-metrics"
+abstract: >-
+  A command-line tool for reproducible structural metrics from Java source
+  code, with deterministic output, explicit completeness status, provenance,
+  a manually reviewed validation corpus, and optional CK integration.
 authors:
   - family-names: "Pitner"
     given-names: "Tomáš"
+    affiliation: "Mendel University in Brno"
+    email: "tomas.pitner@mendelu.cz"
+    orcid: "https://orcid.org/0000-0002-2933-2290"
+keywords:
+  - "Java"
+  - "software metrics"
+  - "static analysis"
+  - "research software"
+  - "reproducibility"
 version: 1.0.0
 date-released: 2026-11-22
 license: Apache-2.0
 repository-code: "https://github.com/tpitner/java-metrics-tool"
+repository-artifact: "https://github.com/tpitner/java-metrics-tool/releases"
+url: "https://github.com/tpitner/java-metrics-tool"

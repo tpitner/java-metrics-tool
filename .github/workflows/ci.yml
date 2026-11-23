@@ -36,17 +36,22 @@ jobs:
       - name: Build and test
         run: mvn --batch-mode --no-transfer-progress clean verify
 
+      - name: Locate packaged JAR
+        run: |
+          project_version="$(mvn --quiet help:evaluate -Dexpression=project.version -DforceStdout)"
+          echo "JAR_PATH=target/java-metrics-${project_version}.jar" >> "$GITHUB_ENV"
+
       - name: Smoke-test packaged CLI
         run: |
           cd examples/quickstart
-          java -jar ../../target/java-metrics-1.1.0.jar \
+          java -jar "../../${JAR_PATH}" \
             --config java-metrics.toml \
             > actual.txt
           diff -u expected.txt actual.txt
-          java -jar ../../target/java-metrics-1.1.0.jar \
+          java -jar "../../${JAR_PATH}" \
             --config java-metrics.toml --format json \
             > actual-1.json
-          java -jar ../../target/java-metrics-1.1.0.jar \
+          java -jar "../../${JAR_PATH}" \
             --config java-metrics.toml --format json \
             > actual-2.json
           diff -u actual-1.json actual-2.json
@@ -64,7 +69,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: java-metrics-${{ matrix.os }}
-          path: target/java-metrics-1.1.0.jar
+          path: ${{ env.JAR_PATH }}
           if-no-files-found: error
 
   real-ck-validation:

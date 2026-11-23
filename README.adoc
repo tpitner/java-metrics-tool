@@ -77,21 +77,21 @@ Single file:
 
 [source,bash]
 ----
-java -jar target/java-metrics-1.1.0.jar path/to/File.java
+java -jar target/java-metrics-1.2.0-SNAPSHOT.jar path/to/File.java
 ----
 
 Directory or module (recursive):
 
 [source,bash]
 ----
-java -jar target/java-metrics-1.1.0.jar path/to/directory
+java -jar target/java-metrics-1.2.0-SNAPSHOT.jar path/to/directory
 ----
 
 Maven project:
 
 [source,bash]
 ----
-java -jar target/java-metrics-1.1.0.jar --pom pom.xml
+java -jar target/java-metrics-1.2.0-SNAPSHOT.jar --pom pom.xml
 ----
 
 For a complete minimal input, configuration, expected output, and verification

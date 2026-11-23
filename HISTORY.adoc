@@ -2,6 +2,13 @@
 :toc:
 :toclevels: 2
 
+== 2026-11-23
+
+* Opened post-JORS development as version `1.2.0-SNAPSHOT`; CI now derives the
+  packaged JAR path from the Maven project version instead of hard-coding it.
+* Corrected `CITATION.cff` to identify the published `1.1.0` release while the
+  Maven main branch continues with the next snapshot version.
+
 == 2026-11-22
 
 * Added tag-driven release automation that enforces tag/POM/citation version

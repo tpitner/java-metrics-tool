@@ -15,7 +15,7 @@ Run the packaged CLI:
 
 [source,bash]
 ----
-java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+java -jar ../../target/java-metrics-1.1.0.jar \
   --config java-metrics.toml
 ----
 
@@ -24,7 +24,7 @@ directly:
 
 [source,bash]
 ----
-java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+java -jar ../../target/java-metrics-1.1.0.jar \
   --config java-metrics.toml > actual.txt
 diff -u expected.txt actual.txt
 ----
@@ -38,7 +38,7 @@ file:
 
 [source,bash]
 ----
-java -jar ../../target/java-metrics-1.0-SNAPSHOT.jar \
+java -jar ../../target/java-metrics-1.1.0.jar \
   --config java-metrics.toml --format json
 ----
 

@@ -26,6 +26,7 @@ import cz.utulnykoutek.metrics.parser.PackageMerger;
 import cz.utulnykoutek.metrics.parser.SyntaxErrorException;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -49,11 +50,15 @@ public final class Main {
         EffectiveConfig effective;
         try {
             cli = CliOverrides.parse(args);
+            if (cli.help()) {
+                usage(System.out);
+                return 0;
+            }
             LoadedToolConfig loaded = ConfigLoader.load(cli.configFile(), workingDirectory);
             effective = EffectiveConfigResolver.resolve(loaded, cli, workingDirectory);
         } catch (ConfigException e) {
             e.errors().forEach(error -> System.err.println("Error: " + error));
-            usage();
+            usage(System.err);
             return 2;
         }
 
@@ -245,7 +250,7 @@ public final class Main {
         return candidate;
     }
 
-    private static void usage() {
-        System.err.println("Usage: java-metrics [<file.java|directory> ...] [--config <file.toml>] [--validate-config] [--print-effective-config] [--pom <pom.xml>] [--format text|json|preview] [--sourcepath <dir[:dir]>] [--classpath <jar[:jar]>] [--release <level>] [--recursive|--no-recursive] [--include-tests] [--no-compile]");
+    private static void usage(PrintStream output) {
+        output.println("Usage: java-metrics [<file.java|directory> ...] [--config <file.toml>] [--validate-config] [--print-effective-config] [--pom <pom.xml>] [--format text|json|preview] [--sourcepath <dir[:dir]>] [--classpath <jar[:jar]>] [--release <level>] [--recursive|--no-recursive] [--include-tests] [--no-compile] [--help]");
     }
 }

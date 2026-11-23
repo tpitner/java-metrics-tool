@@ -23,6 +23,7 @@ public final class CliOverrides {
     private String format;
     private boolean validateConfig;
     private boolean printEffectiveConfig;
+    private boolean help;
     private final List<String> applied = new ArrayList<>();
 
     private CliOverrides() {
@@ -100,6 +101,7 @@ public final class CliOverrides {
                 }
                 case "--validate-config" -> result.validateConfig = true;
                 case "--print-effective-config" -> result.printEffectiveConfig = true;
+                case "--help" -> result.help = true;
                 default -> errors.add("Unknown option: " + arg);
             }
             i++;
@@ -137,5 +139,6 @@ public final class CliOverrides {
     public Optional<String> format() { return Optional.ofNullable(format); }
     public boolean validateConfig() { return validateConfig; }
     public boolean printEffectiveConfig() { return printEffectiveConfig; }
+    public boolean help() { return help; }
     public List<String> appliedKeys() { return applied.stream().distinct().sorted().toList(); }
 }

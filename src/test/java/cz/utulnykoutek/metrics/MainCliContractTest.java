@@ -22,6 +22,15 @@ class MainCliContractTest {
     Path temporaryDirectory;
 
     @Test
+    void printsHelpWithoutRequiringProjectInput() {
+        CliResult result = run("--help");
+
+        assertEquals(0, result.exitCode(), result.stderr());
+        assertTrue(result.stdout().startsWith("Usage: java-metrics"), result.stdout());
+        assertTrue(result.stderr().isEmpty(), result.stderr());
+    }
+
+    @Test
     void returnsZeroForSuccessfulAnalysis() throws Exception {
         Path input = copySample("Nested.java");
 

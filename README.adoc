@@ -30,7 +30,40 @@ complexity, coupling, cohesion, and inheritance metrics. The exact JORS 1.1.0
 scope, metric scopes, and known limitations are documented in
 `docs/jors-release-scope.adoc`.
 
-== Build and run
+== Install
+
+Each GitHub release contains a self-contained executable JAR, its SHA-256
+checksum, `LICENSE`, and `NOTICE`. Download all four files from the release page
+and verify the JAR before running it.
+
+On Linux or macOS:
+
+[source,bash]
+----
+shasum -a 256 -c java-metrics-<version>.jar.sha256
+java -jar java-metrics-<version>.jar --help
+----
+
+On Windows PowerShell, compare the published checksum with:
+
+[source,powershell]
+----
+Get-FileHash .\java-metrics-<version>.jar -Algorithm SHA256
+java -jar .\java-metrics-<version>.jar --help
+----
+
+Java 21 or later is required; Maven is not required for this installation.
+
+== Build and run from source
+
+Clone a specific release tag when reproducing a published version:
+
+[source,bash]
+----
+git clone --branch v<version> --depth 1 \
+  https://github.com/tpitner/java-metrics-tool.git
+cd java-metrics-tool
+----
 
 Build:
 

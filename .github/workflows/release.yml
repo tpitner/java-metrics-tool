@@ -70,6 +70,8 @@ jobs:
             echo "Runtime provenance version $json_version does not match $version" >&2
             exit 1
           fi
+          unzip -p "$jar" META-INF/java-metrics/LICENSE > /dev/null
+          unzip -p "$jar" META-INF/java-metrics/NOTICE > /dev/null
 
       - name: Check out pinned CK revision
         uses: actions/checkout@v7
@@ -114,6 +116,8 @@ jobs:
           path: |
             ${{ steps.artifacts.outputs.jar }}
             ${{ steps.artifacts.outputs.checksum }}
+            LICENSE
+            NOTICE
           if-no-files-found: error
 
       - name: Create GitHub release
@@ -123,6 +127,8 @@ jobs:
           gh release create "$GITHUB_REF_NAME"
           "${{ steps.artifacts.outputs.jar }}"
           "${{ steps.artifacts.outputs.checksum }}"
+          LICENSE
+          NOTICE
           --verify-tag
           --generate-notes
           --title "java-metrics ${{ steps.version.outputs.version }}"

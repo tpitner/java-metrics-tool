@@ -26,9 +26,11 @@ tag triggers a clean Ubuntu build that:
 . builds pinned CK revision `8a1ef91` and runs both real-CK tests;
 . verifies that the shaded versioned JAR exists;
 . creates a SHA-256 checksum;
-. uploads both files as workflow artifacts;
-. creates the GitHub release with generated release notes and attaches the JAR
-  and checksum.
+. verifies that the project license and notice are embedded under
+  `META-INF/java-metrics/` in the JAR;
+. uploads the binary, checksum, `LICENSE`, and `NOTICE` as workflow artifacts;
+. creates the GitHub release with generated release notes and attaches all four
+  files.
 
 If the GitHub repository remains connected to Zenodo, publication of the GitHub
 release creates the preserved software deposit. Record the resulting
@@ -39,6 +41,8 @@ general project README.
 
 * `java-metrics-<version>.jar`
 * `java-metrics-<version>.jar.sha256`
+* `LICENSE`
+* `NOTICE`
 
 The release is incomplete if either artifact is missing or if the GitHub,
 Zenodo, POM, citation, and tag versions do not agree.
